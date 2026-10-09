@@ -185,8 +185,9 @@
   })).filter(anime => safeUrl(anime.url));
   async function fetchLiveRankings() {
     const cacheKey = "animee-live-top10-v1";
+    let cached = null;
     try {
-      const cached = JSON.parse(localStorage.getItem(cacheKey) || "null");
+      cached = JSON.parse(localStorage.getItem(cacheKey) || "null");
       if (cached && cached.savedAt && Date.now() - cached.savedAt < 30 * 60 * 1000 && cached.data) return cached.data;
     } catch (_) {}
     const endpoints = [
@@ -194,16 +195,45 @@
       ["airing", "https://api.jikan.moe/v4/top/anime?filter=airing&limit=10"],
       ["season", "https://api.jikan.moe/v4/seasons/now?limit=10"]
     ];
-    const result = {updated_at:new Date().toISOString(),source:"MyAnimeList data via Jikan API"};
+    const result = {updated_at:new Date().toISOString(),source:"MyAnimeList data via Jikan API",popular:[],airing:[],season:[]};
+    let succeeded = 0;
     for (let i = 0; i < endpoints.length; i++) {
       const [key, endpoint] = endpoints[i];
-      if (i) await new Promise(resolve => window.setTimeout(resolve, 1200));
-      const response = await fetch(endpoint, {headers:{"Accept":"application/json"}});
-      if (!response.ok) throw new Error("Jikan " + key + " HTTP " + response.status);
-      result[key] = mapJikanItems(await response.json());
+      if (i) await new Promise(resolve => window.setTimeout(resolve, 1600));
+      let lastError = null;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const response = await fetch(endpoint, {headers:{"Accept":"application/json"}});
+          if (!response.ok) {
+            const error = new Error("Jikan " + key + " HTTP " + response.status);
+            error.retryAfter = response.headers.get("Retry-After");
+            throw error;
+          }
+          const mapped = mapJikanItems(await response.json());
+          if (!mapped.length) throw new Error("Jikan " + key + " returned no anime");
+          result[key] = mapped;
+          succeeded++;
+          lastError = null;
+          break;
+        } catch (error) {
+          lastError = error;
+          if (attempt === 0) {
+            const waitSeconds = Math.min(8, Math.max(1, Number(error.retryAfter) || 2));
+            await new Promise(resolve => window.setTimeout(resolve, waitSeconds * 1000));
+          }
+        }
+      }
+      if (lastError) console.warn("Animee could not refresh " + key + " rankings:", lastError);
     }
-    try { localStorage.setItem(cacheKey, JSON.stringify({savedAt:Date.now(),data:result})); } catch (_) {}
-    return result;
+    if (succeeded > 0) {
+      try { localStorage.setItem(cacheKey, JSON.stringify({savedAt:Date.now(),data:result})); } catch (_) {}
+      return result;
+    }
+    if (cached && cached.data) {
+      console.warn("Using cached Animee rankings because the live ranking service is unavailable.");
+      return cached.data;
+    }
+    throw new Error("All live ranking requests failed and no cached rankings are available.");
   }
   async function loadRankings() {
     try {

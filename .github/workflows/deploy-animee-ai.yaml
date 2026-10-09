@@ -1,0 +1,39 @@
+name: Deploy Animee AI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "supabase/functions/animee-ai-chat/**"
+      - "supabase/config.toml"
+      - ".github/workflows/deploy-animee-ai.yaml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-animee-ai
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_ID: mnfzpbwhvierboadwctz
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - name: Validate required secrets
+        shell: bash
+        run: |
+          test -n "$SUPABASE_ACCESS_TOKEN" || { echo "::error::Add SUPABASE_ACCESS_TOKEN to GitHub Actions secrets."; exit 1; }
+          test -n "$OPENAI_API_KEY" || { echo "::error::Add OPENAI_API_KEY to GitHub Actions secrets."; exit 1; }
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Store OpenAI key securely in Supabase
+        run: supabase secrets set "OPENAI_API_KEY=$OPENAI_API_KEY" --project-ref "$PROJECT_ID"
+      - name: Deploy Animee AI Edge Function
+        run: supabase functions deploy animee-ai-chat --project-ref "$PROJECT_ID" --use-api

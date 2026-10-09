@@ -280,6 +280,19 @@ footer{color:#173b5b!important}
 }
 
 </style>
+<style id="animee-social-polish">
+.social-hub p{line-height:1.65}
+.social-links{display:grid;grid-template-columns:1fr;gap:9px;margin-top:14px}
+.social-links .follow{display:flex;align-items:center;justify-content:center;min-height:42px;text-align:center;text-decoration:none;font-weight:800;border:1px solid rgba(135,206,235,.5);transition:transform .18s ease,filter .18s ease}
+.social-links .follow:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.site-footer{display:grid;justify-items:center;gap:12px;padding:28px 18px 32px;text-align:center}
+.site-footer>strong{font-size:clamp(16px,2vw,20px);color:#082849}
+.footer-socials{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:9px}
+.footer-socials a{display:inline-flex;align-items:center;justify-content:center;padding:8px 13px;border:1px solid rgba(8,40,73,.24);border-radius:999px;color:#082849;background:rgba(255,255,255,.35);text-decoration:none;font-weight:750;font-size:13px;transition:background .18s ease,transform .18s ease}
+.footer-socials a:hover{background:rgba(255,255,255,.68);transform:translateY(-1px)}
+.site-footer small{max-width:760px;line-height:1.7;color:#173b5b}
+@media(prefers-reduced-motion:reduce){.social-links .follow,.footer-socials a{transition:none}.social-links .follow:hover,.footer-socials a:hover{transform:none}}
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -441,10 +454,14 @@ footer{color:#173b5b!important}
 </main>
 
 <aside>
-<div class="sidebox">
+<div class="sidebox social-hub">
 <h3>🌟 Follow Animee</h3>
-<p>Join the community and catch new anime posts on our official Facebook page.</p>
-<a class="follow" href="https://www.facebook.com/animeeeeee/" target="_blank" rel="noopener">Open Facebook Page</a>
+<p>Join the Animee family and catch new anime posts, clips, and updates across our official channels.</p>
+<div class="social-links">
+<a class="follow" href="https://www.facebook.com/animeeeeee/" target="_blank" rel="noopener noreferrer">📘 Facebook Page ↗</a>
+<a class="follow" href="https://www.tiktok.com/@animee.media" target="_blank" rel="noopener noreferrer">🎵 TikTok ↗</a>
+<a class="follow" href="https://www.instagram.com/animee.media/" target="_blank" rel="noopener noreferrer">📸 Instagram ↗</a>
+</div>
 </div>
 <div class="sidebox" id="about">
 <h3>🎬 About this website</h3>
@@ -459,9 +476,15 @@ footer{color:#173b5b!important}
 </div>
 </div>
 
-<footer>
-© <span id="year"></span> Animee · Where Anime Comes to Life!<br>
-Fan site. Anime and video rights belong to their respective owners.
+<footer class="site-footer">
+<strong>ANIMEE — Where Anime Comes to Life. 💙</strong>
+<div class="footer-socials" aria-label="Official Animee social channels">
+<a href="https://www.facebook.com/animeeeeee/" target="_blank" rel="noopener noreferrer">Facebook</a>
+<a href="https://www.tiktok.com/@animee.media" target="_blank" rel="noopener noreferrer">TikTok</a>
+<a href="https://www.instagram.com/animee.media/" target="_blank" rel="noopener noreferrer">Instagram</a>
+<a href="community.html">Animee Community</a>
+</div>
+<small>© <span id="year"></span> Animee. Fan community website. Anime and video rights belong to their respective owners.</small>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

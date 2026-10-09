@@ -1,0 +1,34 @@
+name: Refresh Animee Anime News
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/update_anime_news.py"
+      - ".github/workflows/anime-news.yml"
+permissions:
+  contents: write
+concurrency:
+  group: animee-anime-news
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Refresh RSS news index
+        run: python scripts/update_anime_news.py
+      - name: Publish updated news index
+        run: |
+          if git diff --quiet -- anime-news.json; then
+            echo "No news changes to publish."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add anime-news.json
+          git commit -m "Refresh Animee anime news feed"
+          git push

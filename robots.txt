@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /community-messages.html
-Disallow: /community-reset-password.html
 
 Sitemap: https://animee355.github.io/Animee/sitemap.xml

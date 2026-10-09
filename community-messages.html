@@ -179,6 +179,28 @@ footer{color:#173b5b!important}
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Animee">
 <script src="./pwa.js" defer></script>
+<style id="animee-mobile-usability-v1">
+:where(a,button,input,textarea,select,[tabindex]):focus-visible{outline:3px solid #75ddff;outline-offset:3px}
+img,video,iframe{max-width:100%}
+@media(max-width:640px){
+ html{scroll-padding-top:82px}
+ body{overflow-x:hidden;background-attachment:scroll!important}
+ header{backdrop-filter:none!important}
+ .wrap{width:calc(100% - 24px)}
+ .bar{align-items:flex-start;padding:10px 0}
+ nav{width:100%;max-width:100%;margin-left:0;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;padding:2px 0 8px;scrollbar-width:thin}
+ nav a,nav button{flex:0 0 auto;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+ input,textarea{font-size:16px}
+ .layout{grid-template-columns:minmax(0,1fr);gap:12px}
+ .panel{padding:14px;min-width:0}
+ .chat{min-height:360px}
+ .messages{max-height:45dvh;min-height:220px}
+ .bubble{max-width:92%}
+ .compose button{min-height:44px}
+ .animee-character-art{opacity:.16!important}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>

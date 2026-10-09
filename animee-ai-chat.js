@@ -80,14 +80,16 @@
           "apikey": SUPABASE_PUBLIC_KEY,
           "Authorization": "Bearer " + SUPABASE_PUBLIC_KEY
         },
-        body: JSON.stringify({ message, history: history.slice(-8) })
+        body: JSON.stringify({ messages: [...history.slice(-8), { role: "user", content: message }] })
       });
       const data = await response.json().catch(() => ({}));
       thinking.remove();
       if (!response.ok) throw new Error(data.error || "The AI service is not ready yet.");
-      addMessage("assistant", data.answer || "I couldn't find an answer this time.");
-      history.push({ role: "assistant", content: data.answer || "" });
-      if (history.length > 8) history.splice(0, history.length - 8);
+      const answer = data.answer || "I couldn't find an answer this time.";
+      const sources = Array.isArray(data.sources) ? data.sources.filter(s => s && typeof s.url === "string" && /^https?:\/\//i.test(s.url)).slice(0, 5) : [];
+      addMessage("assistant", answer + (sources.length ? "\n\nSources:\n" + sources.map(s => "- " + (s.title || s.url) + ": " + s.url).join("\n") : ""));
+      history.push({ role: "assistant", content: answer });
+      if (history.length > 10) history.splice(0, history.length - 10);
     } catch (error) {
       thinking.remove();
       addMessage("assistant", error.message || "Sorry, I couldn't connect. Please try again later.");

@@ -61,4 +61,9 @@
       help.querySelector("#animee-install-close").focus();
     }
   });
+  // Shared Animee news component: the same feed is loaded on every site page and in the PWA.
+  const newsScript = document.createElement("script");
+  newsScript.src = new URL("anime-news.js", base).href;
+  newsScript.defer = true;
+  document.head.appendChild(newsScript);
 })();

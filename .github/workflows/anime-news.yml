@@ -1,4 +1,5 @@
 name: Refresh Animee Anime News
+run-name: Refresh Animee news feed
 on:
   schedule:
     - cron: "*/30 * * * *"

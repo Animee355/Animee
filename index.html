@@ -127,9 +127,75 @@ footer{color:#829ab5}
   *,*::before,*::after{transition:none!important}
 }
 
+
+/* Visible original anime characters in the page background */
+.animee-character-art{position:fixed!important;inset:65px 0 0!important;width:100%;height:calc(100vh - 65px);z-index:0!important;pointer-events:none!important;overflow:hidden;opacity:.48}
+.animee-character-art svg{display:block;width:100%;height:100%}
+body>*:not(.animee-character-art){position:relative;z-index:1}
+@media(max-width:700px){.animee-character-art{opacity:.23}.animee-character-art svg{width:150%;max-width:none;transform:translateX(-17%)}}
+@media(prefers-reduced-transparency:reduce){.animee-character-art{opacity:.3}}
+
 </style>
 </head>
 <body>
+
+<div class="animee-character-art" aria-hidden="true">
+<svg viewBox="0 0 1440 900" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+<defs>
+ <linearGradient id="animee-coat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#36bfff"/><stop offset="1" stop-color="#162b72"/></linearGradient>
+ <linearGradient id="animee-hair" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b4f1ff"/><stop offset=".48" stop-color="#438cff"/><stop offset="1" stop-color="#27336f"/></linearGradient>
+ <linearGradient id="animee-hair2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9b8cff"/><stop offset=".5" stop-color="#4269c9"/><stop offset="1" stop-color="#172348"/></linearGradient>
+ <radialGradient id="animee-glow"><stop stop-color="#238eff" stop-opacity=".5"/><stop offset="1" stop-color="#238eff" stop-opacity="0"/></radialGradient>
+ <filter id="animee-soft"><feGaussianBlur stdDeviation="20"/></filter>
+</defs>
+<ellipse cx="235" cy="465" rx="290" ry="360" fill="url(#animee-glow)" opacity=".65"/>
+<ellipse cx="1220" cy="470" rx="300" ry="380" fill="url(#animee-glow)" opacity=".55"/>
+<!-- Original anime heroine, left -->
+<g transform="translate(18 55)" stroke-linejoin="round" stroke-linecap="round">
+ <path d="M45 900 Q40 710 105 610 L165 545 330 540 405 625 Q455 760 450 900Z" fill="#0a1a35" stroke="#3ca9ff" stroke-width="4"/>
+ <path d="M85 900 Q130 720 190 650 L265 715 345 635 Q405 750 420 900Z" fill="url(#animee-coat)" opacity=".9"/>
+ <path d="M166 430 Q143 365 163 270 Q178 157 270 145 Q365 157 381 268 L367 405 338 490 201 492Z" fill="url(#animee-hair2)" stroke="#7b9cff" stroke-width="4"/>
+ <path d="M177 255 Q111 188 171 118 L213 165 225 92 265 145 298 75 321 154 371 119 363 185 405 208 375 287 349 252 326 213 285 249 245 210 207 270Z" fill="url(#animee-hair2)" stroke="#8bb7ff" stroke-width="4"/>
+ <path d="M197 275 Q208 218 270 213 Q333 216 350 277 L339 365 Q321 414 273 424 Q226 412 207 367Z" fill="#e5c5bd" stroke="#7c9cff" stroke-width="3"/>
+ <path d="M202 277 Q228 248 254 273 L248 304 211 302Z" fill="#111d3d"/>
+ <path d="M292 273 Q320 247 342 275 L333 304 298 303Z" fill="#111d3d"/>
+ <path d="M215 286 L244 290 M301 289 L330 286" stroke="#8ce8ff" stroke-width="5"/>
+ <ellipse cx="232" cy="291" rx="8" ry="11" fill="#8be7ff"/><ellipse cx="315" cy="290" rx="8" ry="11" fill="#8be7ff"/>
+ <path d="M260 337 Q276 349 294 334" fill="none" stroke="#a95468" stroke-width="4"/>
+ <path d="M194 274 Q207 330 190 385 L158 451 193 469 225 407 218 358" fill="#263a7a" stroke="#829dff" stroke-width="3"/>
+ <path d="M343 268 Q365 333 354 395 L386 457 357 475 326 409 330 353" fill="#263a7a" stroke="#829dff" stroke-width="3"/>
+ <path d="M194 458 L270 500 350 454 376 585 270 647 160 577Z" fill="#101d42" stroke="#4aaeff" stroke-width="4"/>
+ <path d="M269 502 L270 645 M195 483 L160 577 M345 479 L376 585" stroke="#73dfff" stroke-width="3" opacity=".8"/>
+ <path d="M180 546 L110 645 168 666 225 586 M356 545 L410 633 355 665 315 587" fill="none" stroke="#3c9fff" stroke-width="12"/>
+ <path d="M170 178 L122 253 148 351 182 318 M354 174 L407 241 382 331 348 302" fill="none" stroke="#8caaff" stroke-width="10"/>
+</g>
+<!-- Original anime hero, right -->
+<g transform="translate(900 38)" stroke-linejoin="round" stroke-linecap="round">
+ <path d="M40 900 Q40 735 112 610 L180 546 340 548 415 625 Q455 760 470 900Z" fill="#09172f" stroke="#48bfff" stroke-width="4"/>
+ <path d="M86 900 Q132 735 191 648 L268 704 350 630 Q405 752 435 900Z" fill="#142c58"/>
+ <path d="M153 432 Q123 350 146 250 Q157 145 270 130 Q374 145 392 258 L373 409 343 493 199 495Z" fill="url(#animee-hair)" stroke="#7adfff" stroke-width="4"/>
+ <path d="M153 268 Q112 219 139 167 L177 181 168 112 220 153 247 72 278 145 318 88 323 163 374 135 364 199 410 226 375 290 347 253 324 223 285 259 249 221 204 282Z" fill="url(#animee-hair)" stroke="#8beaff" stroke-width="4"/>
+ <path d="M194 270 Q211 214 271 214 Q333 217 351 278 L340 368 Q322 417 273 426 Q224 414 207 369Z" fill="#dfbfb5" stroke="#75d7ff" stroke-width="3"/>
+ <path d="M202 272 Q228 246 255 270 L249 302 211 301Z" fill="#0c1b37"/>
+ <path d="M292 270 Q321 245 344 273 L334 302 298 302Z" fill="#0c1b37"/>
+ <path d="M214 285 L245 289 M301 288 L331 284" stroke="#9bf1ff" stroke-width="5"/>
+ <ellipse cx="232" cy="290" rx="8" ry="11" fill="#9bf1ff"/><ellipse cx="316" cy="289" rx="8" ry="11" fill="#9bf1ff"/>
+ <path d="M260 337 Q276 345 294 333" fill="none" stroke="#9d5b6a" stroke-width="4"/>
+ <path d="M198 270 Q209 334 188 388 L159 452 192 472 226 409 218 358" fill="#17386d" stroke="#68d6ff" stroke-width="3"/>
+ <path d="M345 269 Q365 335 354 396 L388 458 356 477 326 409 331 353" fill="#17386d" stroke="#68d6ff" stroke-width="3"/>
+ <path d="M194 459 L270 500 351 455 378 586 270 648 160 578Z" fill="#0e1d3c" stroke="#4aaeff" stroke-width="4"/>
+ <path d="M270 501 L270 645 M195 484 L160 578 M346 480 L378 586" stroke="#8ceaff" stroke-width="3" opacity=".85"/>
+ <path d="M178 543 L109 644 167 667 225 587 M357 545 L414 633 357 665 315 588" fill="none" stroke="#2b8fff" stroke-width="12"/>
+ <path d="M165 180 L115 253 145 351 182 319 M359 175 L412 244 382 333 350 301" fill="none" stroke="#7fe6ff" stroke-width="10"/>
+</g>
+<!-- atmospheric light accents -->
+<g fill="#a7eaff">
+ <circle cx="90" cy="160" r="3"/><circle cx="455" cy="250" r="2"/><circle cx="515" cy="610" r="3"/>
+ <circle cx="845" cy="160" r="2"/><circle cx="1310" cy="230" r="3"/><circle cx="1380" cy="570" r="2"/>
+</g>
+</svg>
+</div>
+
 <header>
 <img class="banner" src="assets/animee-banner.jpg" alt="Animee — Where Anime Comes to Life banner">
 <nav>

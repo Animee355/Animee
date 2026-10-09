@@ -87,56 +87,80 @@ body>*:not(.animee-character-art){position:relative;z-index:1}
 <div class="animee-character-art" aria-hidden="true">
 <svg viewBox="0 0 1440 900" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
 <defs>
- <linearGradient id="animee-coat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#36bfff"/><stop offset="1" stop-color="#162b72"/></linearGradient>
- <linearGradient id="animee-hair" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b4f1ff"/><stop offset=".48" stop-color="#438cff"/><stop offset="1" stop-color="#27336f"/></linearGradient>
- <linearGradient id="animee-hair2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9b8cff"/><stop offset=".5" stop-color="#4269c9"/><stop offset="1" stop-color="#172348"/></linearGradient>
- <radialGradient id="animee-glow"><stop stop-color="#238eff" stop-opacity=".5"/><stop offset="1" stop-color="#238eff" stop-opacity="0"/></radialGradient>
- <filter id="animee-soft"><feGaussianBlur stdDeviation="20"/></filter>
+ <linearGradient id="auraGold" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#ff8a22" stop-opacity="0"/><stop offset=".5" stop-color="#ffd86a" stop-opacity=".7"/><stop offset="1" stop-color="#fff2a0" stop-opacity="0"/></linearGradient>
+ <linearGradient id="rimuruHair" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c7ffff"/><stop offset=".45" stop-color="#56d9ff"/><stop offset="1" stop-color="#3671ef"/></linearGradient>
+ <linearGradient id="darkCoat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#263b63"/><stop offset=".55" stop-color="#10172f"/><stop offset="1" stop-color="#050914"/></linearGradient>
+ <radialGradient id="blueGlow"><stop stop-color="#16baff" stop-opacity=".65"/><stop offset="1" stop-color="#168aff" stop-opacity="0"/></radialGradient>
+ <radialGradient id="purpleGlow"><stop stop-color="#8c45ff" stop-opacity=".6"/><stop offset="1" stop-color="#662dff" stop-opacity="0"/></radialGradient>
 </defs>
-<ellipse cx="235" cy="465" rx="290" ry="360" fill="url(#animee-glow)" opacity=".65"/>
-<ellipse cx="1220" cy="470" rx="300" ry="380" fill="url(#animee-glow)" opacity=".55"/>
-<!-- Original anime heroine, left -->
-<g transform="translate(18 55)" stroke-linejoin="round" stroke-linecap="round">
- <path d="M45 900 Q40 710 105 610 L165 545 330 540 405 625 Q455 760 450 900Z" fill="#0a1a35" stroke="#3ca9ff" stroke-width="4"/>
- <path d="M85 900 Q130 720 190 650 L265 715 345 635 Q405 750 420 900Z" fill="url(#animee-coat)" opacity=".9"/>
- <path d="M166 430 Q143 365 163 270 Q178 157 270 145 Q365 157 381 268 L367 405 338 490 201 492Z" fill="url(#animee-hair2)" stroke="#7b9cff" stroke-width="4"/>
- <path d="M177 255 Q111 188 171 118 L213 165 225 92 265 145 298 75 321 154 371 119 363 185 405 208 375 287 349 252 326 213 285 249 245 210 207 270Z" fill="url(#animee-hair2)" stroke="#8bb7ff" stroke-width="4"/>
- <path d="M197 275 Q208 218 270 213 Q333 216 350 277 L339 365 Q321 414 273 424 Q226 412 207 367Z" fill="#e5c5bd" stroke="#7c9cff" stroke-width="3"/>
- <path d="M202 277 Q228 248 254 273 L248 304 211 302Z" fill="#111d3d"/>
- <path d="M292 273 Q320 247 342 275 L333 304 298 303Z" fill="#111d3d"/>
- <path d="M215 286 L244 290 M301 289 L330 286" stroke="#8ce8ff" stroke-width="5"/>
- <ellipse cx="232" cy="291" rx="8" ry="11" fill="#8be7ff"/><ellipse cx="315" cy="290" rx="8" ry="11" fill="#8be7ff"/>
- <path d="M260 337 Q276 349 294 334" fill="none" stroke="#a95468" stroke-width="4"/>
- <path d="M194 274 Q207 330 190 385 L158 451 193 469 225 407 218 358" fill="#263a7a" stroke="#829dff" stroke-width="3"/>
- <path d="M343 268 Q365 333 354 395 L386 457 357 475 326 409 330 353" fill="#263a7a" stroke="#829dff" stroke-width="3"/>
- <path d="M194 458 L270 500 350 454 376 585 270 647 160 577Z" fill="#101d42" stroke="#4aaeff" stroke-width="4"/>
- <path d="M269 502 L270 645 M195 483 L160 577 M345 479 L376 585" stroke="#73dfff" stroke-width="3" opacity=".8"/>
- <path d="M180 546 L110 645 168 666 225 586 M356 545 L410 633 355 665 315 587" fill="none" stroke="#3c9fff" stroke-width="12"/>
- <path d="M170 178 L122 253 148 351 182 318 M354 174 L407 241 382 331 348 302" fill="none" stroke="#8caaff" stroke-width="10"/>
+<ellipse cx="145" cy="465" rx="260" ry="390" fill="url(#auraGold)"/>
+<ellipse cx="400" cy="460" rx="220" ry="350" fill="url(#blueGlow)"/>
+<ellipse cx="1050" cy="470" rx="230" ry="360" fill="url(#blueGlow)"/>
+<ellipse cx="1300" cy="470" rx="250" ry="390" fill="url(#purpleGlow)"/>
+<!-- Goku-inspired martial arts hero, far left -->
+<g transform="translate(-25 75)" stroke-linejoin="round" stroke-linecap="round">
+ <path d="M20 900 Q38 690 95 620 L155 560 252 568 319 630 Q365 760 365 900Z" fill="#ef6c22" stroke="#ffc16b" stroke-width="5"/>
+ <path d="M110 900 L145 664 203 712 263 650 302 900Z" fill="#f58a2c"/>
+ <path d="M145 495 Q112 402 135 305 L156 223 255 210 302 300 287 434 250 515Z" fill="#e5ad8c" stroke="#ffc4a1" stroke-width="4"/>
+ <path d="M135 307 L96 260 139 267 111 205 168 230 158 161 211 207 233 134 261 205 307 175 292 240 330 232 298 301 266 269 240 291 206 259 178 300Z" fill="#141a27" stroke="#323b53" stroke-width="5"/>
+ <path d="M155 332 L205 342 195 365 157 361Z M231 340 L278 329 272 359 234 367Z" fill="#17223a"/>
+ <path d="M163 348 L193 352 M239 352 L270 342" stroke="#f7d45f" stroke-width="6"/>
+ <ellipse cx="180" cy="353" rx="7" ry="10" fill="#72e8ff"/><ellipse cx="252" cy="350" rx="7" ry="10" fill="#72e8ff"/>
+ <path d="M203 405 Q222 419 241 402" fill="none" stroke="#8e4b4a" stroke-width="4"/>
+ <path d="M151 490 L207 533 275 485 302 616 212 674 119 611Z" fill="#f07827" stroke="#ffbf67" stroke-width="5"/>
+ <path d="M207 534 L212 674" stroke="#ffdf8a" stroke-width="5"/>
+ <path d="M149 504 L96 624 141 653 192 574 M275 505 L329 615 283 649 244 573" fill="none" stroke="#f4a36b" stroke-width="17"/>
+ <path d="M125 635 L172 663 M300 632 L263 663" stroke="#2d8dff" stroke-width="18"/>
 </g>
-<!-- Original anime hero, right -->
-<g transform="translate(900 38)" stroke-linejoin="round" stroke-linecap="round">
- <path d="M40 900 Q40 735 112 610 L180 546 340 548 415 625 Q455 760 470 900Z" fill="#09172f" stroke="#48bfff" stroke-width="4"/>
- <path d="M86 900 Q132 735 191 648 L268 704 350 630 Q405 752 435 900Z" fill="#142c58"/>
- <path d="M153 432 Q123 350 146 250 Q157 145 270 130 Q374 145 392 258 L373 409 343 493 199 495Z" fill="url(#animee-hair)" stroke="#7adfff" stroke-width="4"/>
- <path d="M153 268 Q112 219 139 167 L177 181 168 112 220 153 247 72 278 145 318 88 323 163 374 135 364 199 410 226 375 290 347 253 324 223 285 259 249 221 204 282Z" fill="url(#animee-hair)" stroke="#8beaff" stroke-width="4"/>
- <path d="M194 270 Q211 214 271 214 Q333 217 351 278 L340 368 Q322 417 273 426 Q224 414 207 369Z" fill="#dfbfb5" stroke="#75d7ff" stroke-width="3"/>
- <path d="M202 272 Q228 246 255 270 L249 302 211 301Z" fill="#0c1b37"/>
- <path d="M292 270 Q321 245 344 273 L334 302 298 302Z" fill="#0c1b37"/>
- <path d="M214 285 L245 289 M301 288 L331 284" stroke="#9bf1ff" stroke-width="5"/>
- <ellipse cx="232" cy="290" rx="8" ry="11" fill="#9bf1ff"/><ellipse cx="316" cy="289" rx="8" ry="11" fill="#9bf1ff"/>
- <path d="M260 337 Q276 345 294 333" fill="none" stroke="#9d5b6a" stroke-width="4"/>
- <path d="M198 270 Q209 334 188 388 L159 452 192 472 226 409 218 358" fill="#17386d" stroke="#68d6ff" stroke-width="3"/>
- <path d="M345 269 Q365 335 354 396 L388 458 356 477 326 409 331 353" fill="#17386d" stroke="#68d6ff" stroke-width="3"/>
- <path d="M194 459 L270 500 351 455 378 586 270 648 160 578Z" fill="#0e1d3c" stroke="#4aaeff" stroke-width="4"/>
- <path d="M270 501 L270 645 M195 484 L160 578 M346 480 L378 586" stroke="#8ceaff" stroke-width="3" opacity=".85"/>
- <path d="M178 543 L109 644 167 667 225 587 M357 545 L414 633 357 665 315 588" fill="none" stroke="#2b8fff" stroke-width="12"/>
- <path d="M165 180 L115 253 145 351 182 319 M359 175 L412 244 382 333 350 301" fill="none" stroke="#7fe6ff" stroke-width="10"/>
+<!-- Rimuru-inspired blue-haired slime/fantasy hero -->
+<g transform="translate(300 125)" stroke-linejoin="round" stroke-linecap="round">
+ <path d="M-15 775 Q8 600 60 525 L105 495 188 500 239 548 Q274 665 275 775Z" fill="#173c83" stroke="#5eeaff" stroke-width="4"/>
+ <path d="M20 775 L65 572 124 623 183 570 236 775Z" fill="#58d8ff" opacity=".72"/>
+ <path d="M77 444 Q54 369 68 290 Q83 210 155 198 Q228 212 240 292 L224 405 190 462 113 465Z" fill="url(#rimuruHair)" stroke="#a9f8ff" stroke-width="4"/>
+ <path d="M73 300 Q37 258 78 206 L109 235 111 173 151 214 177 155 198 221 241 190 229 249 260 276 228 315 205 281 176 300 147 273 111 314Z" fill="url(#rimuruHair)" stroke="#c5ffff" stroke-width="4"/>
+ <path d="M101 301 Q120 273 149 295 L146 326 108 326Z M170 295 Q202 273 220 300 L210 328 174 326Z" fill="#14306b"/>
+ <path d="M108 312 L140 315 M177 314 L207 311" stroke="#fff" stroke-width="5"/>
+ <ellipse cx="125" cy="315" rx="7" ry="10" fill="#b6ffff"/><ellipse cx="193" cy="314" rx="7" ry="10" fill="#b6ffff"/>
+ <path d="M146 357 Q160 368 174 355" fill="none" stroke="#4387cc" stroke-width="4"/>
+ <path d="M104 443 L70 535 120 569 154 502 191 568 237 535 207 443Z" fill="#e8faff" stroke="#76eaff" stroke-width="4"/>
+ <path d="M105 466 L154 510 205 465" fill="none" stroke="#67cfff" stroke-width="5"/>
+ <path d="M70 530 L26 647 69 663 120 568 M237 530 L278 645 236 665 191 568" fill="none" stroke="#c2f7ff" stroke-width="15"/>
 </g>
-<!-- atmospheric light accents -->
-<g fill="#a7eaff">
- <circle cx="90" cy="160" r="3"/><circle cx="455" cy="250" r="2"/><circle cx="515" cy="610" r="3"/>
- <circle cx="845" cy="160" r="2"/><circle cx="1310" cy="230" r="3"/><circle cx="1380" cy="570" r="2"/>
+<!-- Fate-inspired dark fantasy swordsman -->
+<g transform="translate(875 112)" stroke-linejoin="round" stroke-linecap="round">
+ <path d="M30 790 Q45 626 105 546 L155 500 250 508 304 565 Q345 685 346 790Z" fill="url(#darkCoat)" stroke="#4abfff" stroke-width="4"/>
+ <path d="M94 790 L132 577 187 626 244 572 291 790Z" fill="#111a30"/>
+ <path d="M133 456 Q105 375 127 288 Q143 211 218 201 Q286 214 300 290 L286 411 252 472 160 476Z" fill="#1a2237" stroke="#5c80bf" stroke-width="4"/>
+ <path d="M127 294 Q93 247 130 208 L160 230 159 173 199 213 222 153 242 215 286 190 278 246 314 271 285 312 255 281 225 300 192 274 158 313Z" fill="#121827" stroke="#45577f" stroke-width="4"/>
+ <path d="M139 308 Q166 283 190 304 L184 332 145 333Z M211 304 Q240 281 270 305 L260 333 218 332Z" fill="#090e1b"/>
+ <path d="M145 317 L179 319 M218 319 L256 315" stroke="#e53c4c" stroke-width="5"/>
+ <ellipse cx="164" cy="320" rx="7" ry="10" fill="#ff394f"/><ellipse cx="239" cy="318" rx="7" ry="10" fill="#ff394f"/>
+ <path d="M187 360 L211 359" stroke="#b87881" stroke-width="4"/>
+ <path d="M135 455 L183 501 246 456 281 579 188 633 98 577Z" fill="#080d1a" stroke="#5c6e9d" stroke-width="4"/>
+ <path d="M183 501 L188 633 M135 470 L98 577 M245 470 L281 579" stroke="#2f8dd7" stroke-width="4"/>
+ <path d="M104 543 L58 637 100 658 147 575 M267 544 L312 638 270 658 229 575" fill="none" stroke="#243c67" stroke-width="17"/>
+ <path d="M310 650 L383 395" stroke="#9acfff" stroke-width="12"/><path d="M300 650 L373 395" stroke="#e5f7ff" stroke-width="4"/>
+</g>
+<!-- Shadow-monarch-inspired black-haired hero, far right -->
+<g transform="translate(1130 80)" stroke-linejoin="round" stroke-linecap="round">
+ <path d="M-10 820 Q12 635 66 563 L116 516 216 522 277 577 Q319 700 321 820Z" fill="#070c1a" stroke="#8159ff" stroke-width="4"/>
+ <path d="M34 820 L80 590 138 636 199 582 255 820Z" fill="url(#darkCoat)"/>
+ <path d="M83 468 Q59 384 78 299 Q93 218 169 207 Q243 219 257 299 L243 420 207 480 111 483Z" fill="#d6b7ad" stroke="#7061a7" stroke-width="4"/>
+ <path d="M78 304 Q48 260 87 218 L115 240 113 177 154 218 174 159 194 221 239 187 232 247 267 275 238 315 209 282 179 300 147 274 111 314Z" fill="#101523" stroke="#414a71" stroke-width="4"/>
+ <path d="M91 313 Q119 287 143 308 L138 337 100 337Z M165 308 Q194 286 223 310 L213 338 171 337Z" fill="#11152b"/>
+ <path d="M99 323 L132 322 M173 322 L209 321" stroke="#ad8cff" stroke-width="5"/>
+ <ellipse cx="117" cy="323" rx="7" ry="10" fill="#b59aff"/><ellipse cx="192" cy="322" rx="7" ry="10" fill="#b59aff"/>
+ <path d="M140 365 Q157 374 175 362" fill="none" stroke="#925f77" stroke-width="4"/>
+ <path d="M94 468 L142 512 209 465 242 589 151 643 58 588Z" fill="#080b16" stroke="#7e53f3" stroke-width="4"/>
+ <path d="M142 512 L151 643 M95 481 L58 588 M208 479 L242 589" stroke="#5630a7" stroke-width="4"/>
+ <path d="M65 548 L18 650 62 672 107 580 M226 548 L275 649 232 671 190 580" fill="none" stroke="#17172e" stroke-width="17"/>
+ <path d="M15 565 Q-25 520 4 476 M-1 635 Q-40 600 -16 560 M275 495 Q319 459 307 419" fill="none" stroke="#8a4cff" stroke-width="7" opacity=".8"/>
+</g>
+<!-- central negative space remains clear for website content -->
+<g fill="#a9eaff" opacity=".85">
+ <circle cx="530" cy="170" r="3"/><circle cx="620" cy="300" r="2"/><circle cx="760" cy="190" r="2"/>
+ <circle cx="780" cy="620" r="3"/><circle cx="690" cy="735" r="2"/><circle cx="845" cy="360" r="2"/>
+ <circle cx="455" cy="730" r="2"/><circle cx="1010" cy="170" r="3"/>
 </g>
 </svg>
 </div>

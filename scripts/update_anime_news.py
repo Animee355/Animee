@@ -159,7 +159,7 @@ def update_rankings():
     if successful:
         result["source"] = "MyAnimeList data via Jikan API"
         result["source_url"] = "https://docs.jikan.moe/usage/top/anime/"
-        RANKINGS_OUTPUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+        RANKINGS_OUTPUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print("Saved anime rankings to " + str(RANKINGS_OUTPUT))
     else:
         print("No anime ranking endpoint responded; preserving existing rankings.", file=sys.stderr)

@@ -24,12 +24,12 @@ jobs:
         run: python scripts/update_anime_news.py
       - name: Publish updated news index
         run: |
-          if git diff --quiet -- anime-news.json; then
+          if git diff --quiet -- anime-news.json anime-top10.json; then
             echo "No news changes to publish."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add anime-news.json
-          git commit -m "Refresh Animee anime news feed"
+          git add anime-news.json anime-top10.json
+          git commit -m "Refresh Animee news and top anime rankings"
           git push

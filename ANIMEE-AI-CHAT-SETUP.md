@@ -24,4 +24,4 @@ The function is public so visitors can ask questions without signing in. It vali
 - `supabase/config.toml` — function JWT setting
 - `pwa.js` — floating chat UI shared across site pages
 
-The AI answers general questions and anime questions, but can make mistakes. It does not automatically have live web search.
+The AI endpoint is configured to use OpenAI's hosted web search tool for factual questions and return clickable source links when sources are available. Search results cover relevant indexed and accessible pages—not every website on the internet—and citations should be checked for important claims. Search availability and model/API usage may incur costs. The AI can still make mistakes, so it should never promise perfect accuracy.

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Animee — Where Anime Comes to Life</title>
+<meta name="description" content="Animee — where anime comes to life. Watch featured anime clips and follow the latest posts.">
+<style>
+:root{--bg:#08090f;--panel:#121520;--panel2:#191d2b;--red:#ff202b;--cyan:#00c9f2;--gold:#ffd21c;--text:#f7f7fb;--muted:#aab0c2}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#20121a 0,transparent 35%),radial-gradient(ellipse at 90% 15%,#09202b 0,transparent 32%),var(--bg);color:var(--text);font:16px/1.5 system-ui,Segoe UI,Arial,sans-serif}
+header{max-width:1200px;margin:auto;padding:18px 20px 0}.banner{width:100%;display:block;border-radius:16px;border:1px solid #292c38;box-shadow:0 10px 38px #0008}
+nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:16px 0}nav a,.btn{color:white;text-decoration:none;border:1px solid #343949;background:#151925;border-radius:999px;padding:9px 14px;cursor:pointer}nav a:hover,.btn:hover{border-color:var(--cyan)}
+nav .spacer{flex:1}.page{max-width:1200px;margin:auto;padding:0 20px 50px}.hero{padding:26px 0 20px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}.hero h1{font-size:clamp(28px,4vw,48px);line-height:1.08;margin:0 0 8px}.gradient{background:linear-gradient(90deg,var(--red),var(--gold),var(--cyan));color:transparent;background-clip:text}.hero p{color:var(--muted);margin:0}.tag{display:inline-block;color:var(--gold);font-weight:800;letter-spacing:.12em;font-size:12px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:20px 0 12px}.section-title h2{margin:0;font-size:22px}.section-title small{color:var(--muted)}.filters{display:flex;gap:8px;flex-wrap:wrap}.filters button{border:0;background:#252a3a;color:#d9deee;border-radius:8px;padding:8px 12px;cursor:pointer}.filters button.active{background:var(--red);color:white}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card,.sidebox{background:linear-gradient(145deg,#171a27,#10121b);border:1px solid #292d3c;border-radius:14px;overflow:hidden}.card{padding:14px}.card h3{margin:0 0 5px;font-size:18px}.card p{color:var(--muted);margin:0 0 12px;overflow-wrap:anywhere}.embed{width:100%;min-height:220px;border:0;border-radius:10px;background:#05060a}.postmeta{display:flex;justify-content:space-between;gap:8px;color:#939bad;font-size:12px;margin-top:10px}.sidebox{padding:16px;margin:20px 0}.sidebox h3{margin:0 0 8px}.sidebox p{color:var(--muted);font-size:14px}.follow{display:block;text-align:center;background:linear-gradient(90deg,#1877f2,#0754bc);padding:12px;border-radius:10px;text-decoration:none;color:white;font-weight:800}.empty{color:var(--muted);padding:24px;border:1px dashed #343949;border-radius:12px;text-align:center;grid-column:1/-1}
+.admin{display:none;margin-top:22px;padding:18px;border:1px solid #454b61;border-radius:14px;background:#111521}.admin.show{display:block}.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.admin label{display:block;font-size:13px;color:#c4cada;margin-bottom:5px}.admin input,.admin textarea,.admin select{width:100%;padding:10px;background:#080a11;border:1px solid #343949;border-radius:8px;color:white}.admin textarea{min-height:78px;resize:vertical}.admin .wide{grid-column:1/-1}.warn{border-left:3px solid var(--gold);padding:10px 12px;background:#2a2513;color:#f4e7b2;border-radius:6px;font-size:13px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.primary{background:var(--red);border-color:var(--red)}footer{text-align:center;color:#858b9d;padding:24px;font-size:13px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.admin-grid{grid-template-columns:1fr}.admin .wide{grid-column:auto}.embed{min-height:190px}}
+</style>
+</head>
+<body>
+<header>
+<img class="banner" src="assets/animee-banner.jpg" alt="Animee — Where Anime Comes to Life banner">
+<nav><a href="#latest">Latest posts</a><a href="#history">Post history</a><a href="#about">About Animee</a><span class="spacer"></span><button class="btn" id="adminToggle">Admin sign in</button></nav>
+</header>
+<div class="page">
+<section class="hero"><div><span class="tag">WELCOME TO ANIMEE</span><h1>Where <span class="gradient">Anime Comes to Life!</span></h1><p>Anime moments, fantasy worlds, and the latest posts — all in one place.</p></div><a class="follow" href="https://www.facebook.com/animeeeeee/" target="_blank" rel="noopener">Follow Animee on Facebook ↗</a></section>
+<div class="layout"><main>
+<section id="latest"><div class="section-title"><h2>⚡ Latest posts</h2><small id="count">0 posts</small></div><div class="filters"><button class="active" data-filter="all">All</button><button data-filter="video">Videos</button><button data-filter="photo">Photos</button><button data-filter="facebook">Facebook Reels</button></div><div class="cards" id="posts"></div></section>
+<section id="history"><div class="section-title"><h2>🗂 Post history</h2><small>Newest first</small></div><div id="historyList" class="cards"></div></section>
+<section id="admin" class="admin"><h2>Admin studio</h2><p class="warn">Prototype only: posts are stored in this browser, not synced live to Facebook or shared across devices. Do not use this client-side demo to store a real admin password or Facebook token.</p>
+<div class="admin-grid">
+<div><label for="title">Post title</label><input id="title" placeholder="e.g. Full Episode 1"></div>
+<div><label for="kind">Post type</label><select id="kind"><option value="video">Video from device</option><option value="photo">Photo from device</option><option value="facebook">Public Facebook Reel/post URL</option></select></div>
+<div class="wide" id="fileWrap"><label for="file">Choose video or photo</label><input type="file" id="file" accept="video/*,image/*"></div>
+<div class="wide" id="urlWrap" hidden><label for="fburl">Public Facebook Reel or post URL</label><input id="fburl" placeholder="https://www.facebook.com/reel/..."></div>
+<div class="wide"><label for="caption">Caption / description</label><textarea id="caption" placeholder="Write a short description..."></textarea></div>
+</div><div class="actions"><button class="btn primary" id="publish">Add to website</button><button class="btn" id="clear">Clear form</button><button class="btn" id="export">Export post list (JSON)</button><label class="btn" for="importFile">Import post list</label><input id="importFile" type="file" accept="application/json" hidden></div>
+<p style="color:#aab0c2;font-size:13px">To remove a post from this demo, use its Delete button. Uploaded media is stored locally in this browser only and may be lost if browser data is cleared.</p>
+</section>
+</main><aside>
+<div class="sidebox"><h3>🌟 Follow Animee</h3><p>Join the community and catch new anime posts on our official Facebook page.</p><a class="follow" href="https://www.facebook.com/animeeeeee/" target="_blank" rel="noopener">Open Facebook Page</a></div>
+<div class="sidebox" id="about"><h3>🎬 About this website</h3><p>A fan community hub for Animee. Facebook posts can be embedded using their public URL. Viewing and commenting on embedded Facebook content may require visitors to sign in to Facebook.</p></div>
+<div class="sidebox"><h3>💬 Comments</h3><p>For Facebook posts, visitors can interact through Facebook's own embed when supported. This demo does not provide a shared, cross-device comment database.</p></div>
+</aside></div>
+</div>
+<footer>© <span id="year"></span> Animee · Where Anime Comes to Life!<br>Fan site. Anime and video rights belong to their respective owners.</footer>
+<script>
+const $=s=>document.querySelector(s); let posts=[];
+const storageKey='animee_demo_posts_v1';
+function load(){try{posts=JSON.parse(localStorage.getItem(storageKey)||'[]')}catch{posts=[]}render()}
+function save(){try{localStorage.setItem(storageKey,JSON.stringify(posts))}catch(e){alert('Browser storage is full. Try shorter/smaller media or export your post list.')}render()}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function fbEmbed(url){let clean=url.trim(); if(!/^https:\/\/(www\.)?facebook\.com\//i.test(clean))return ''; return 'https://www.facebook.com/plugins/video.php?href='+encodeURIComponent(clean)+'&show_text=true&width=500'}
+function card(p,history=false){let media='';if(p.kind==='facebook'){const src=fbEmbed(p.url||'');media=src?`<iframe class="embed" src="${src}" title="Facebook video embed" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe><p><a href="${esc(p.url)}" target="_blank" rel="noopener">Open original Facebook post ↗</a></p>`:`<p>Facebook URL unavailable. <a href="${esc(p.url)}" target="_blank" rel="noopener">Open post ↗</a></p>`}
+else if(p.data&&p.kind==='photo')media=`<img class="embed" style="object-fit:contain" src="${p.data}" alt="${esc(p.title)}">`;
+else if(p.data&&p.kind==='video')media=`<video class="embed" controls playsinline preload="metadata" src="${p.data}"></video>`;
+else media='<p>Media preview unavailable in this browser.</p>';
+return `<article class="card" data-kind="${p.kind}">${media}<h3>${esc(p.title||'Untitled post')}</h3><p>${esc(p.caption||'')}</p><div class="postmeta"><span>${esc(p.kind.toUpperCase())}</span><span>${esc(p.date||'')}</span></div>${history?`<div class="actions"><button class="btn" onclick="delPost('${p.id}')">Delete</button></div>`:''}</article>`}
+function render(){const f=document.querySelector('.filters button.active')?.dataset.filter||'all';const latest=posts.filter(p=>f==='all'||p.kind===f);$('#posts').innerHTML=latest.length?latest.slice().reverse().map(p=>card(p,false)).join(''):'<div class="empty">No posts yet. Admin can add a video, photo, or public Facebook link.</div>';$('#historyList').innerHTML=posts.length?posts.slice().reverse().map(p=>card(p,true)).join(''):'<div class="empty">Your post history will appear here.</div>';$('#count').textContent=posts.length+' post'+(posts.length===1?'':'s')}
+window.delPost=id=>{posts=posts.filter(p=>p.id!==id);save()};
+$('#adminToggle').onclick=()=>{const el=$('#admin');el.classList.toggle('show');if(el.classList.contains('show'))el.scrollIntoView({behavior:'smooth'})};
+$('#kind').onchange=()=>{const k=$('#kind').value;$('#urlWrap').hidden=k!=='facebook';$('#fileWrap').hidden=k==='facebook';$('#file').accept=k==='photo'?'image/*':k==='video'?'video/*':'image/*,video/*'};
+document.querySelectorAll('.filters button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters button').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});
+$('#publish').onclick=()=>{const kind=$('#kind').value,file=$('#file').files[0],url=$('#fburl').value.trim();if(kind==='facebook'&&!url){alert('Paste a public Facebook URL first.');return}if(kind!=='facebook'&&!file){alert('Choose a video or photo from your device.');return}if(kind==='facebook'&&!/^https:\/\/(www\.)?facebook\.com\//i.test(url)){alert('Please use a Facebook URL beginning with https://www.facebook.com/');return}
+const add=data=>{posts.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),title:$('#title').value||'Animee update',caption:$('#caption').value,kind,url:kind==='facebook'?url:'',data,date:new Date().toLocaleString()});save();$('#title').value='';$('#caption').value='';$('#fburl').value='';$('#file').value='';alert('Added to this browser’s demo website. It has NOT been posted to Facebook.')};
+if(kind==='facebook')add('');else{if(file.size>20*1024*1024){alert('For this browser-only demo, choose a file under 20 MB. A real hosted site needs server/cloud storage.');return}const reader=new FileReader();reader.onload=()=>add(reader.result);reader.readAsDataURL(file)}};
+$('#clear').onclick=()=>{$('#title').value='';$('#caption').value='';$('#fburl').value='';$('#file').value=''};
+$('#export').onclick=()=>{const blob=new Blob([JSON.stringify(posts.map(({data,...p})=>p),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='animee-post-list.json';a.click();URL.revokeObjectURL(a.href)};
+$('#importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const items=JSON.parse(r.result);if(Array.isArray(items)){posts=items;save();alert('Imported post list. Media files are not included in JSON exports.')}else alert('Invalid JSON list')}catch{alert('Could not read JSON file')}};r.readAsText(f)};
+$('#year').textContent=new Date().getFullYear();load();
+</script>
+</body></html>

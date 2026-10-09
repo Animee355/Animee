@@ -386,7 +386,6 @@ footer{color:#173b5b!important}
 <button class="active" data-filter="all" type="button">All</button>
 <button data-filter="video" type="button">Videos</button>
 <button data-filter="photo" type="button">Photos</button>
-<button data-filter="facebook" type="button">Facebook Reels</button>
 </div>
 <div class="cards" id="posts"></div>
 </section>
@@ -432,17 +431,12 @@ footer{color:#173b5b!important}
 <select id="kind">
 <option value="video">Video from device</option>
 <option value="photo">Photo from device</option>
-<option value="facebook">Public Facebook Reel/post URL</option>
 </select>
 </div>
 <div class="wide" id="fileWrap">
 <label for="file">Choose video or photo</label>
 <input type="file" id="file" accept="video/*">
 <p id="fileHelp" style="font-size:12px;color:#aab0c2">Choose a file from your device. Large uploads may be limited by your Supabase Storage settings.</p>
-</div>
-<div class="wide" id="urlWrap" hidden>
-<label for="fburl">Public Facebook Reel or post URL</label>
-<input id="fburl" type="url" placeholder="https://www.facebook.com/reel/...">
 </div>
 <div class="wide">
 <label for="caption">Caption / description</label>
@@ -471,7 +465,7 @@ footer{color:#173b5b!important}
 </div>
 <div class="sidebox" id="about">
 <h3>🎬 About this website</h3>
-<p>A fan community hub for Animee. Public Facebook posts may be embedded using their URL. Viewing some Facebook content may require signing in to Facebook.</p>
+<p>A fan community hub for Animee with original updates, community discussions, photos, and authorized media. Visit our official social channels for more.</p>
 </div>
 <div class="sidebox">
 <h3>💬 Website comments</h3>
@@ -537,13 +531,6 @@ function formatDate(value) {
   return Number.isNaN(date.getTime()) ? '' : date.toLocaleString();
 }
 
-function facebookEmbed(url = '') {
-  const clean = String(url).trim();
-  if (!/^https:\/\/(www\.)?facebook\.com\//i.test(clean)) return '';
-  return 'https://www.facebook.com/plugins/video.php?href=' +
-    encodeURIComponent(clean) + '&show_text=true&width=500';
-}
-
 function commentsMarkup(post) {
   const postId = String(post.id);
   const items = websiteComments.filter(comment => String(comment.post_id) === postId);
@@ -567,13 +554,7 @@ function card(post, history = false) {
   const kind = displayKind(post);
   let media = '';
 
-  if (kind === 'facebook') {
-    const src = facebookEmbed(post.facebook_url || '');
-    media = src
-      ? `<iframe class="embed" src="${esc(src)}" title="Facebook post embed" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
-         <p><a href="${esc(post.facebook_url || '')}" target="_blank" rel="noopener noreferrer">Open original Facebook post ↗</a></p>`
-      : `<p><a href="${esc(post.facebook_url || '')}" target="_blank" rel="noopener noreferrer">Open Facebook post ↗</a></p>`;
-  } else if (kind === 'photo' && post.media_url) {
+  if (kind === 'photo' && post.media_url) {
     media = `<img class="embed" style="object-fit:contain" src="${esc(post.media_url)}" alt="${esc(post.title || 'Animee photo')}" loading="lazy">`;
   } else if (kind === 'video' && post.media_url) {
     media = `<video class="embed" controls playsinline preload="metadata" src="${esc(post.media_url)}"></video>`;
@@ -605,7 +586,9 @@ function card(post, history = false) {
 
 function render() {
   const activeFilter = document.querySelector('.filters button.active')?.dataset.filter || 'all';
-  const visiblePosts = posts.filter(post => {
+  // Legacy Facebook URL posts remain in the database but are not embedded or displayed.
+  const safePosts = posts.filter(post => displayKind(post) !== 'facebook');
+  const visiblePosts = safePosts.filter(post => {
     return activeFilter === 'all' || displayKind(post) === activeFilter;
   });
 
@@ -613,11 +596,11 @@ function render() {
     ? visiblePosts.map(post => card(post)).join('')
     : '<div class="empty">No published posts yet. Please check again soon.</div>';
 
-  $('#historyList').innerHTML = posts.length
-    ? posts.map(post => card(post, true)).join('')
+  $('#historyList').innerHTML = safePosts.length
+    ? safePosts.map(post => card(post, true)).join('')
     : '<div class="empty">Your post history will appear here.</div>';
 
-  $('#count').textContent = posts.length + (posts.length === 1 ? ' post' : ' posts');
+  $('#count').textContent = safePosts.length + (safePosts.length === 1 ? ' post' : ' posts');
 }
 
 function updateAdminUI() {
@@ -648,7 +631,7 @@ async function loadWebsiteComments() {
     return;
   }
 
-  const visiblePostIds = new Set(posts.filter(post => post.status === 'published').map(post => String(post.id)));
+  const visiblePostIds = new Set(posts.filter(post => post.status === 'published' && displayKind(post) !== 'facebook').map(post => String(post.id)));
   websiteComments = (data || []).filter(comment => visiblePostIds.has(String(comment.post_id)));
   const ids = [...new Set(websiteComments.map(comment => comment.author_id).filter(Boolean))];
   commentProfiles = new Map();
@@ -689,11 +672,9 @@ function resetForm() {
   editingId = null;
   $('#title').value = '';
   $('#caption').value = '';
-  $('#fburl').value = '';
   $('#file').value = '';
   $('#kind').value = 'video';
   $('#fileWrap').hidden = false;
-  $('#urlWrap').hidden = true;
   $('#file').accept = 'video/*';
   $('#publish').textContent = 'Publish on website';
   $('#cancelEdit').hidden = true;
@@ -702,8 +683,7 @@ function resetForm() {
 
 function updateKindFields() {
   const kind = $('#kind').value;
-  $('#urlWrap').hidden = kind !== 'facebook';
-  $('#fileWrap').hidden = kind === 'facebook';
+  $('#fileWrap').hidden = false;
   $('#file').accept = kind === 'photo' ? 'image/*' : 'video/*';
 }
 
@@ -812,13 +792,7 @@ $('#publish').addEventListener('click', async () => {
   const file = $('#file').files[0];
   const title = $('#title').value.trim() || 'Animee update';
   const caption = $('#caption').value.trim();
-  const facebookUrl = $('#fburl').value.trim();
   const existing = editingId ? posts.find(post => Number(post.id) === Number(editingId)) : null;
-
-  if (kind === 'facebook' && !/^https:\/\/(www\.)?facebook\.com\//i.test(facebookUrl)) {
-    setEditorMessage('Enter a valid Facebook URL beginning with https://www.facebook.com/.');
-    return;
-  }
 
   if (kind === 'photo' && file && !file.type.startsWith('image/')) {
     setEditorMessage('Please choose an image file.');
@@ -856,7 +830,7 @@ $('#publish').addEventListener('click', async () => {
       caption,
       media_type: newMediaType,
       media_url: mediaUrl,
-      facebook_url: kind === 'facebook' ? facebookUrl : null,
+      facebook_url: null,
       status: 'published',
       owner_id: OWNER_ID,
       updated_at: new Date().toISOString()
@@ -903,13 +877,12 @@ window.editPost = function(id) {
   if (!isOwner()) return;
 
   const post = posts.find(item => Number(item.id) === Number(id));
-  if (!post) return;
+  if (!post || displayKind(post) === 'facebook') return;
 
   editingId = post.id;
   $('#title').value = post.title || '';
   $('#caption').value = post.caption || '';
   $('#kind').value = displayKind(post);
-  $('#fburl').value = post.facebook_url || '';
   $('#file').value = '';
   updateKindFields();
 

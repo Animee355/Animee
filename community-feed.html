@@ -238,5 +238,4 @@ $('#posts').addEventListener('click',async e=>{const b=e.target.closest('[data-a
 db.auth.onAuthStateChange(async(_e,s)=>{user=s?.user||null;$('#auth-nav').textContent=user?'Sign out':'Sign in';$('#composer-hint').textContent=user?'Posting as your Animee member account.':'Sign in with your Animee member account to publish and comment.';await refresh();});
 (async()=>{await loadUser();await refresh();})();
 </script><script src="./anime-news.js" defer></script>
-<script src="./animee-ai-chat.js" defer></script>
 </body></html>

@@ -34,12 +34,12 @@
   panel.setAttribute("aria-labelledby", "animee-news-title");
   panel.innerHTML = `
     <div class="an-head">
-      <div><h2 class="an-title" id="animee-news-title">📰 Animee Anime News Live</h2><p class="an-sub">Announcements, anime creators, studios, release dates and industry updates.</p></div>
+      <div><h2 class="an-title" id="animee-news-title">📰 Latest Anime News</h2><p class="an-sub">Announcements, anime creators, studios, release dates and industry updates.</p></div>
       <div class="an-actions">
         <select id="animee-news-filter" aria-label="Filter anime news">
-          <option value="all">All news</option>
+          <option value="all">Latest Anime News</option>
           <option value="announcement">Announcements & releases</option>
-          <option value="creator">Creators & industry</option>
+          <option value="creator">Creators & Industry Updates</option>
         </select>
         <button id="animee-news-refresh" type="button">↻ Refresh</button>
         <button id="animee-news-toggle" type="button" aria-expanded="true">Hide news</button>
@@ -88,7 +88,7 @@
     }).join("");
     if (!visible.length) {
       stateEl.hidden = false;
-      stateEl.textContent = items.length ? "No stories match this filter yet. Try All news." : "The news feed is being prepared. Please check back shortly.";
+      stateEl.textContent = items.length ? "No stories match this filter yet. Try Latest Anime News." : "The news feed is being prepared. Please check back shortly.";
     } else {
       stateEl.hidden = true;
     }

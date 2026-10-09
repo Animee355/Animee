@@ -53,6 +53,17 @@ nav .spacer{flex:1}
 .primary{background:var(--red);border-color:var(--red)}
 .status{font-size:13px;color:var(--cyan);overflow-wrap:anywhere}
 footer{text-align:center;color:#858b9d;padding:24px;font-size:13px}
+.website-comments{border-top:1px solid rgba(117,221,255,.18);margin-top:14px;padding-top:12px}
+.website-comments h4{margin:0 0 10px;font-size:15px;color:#dff6ff}
+.website-comment{padding:9px 0;border-bottom:1px solid rgba(117,221,255,.12);overflow-wrap:anywhere}
+.website-comment strong{color:#f4f8ff}
+.website-comment p{margin:4px 0 0;white-space:pre-wrap}
+.website-comment small{color:#8fa9c5}
+.website-comment-form{display:grid;gap:8px;margin-top:12px}
+.website-comment-form textarea{width:100%;min-height:64px;resize:vertical;padding:10px;background:#061321;color:white;border:1px solid #2a4968;border-radius:10px;font:inherit}
+.website-comment-form button{justify-self:start}
+.comment-status{font-size:13px;color:var(--cyan);margin:8px 0 0;overflow-wrap:anywhere}
+.comment-status.error{color:#ff9eaf}
 [hidden]{display:none!important}
 @media(max-width:850px){.layout{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.admin-grid{grid-template-columns:1fr}.admin .wide{grid-column:auto}.embed{min-height:190px}}
 
@@ -284,8 +295,9 @@ body>*:not(.animee-character-art){position:relative;z-index:1}
 <p>A fan community hub for Animee. Public Facebook posts may be embedded using their URL. Viewing some Facebook content may require signing in to Facebook.</p>
 </div>
 <div class="sidebox">
-<h3>💬 Comments</h3>
-<p>Visitors can interact with Facebook content through Facebook when supported. This website does not yet have its own shared comment system.</p>
+<h3>💬 Website comments</h3>
+<p>Join the conversation right here on Animee. Sign in with your Animee member account to comment on published posts and read what other fans think.</p>
+<a class="follow" href="community.html">Join / Sign in to Animee</a>
 </div>
 </aside>
 </div>
@@ -311,6 +323,9 @@ const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let posts = [];
 let currentUser = null;
 let editingId = null;
+let websiteComments = [];
+let commentProfiles = new Map();
+let commentsLoadError = '';
 
 function esc(value = '') {
   return String(value).replace(/[&<>"']/g, character => ({
@@ -342,6 +357,25 @@ function facebookEmbed(url = '') {
   if (!/^https:\/\/(www\.)?facebook\.com\//i.test(clean)) return '';
   return 'https://www.facebook.com/plugins/video.php?href=' +
     encodeURIComponent(clean) + '&show_text=true&width=500';
+}
+
+function commentsMarkup(post) {
+  const postId = String(post.id);
+  const items = websiteComments.filter(comment => String(comment.post_id) === postId);
+  if (commentsLoadError) {
+    return `<section class="website-comments"><h4>💬 Comments</h4><p class="comment-status error">${esc(commentsLoadError)}</p></section>`;
+  }
+  const list = items.length
+    ? items.map(comment => {
+        const profile = commentProfiles.get(comment.author_id) || {};
+        const name = profile.display_name || profile.username || 'Animee Member';
+        return `<div class="website-comment"><strong>${esc(name)}</strong> <small>· ${esc(formatDate(comment.created_at))}</small><p>${esc(comment.body)}</p></div>`;
+      }).join('')
+    : '<p style="color:var(--muted);font-size:14px">No comments yet. Be the first to join the conversation! 💙</p>';
+  const form = currentUser
+    ? `<form class="website-comment-form" data-post-id="${esc(postId)}"><textarea name="comment" maxlength="800" required placeholder="Share your thoughts about this post…"></textarea><button class="btn primary" type="submit">Post comment</button><p class="comment-status" data-comment-status="${esc(postId)}" role="status"></p></form>`
+    : '<p style="color:var(--muted);font-size:14px"><a href="community.html">Sign in or join Animee</a> to leave a comment.</p>';
+  return `<section class="website-comments" aria-label="Website comments"><h4>💬 Comments (${items.length})</h4>${list}${form}</section>`;
 }
 
 function card(post, history = false) {
@@ -380,6 +414,7 @@ function card(post, history = false) {
       <span>${esc(formatDate(post.created_at))}</span>
     </div>
     ${ownerActions}
+    ${history ? '' : commentsMarkup(post)}
   </article>`;
 }
 
@@ -407,8 +442,39 @@ function updateAdminUI() {
   $('#editorPanel').hidden = !owner;
   $('#authMessage').textContent = owner
     ? 'Signed in with the authorized owner account.'
-    : 'Sign in to manage Animee posts.';
+    : currentUser
+      ? 'Signed in as a community member. Only the owner can manage website posts.'
+      : 'Sign in to manage Animee posts.';
   render();
+}
+
+async function loadWebsiteComments() {
+  commentsLoadError = '';
+  const { data, error } = await db
+    .from('post_comments')
+    .select('id,post_id,author_id,body,created_at')
+    .order('created_at', { ascending: true })
+    .limit(2000);
+
+  if (error) {
+    websiteComments = [];
+    commentsLoadError = 'Comment system setup required. Run supabase-website-comments.sql in the Supabase SQL Editor.';
+    console.warn('Could not load website comments:', error.message);
+    return;
+  }
+
+  const visiblePostIds = new Set(posts.filter(post => post.status === 'published').map(post => String(post.id)));
+  websiteComments = (data || []).filter(comment => visiblePostIds.has(String(comment.post_id)));
+  const ids = [...new Set(websiteComments.map(comment => comment.author_id).filter(Boolean))];
+  commentProfiles = new Map();
+  if (currentUser?.id) ids.push(currentUser.id);
+  const uniqueIds = [...new Set(ids)];
+  if (uniqueIds.length) {
+    const profilesResult = await db.from('profiles').select('id,username,display_name').in('id', uniqueIds);
+    if (!profilesResult.error) {
+      (profilesResult.data || []).forEach(profile => commentProfiles.set(profile.id, profile));
+    }
+  }
 }
 
 async function loadPosts() {
@@ -426,6 +492,7 @@ async function loadPosts() {
   }
 
   posts = data || [];
+  await loadWebsiteComments();
   render();
 }
 
@@ -515,10 +582,10 @@ $('#signIn').addEventListener('click', async () => {
   }
 
   if (!data.user || data.user.id !== OWNER_ID) {
-    await db.auth.signOut();
-    currentUser = null;
+    currentUser = data.user || null;
     updateAdminUI();
-    $('#authMessage').textContent = 'Access denied. This account is not the authorized Animee owner.';
+    $('#authMessage').textContent = 'You are signed in, but only the Animee owner account can manage website posts.';
+    await loadPosts();
     return;
   }
 
@@ -691,6 +758,40 @@ window.deletePost = async function(id) {
   await loadPosts();
 };
 
+$('#posts').addEventListener('submit', async event => {
+  const form = event.target.closest('.website-comment-form');
+  if (!form) return;
+  event.preventDefault();
+  if (!currentUser) {
+    const status = form.querySelector('.comment-status');
+    if (status) status.textContent = 'Please sign in to comment.';
+    return;
+  }
+  const field = form.querySelector('textarea[name="comment"]');
+  const body = field.value.trim();
+  if (!body) return;
+  const button = form.querySelector('button[type="submit"]');
+  const status = form.querySelector('.comment-status');
+  button.disabled = true;
+  if (status) { status.className = 'comment-status'; status.textContent = 'Posting comment…'; }
+  const postId = form.dataset.postId;
+  const { data, error } = await db.from('post_comments')
+    .insert({ post_id: Number(postId), author_id: currentUser.id, body })
+    .select('id,post_id,author_id,body,created_at')
+    .single();
+  button.disabled = false;
+  if (error) {
+    if (status) { status.className = 'comment-status error'; status.textContent = 'Could not post comment: ' + error.message; }
+    return;
+  }
+  websiteComments.push(data);
+  if (!commentProfiles.has(currentUser.id)) {
+    const profileResult = await db.from('profiles').select('id,username,display_name').eq('id', currentUser.id).maybeSingle();
+    if (!profileResult.error && profileResult.data) commentProfiles.set(currentUser.id, profileResult.data);
+  }
+  render();
+});
+
 $('#clear').addEventListener('click', resetForm);
 $('#cancelEdit').addEventListener('click', resetForm);
 $('#year').textContent = new Date().getFullYear();
@@ -707,11 +808,6 @@ db.auth.onAuthStateChange((_event, session) => {
   if (error) console.warn('Could not restore sign-in session:', error.message);
 
   currentUser = data?.session?.user || null;
-
-  if (currentUser && currentUser.id !== OWNER_ID) {
-    await db.auth.signOut();
-    currentUser = null;
-  }
 
   updateAdminUI();
   await loadPosts();

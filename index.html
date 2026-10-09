@@ -1,75 +1,611 @@
+
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Animee — Where Anime Comes to Life</title>
-<meta name="description" content="Animee — where anime comes to life. Watch featured anime clips and follow the latest posts.">
+<meta name="description" content="Animee — where anime comes to life. Discover anime posts, photos and videos.">
 <style>
-:root{--bg:#08090f;--panel:#121520;--panel2:#191d2b;--red:#ff202b;--cyan:#00c9f2;--gold:#ffd21c;--text:#f7f7fb;--muted:#aab0c2}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#20121a 0,transparent 35%),radial-gradient(ellipse at 90% 15%,#09202b 0,transparent 32%),var(--bg);color:var(--text);font:16px/1.5 system-ui,Segoe UI,Arial,sans-serif}
-header{max-width:1200px;margin:auto;padding:18px 20px 0}.banner{width:100%;display:block;border-radius:16px;border:1px solid #292c38;box-shadow:0 10px 38px #0008}
-nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:16px 0}nav a,.btn{color:white;text-decoration:none;border:1px solid #343949;background:#151925;border-radius:999px;padding:9px 14px;cursor:pointer}nav a:hover,.btn:hover{border-color:var(--cyan)}
-nav .spacer{flex:1}.page{max-width:1200px;margin:auto;padding:0 20px 50px}.hero{padding:26px 0 20px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}.hero h1{font-size:clamp(28px,4vw,48px);line-height:1.08;margin:0 0 8px}.gradient{background:linear-gradient(90deg,var(--red),var(--gold),var(--cyan));color:transparent;background-clip:text}.hero p{color:var(--muted);margin:0}.tag{display:inline-block;color:var(--gold);font-weight:800;letter-spacing:.12em;font-size:12px}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:20px 0 12px}.section-title h2{margin:0;font-size:22px}.section-title small{color:var(--muted)}.filters{display:flex;gap:8px;flex-wrap:wrap}.filters button{border:0;background:#252a3a;color:#d9deee;border-radius:8px;padding:8px 12px;cursor:pointer}.filters button.active{background:var(--red);color:white}
-.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card,.sidebox{background:linear-gradient(145deg,#171a27,#10121b);border:1px solid #292d3c;border-radius:14px;overflow:hidden}.card{padding:14px}.card h3{margin:0 0 5px;font-size:18px}.card p{color:var(--muted);margin:0 0 12px;overflow-wrap:anywhere}.embed{width:100%;min-height:220px;border:0;border-radius:10px;background:#05060a}.postmeta{display:flex;justify-content:space-between;gap:8px;color:#939bad;font-size:12px;margin-top:10px}.sidebox{padding:16px;margin:20px 0}.sidebox h3{margin:0 0 8px}.sidebox p{color:var(--muted);font-size:14px}.follow{display:block;text-align:center;background:linear-gradient(90deg,#1877f2,#0754bc);padding:12px;border-radius:10px;text-decoration:none;color:white;font-weight:800}.empty{color:var(--muted);padding:24px;border:1px dashed #343949;border-radius:12px;text-align:center;grid-column:1/-1}
-.admin{display:none;margin-top:22px;padding:18px;border:1px solid #454b61;border-radius:14px;background:#111521}.admin.show{display:block}.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.admin label{display:block;font-size:13px;color:#c4cada;margin-bottom:5px}.admin input,.admin textarea,.admin select{width:100%;padding:10px;background:#080a11;border:1px solid #343949;border-radius:8px;color:white}.admin textarea{min-height:78px;resize:vertical}.admin .wide{grid-column:1/-1}.warn{border-left:3px solid var(--gold);padding:10px 12px;background:#2a2513;color:#f4e7b2;border-radius:6px;font-size:13px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.primary{background:var(--red);border-color:var(--red)}footer{text-align:center;color:#858b9d;padding:24px;font-size:13px}
+:root{--bg:#08090f;--panel:#121520;--red:#ff202b;--cyan:#00c9f2;--gold:#ffd21c;--text:#f7f7fb;--muted:#aab0c2}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 15% 0%,#20121a 0,transparent 35%),radial-gradient(ellipse at 90% 15%,#09202b 0,transparent 32%),var(--bg);color:var(--text);font:16px/1.5 system-ui,Segoe UI,Arial,sans-serif}
+header{max-width:1200px;margin:auto;padding:18px 20px 0}
+.banner{width:100%;display:block;border-radius:16px;border:1px solid #292c38;box-shadow:0 10px 38px #0008}
+nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:16px 0}
+nav a,.btn{color:white;text-decoration:none;border:1px solid #343949;background:#151925;border-radius:999px;padding:9px 14px;cursor:pointer}
+nav a:hover,.btn:hover{border-color:var(--cyan)}
+nav .spacer{flex:1}
+.page{max-width:1200px;margin:auto;padding:0 20px 50px}
+.hero{padding:26px 0 20px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.hero h1{font-size:clamp(28px,4vw,48px);line-height:1.08;margin:0 0 8px}
+.gradient{background:linear-gradient(90deg,var(--red),var(--gold),var(--cyan));color:transparent;background-clip:text}
+.hero p{color:var(--muted);margin:0}
+.tag{display:inline-block;color:var(--gold);font-weight:800;letter-spacing:.12em;font-size:12px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:20px 0 12px}
+.section-title h2{margin:0;font-size:22px}
+.section-title small{color:var(--muted)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filters button{border:0;background:#252a3a;color:#d9deee;border-radius:8px;padding:8px 12px;cursor:pointer}
+.filters button.active{background:var(--red);color:white}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card,.sidebox{background:linear-gradient(145deg,#171a27,#10121b);border:1px solid #292d3c;border-radius:14px;overflow:hidden}
+.card{padding:14px;min-width:0}
+.card h3{margin:0 0 5px;font-size:18px;overflow-wrap:anywhere}
+.card p{color:var(--muted);margin:0 0 12px;overflow-wrap:anywhere}
+.embed{width:100%;min-height:220px;border:0;border-radius:10px;background:#05060a}
+.postmeta{display:flex;justify-content:space-between;gap:8px;color:#939bad;font-size:12px;margin-top:10px;flex-wrap:wrap}
+.sidebox{padding:16px;margin:20px 0}
+.sidebox h3{margin:0 0 8px}
+.sidebox p{color:var(--muted);font-size:14px}
+.follow{display:block;text-align:center;background:linear-gradient(90deg,#1877f2,#0754bc);padding:12px;border-radius:10px;text-decoration:none;color:white;font-weight:800}
+.empty{color:var(--muted);padding:24px;border:1px dashed #343949;border-radius:12px;text-align:center;grid-column:1/-1}
+.admin{display:none;margin-top:22px;padding:18px;border:1px solid #454b61;border-radius:14px;background:#111521}
+.admin.show{display:block}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.admin label{display:block;font-size:13px;color:#c4cada;margin-bottom:5px}
+.admin input,.admin textarea,.admin select{width:100%;padding:10px;background:#080a11;border:1px solid #343949;border-radius:8px;color:white}
+.admin textarea{min-height:78px;resize:vertical}
+.admin .wide{grid-column:1/-1}
+.warn{border-left:3px solid var(--gold);padding:10px 12px;background:#2a2513;color:#f4e7b2;border-radius:6px;font-size:13px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.primary{background:var(--red);border-color:var(--red)}
+.status{font-size:13px;color:var(--cyan);overflow-wrap:anywhere}
+footer{text-align:center;color:#858b9d;padding:24px;font-size:13px}
+[hidden]{display:none!important}
 @media(max-width:850px){.layout{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.admin-grid{grid-template-columns:1fr}.admin .wide{grid-column:auto}.embed{min-height:190px}}
 </style>
 </head>
 <body>
 <header>
 <img class="banner" src="assets/animee-banner.jpg" alt="Animee — Where Anime Comes to Life banner">
-<nav><a href="#latest">Latest posts</a><a href="#history">Post history</a><a href="#about">About Animee</a><span class="spacer"></span><button class="btn" id="adminToggle">Admin sign in</button></nav>
+<nav>
+<a href="#latest">Latest posts</a>
+<a href="#history">Post history</a>
+<a href="#about">About Animee</a>
+<span class="spacer"></span>
+<button class="btn" id="adminToggle" type="button">Admin sign in</button>
+</nav>
 </header>
+
 <div class="page">
-<section class="hero"><div><span class="tag">WELCOME TO ANIMEE</span><h1>Where <span class="gradient">Anime Comes to Life!</span></h1><p>Anime moments, fantasy worlds, and the latest posts — all in one place.</p></div><a class="follow" href="https://www.facebook.com/animeeeeee/" target="_blank" rel="noopener">Follow Animee on Facebook ↗</a></section>
-<div class="layout"><main>
-<section id="latest"><div class="section-title"><h2>⚡ Latest posts</h2><small id="count">0 posts</small></div><div class="filters"><button class="active" data-filter="all">All</button><button data-filter="video">Videos</button><button data-filter="photo">Photos</button><button data-filter="facebook">Facebook Reels</button></div><div class="cards" id="posts"></div></section>
-<section id="history"><div class="section-title"><h2>🗂 Post history</h2><small>Newest first</small></div><div id="historyList" class="cards"></div></section>
-<section id="admin" class="admin"><h2>Admin studio</h2><p class="warn">Prototype only: posts are stored in this browser, not synced live to Facebook or shared across devices. Do not use this client-side demo to store a real admin password or Facebook token.</p>
-<div class="admin-grid">
-<div><label for="title">Post title</label><input id="title" placeholder="e.g. Full Episode 1"></div>
-<div><label for="kind">Post type</label><select id="kind"><option value="video">Video from device</option><option value="photo">Photo from device</option><option value="facebook">Public Facebook Reel/post URL</option></select></div>
-<div class="wide" id="fileWrap"><label for="file">Choose video or photo</label><input type="file" id="file" accept="video/*,image/*"></div>
-<div class="wide" id="urlWrap" hidden><label for="fburl">Public Facebook Reel or post URL</label><input id="fburl" placeholder="https://www.facebook.com/reel/..."></div>
-<div class="wide"><label for="caption">Caption / description</label><textarea id="caption" placeholder="Write a short description..."></textarea></div>
-</div><div class="actions"><button class="btn primary" id="publish">Add to website</button><button class="btn" id="clear">Clear form</button><button class="btn" id="export">Export post list (JSON)</button><label class="btn" for="importFile">Import post list</label><input id="importFile" type="file" accept="application/json" hidden></div>
-<p style="color:#aab0c2;font-size:13px">To remove a post from this demo, use its Delete button. Uploaded media is stored locally in this browser only and may be lost if browser data is cleared.</p>
-</section>
-</main><aside>
-<div class="sidebox"><h3>🌟 Follow Animee</h3><p>Join the community and catch new anime posts on our official Facebook page.</p><a class="follow" href="https://www.facebook.com/animeeeeee/" target="_blank" rel="noopener">Open Facebook Page</a></div>
-<div class="sidebox" id="about"><h3>🎬 About this website</h3><p>A fan community hub for Animee. Facebook posts can be embedded using their public URL. Viewing and commenting on embedded Facebook content may require visitors to sign in to Facebook.</p></div>
-<div class="sidebox"><h3>💬 Comments</h3><p>For Facebook posts, visitors can interact through Facebook's own embed when supported. This demo does not provide a shared, cross-device comment database.</p></div>
-</aside></div>
+<section class="hero">
+<div>
+<span class="tag">WELCOME TO ANIMEE</span>
+<h1>Where <span class="gradient">Anime Comes to Life!</span></h1>
+<p>Anime moments, fantasy worlds, and the latest posts — all in one place.</p>
 </div>
-<footer>© <span id="year"></span> Animee · Where Anime Comes to Life!<br>Fan site. Anime and video rights belong to their respective owners.</footer>
+<a class="follow" href="https://www.facebook.com/animeeeeee/" target="_blank" rel="noopener">Follow Animee on Facebook ↗</a>
+</section>
+
+<div class="layout">
+<main>
+<section id="latest">
+<div class="section-title">
+<h2>⚡ Latest posts</h2>
+<small id="count">Loading posts…</small>
+</div>
+<div class="filters">
+<button class="active" data-filter="all" type="button">All</button>
+<button data-filter="video" type="button">Videos</button>
+<button data-filter="photo" type="button">Photos</button>
+<button data-filter="facebook" type="button">Facebook Reels</button>
+</div>
+<div class="cards" id="posts"></div>
+</section>
+
+<section id="history">
+<div class="section-title">
+<h2>🗂 Post history</h2>
+<small>Newest first</small>
+</div>
+<div id="historyList" class="cards"></div>
+</section>
+
+<section id="admin" class="admin">
+<h2>Admin studio</h2>
+
+<div id="loginPanel" style="margin:16px 0">
+<div id="loginFields">
+<p>Sign in with your authorized Animee owner account.</p>
+<label for="adminEmail">Email</label>
+<input id="adminEmail" type="email" autocomplete="username" placeholder="Your Supabase email">
+<label for="adminPassword" style="margin-top:10px">Password</label>
+<input id="adminPassword" type="password" autocomplete="current-password" placeholder="Your Supabase password">
+<div class="actions">
+<button class="btn primary" id="signIn" type="button">Sign in</button>
+</div>
+</div>
+<div class="actions">
+<button class="btn" id="signOut" type="button" hidden>Sign out</button>
+</div>
+<p id="authMessage" class="status" role="status" aria-live="polite"></p>
+</div>
+
+<p class="warn">Only the authorized owner account can add, edit or delete posts. Published posts and public media can be viewed by website visitors. Adding a post here does not publish it to Facebook.</p>
+
+<div id="editorPanel" hidden>
+<div class="admin-grid">
+<div>
+<label for="title">Post title</label>
+<input id="title" placeholder="e.g. Full Episode 1">
+</div>
+<div>
+<label for="kind">Post type</label>
+<select id="kind">
+<option value="video">Video from device</option>
+<option value="photo">Photo from device</option>
+<option value="facebook">Public Facebook Reel/post URL</option>
+</select>
+</div>
+<div class="wide" id="fileWrap">
+<label for="file">Choose video or photo</label>
+<input type="file" id="file" accept="video/*">
+<p id="fileHelp" style="font-size:12px;color:#aab0c2">Choose a file from your device. Large uploads may be limited by your Supabase Storage settings.</p>
+</div>
+<div class="wide" id="urlWrap" hidden>
+<label for="fburl">Public Facebook Reel or post URL</label>
+<input id="fburl" type="url" placeholder="https://www.facebook.com/reel/...">
+</div>
+<div class="wide">
+<label for="caption">Caption / description</label>
+<textarea id="caption" placeholder="Write a short description..."></textarea>
+</div>
+</div>
+<div class="actions">
+<button class="btn primary" id="publish" type="button">Publish on website</button>
+<button class="btn" id="clear" type="button">Clear form</button>
+<button class="btn" id="cancelEdit" type="button" hidden>Cancel edit</button>
+</div>
+<p id="editorMessage" class="status" role="status" aria-live="polite"></p>
+</div>
+</section>
+</main>
+
+<aside>
+<div class="sidebox">
+<h3>🌟 Follow Animee</h3>
+<p>Join the community and catch new anime posts on our official Facebook page.</p>
+<a class="follow" href="https://www.facebook.com/animeeeeee/" target="_blank" rel="noopener">Open Facebook Page</a>
+</div>
+<div class="sidebox" id="about">
+<h3>🎬 About this website</h3>
+<p>A fan community hub for Animee. Public Facebook posts may be embedded using their URL. Viewing some Facebook content may require signing in to Facebook.</p>
+</div>
+<div class="sidebox">
+<h3>💬 Comments</h3>
+<p>Visitors can interact with Facebook content through Facebook when supported. This website does not yet have its own shared comment system.</p>
+</div>
+</aside>
+</div>
+</div>
+
+<footer>
+© <span id="year"></span> Animee · Where Anime Comes to Life!<br>
+Fan site. Anime and video rights belong to their respective owners.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const $=s=>document.querySelector(s); let posts=[];
-const storageKey='animee_demo_posts_v1';
-function load(){try{posts=JSON.parse(localStorage.getItem(storageKey)||'[]')}catch{posts=[]}render()}
-function save(){try{localStorage.setItem(storageKey,JSON.stringify(posts))}catch(e){alert('Browser storage is full. Try shorter/smaller media or export your post list.')}render()}
-function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function fbEmbed(url){let clean=url.trim(); if(!/^https:\/\/(www\.)?facebook\.com\//i.test(clean))return ''; return 'https://www.facebook.com/plugins/video.php?href='+encodeURIComponent(clean)+'&show_text=true&width=500'}
-function card(p,history=false){let media='';if(p.kind==='facebook'){const src=fbEmbed(p.url||'');media=src?`<iframe class="embed" src="${src}" title="Facebook video embed" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe><p><a href="${esc(p.url)}" target="_blank" rel="noopener">Open original Facebook post ↗</a></p>`:`<p>Facebook URL unavailable. <a href="${esc(p.url)}" target="_blank" rel="noopener">Open post ↗</a></p>`}
-else if(p.data&&p.kind==='photo')media=`<img class="embed" style="object-fit:contain" src="${p.data}" alt="${esc(p.title)}">`;
-else if(p.data&&p.kind==='video')media=`<video class="embed" controls playsinline preload="metadata" src="${p.data}"></video>`;
-else media='<p>Media preview unavailable in this browser.</p>';
-return `<article class="card" data-kind="${p.kind}">${media}<h3>${esc(p.title||'Untitled post')}</h3><p>${esc(p.caption||'')}</p><div class="postmeta"><span>${esc(p.kind.toUpperCase())}</span><span>${esc(p.date||'')}</span></div>${history?`<div class="actions"><button class="btn" onclick="delPost('${p.id}')">Delete</button></div>`:''}</article>`}
-function render(){const f=document.querySelector('.filters button.active')?.dataset.filter||'all';const latest=posts.filter(p=>f==='all'||p.kind===f);$('#posts').innerHTML=latest.length?latest.slice().reverse().map(p=>card(p,false)).join(''):'<div class="empty">No posts yet. Admin can add a video, photo, or public Facebook link.</div>';$('#historyList').innerHTML=posts.length?posts.slice().reverse().map(p=>card(p,true)).join(''):'<div class="empty">Your post history will appear here.</div>';$('#count').textContent=posts.length+' post'+(posts.length===1?'':'s')}
-window.delPost=id=>{posts=posts.filter(p=>p.id!==id);save()};
-$('#adminToggle').onclick=()=>{const el=$('#admin');el.classList.toggle('show');if(el.classList.contains('show'))el.scrollIntoView({behavior:'smooth'})};
-$('#kind').onchange=()=>{const k=$('#kind').value;$('#urlWrap').hidden=k!=='facebook';$('#fileWrap').hidden=k==='facebook';$('#file').accept=k==='photo'?'image/*':k==='video'?'video/*':'image/*,video/*'};
-document.querySelectorAll('.filters button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters button').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});
-$('#publish').onclick=()=>{const kind=$('#kind').value,file=$('#file').files[0],url=$('#fburl').value.trim();if(kind==='facebook'&&!url){alert('Paste a public Facebook URL first.');return}if(kind!=='facebook'&&!file){alert('Choose a video or photo from your device.');return}if(kind==='facebook'&&!/^https:\/\/(www\.)?facebook\.com\//i.test(url)){alert('Please use a Facebook URL beginning with https://www.facebook.com/');return}
-const add=data=>{posts.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),title:$('#title').value||'Animee update',caption:$('#caption').value,kind,url:kind==='facebook'?url:'',data,date:new Date().toLocaleString()});save();$('#title').value='';$('#caption').value='';$('#fburl').value='';$('#file').value='';alert('Added to this browser’s demo website. It has NOT been posted to Facebook.')};
-if(kind==='facebook')add('');else{if(file.size>20*1024*1024){alert('For this browser-only demo, choose a file under 20 MB. A real hosted site needs server/cloud storage.');return}const reader=new FileReader();reader.onload=()=>add(reader.result);reader.readAsDataURL(file)}};
-$('#clear').onclick=()=>{$('#title').value='';$('#caption').value='';$('#fburl').value='';$('#file').value=''};
-$('#export').onclick=()=>{const blob=new Blob([JSON.stringify(posts.map(({data,...p})=>p),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='animee-post-list.json';a.click();URL.revokeObjectURL(a.href)};
-$('#importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const items=JSON.parse(r.result);if(Array.isArray(items)){posts=items;save();alert('Imported post list. Media files are not included in JSON exports.')}else alert('Invalid JSON list')}catch{alert('Could not read JSON file')}};r.readAsText(f)};
-$('#year').textContent=new Date().getFullYear();load();
+'use strict';
+
+const SUPABASE_URL = 'https://mnfzpbwhvierboadwctz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_XV2dfLKtRHyIRcQBcwlaXA_QX61BvXW';
+const OWNER_ID = '991aadfe-375e-41b1-b709-a4e0cbf74512';
+const BUCKET = 'animee-media';
+
+const $ = selector => document.querySelector(selector);
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let posts = [];
+let currentUser = null;
+let editingId = null;
+
+function esc(value = '') {
+  return String(value).replace(/[&<>"']/g, character => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[character]);
+}
+
+function isOwner() {
+  return Boolean(currentUser && currentUser.id === OWNER_ID);
+}
+
+function displayKind(post) {
+  if (post.media_type === 'image') return 'photo';
+  return post.media_type;
+}
+
+function formatDate(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? '' : date.toLocaleString();
+}
+
+function facebookEmbed(url = '') {
+  const clean = String(url).trim();
+  if (!/^https:\/\/(www\.)?facebook\.com\//i.test(clean)) return '';
+  return 'https://www.facebook.com/plugins/video.php?href=' +
+    encodeURIComponent(clean) + '&show_text=true&width=500';
+}
+
+function card(post, history = false) {
+  const kind = displayKind(post);
+  let media = '';
+
+  if (kind === 'facebook') {
+    const src = facebookEmbed(post.facebook_url || '');
+    media = src
+      ? `<iframe class="embed" src="${esc(src)}" title="Facebook post embed" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+         <p><a href="${esc(post.facebook_url || '')}" target="_blank" rel="noopener noreferrer">Open original Facebook post ↗</a></p>`
+      : `<p><a href="${esc(post.facebook_url || '')}" target="_blank" rel="noopener noreferrer">Open Facebook post ↗</a></p>`;
+  } else if (kind === 'photo' && post.media_url) {
+    media = `<img class="embed" style="object-fit:contain" src="${esc(post.media_url)}" alt="${esc(post.title || 'Animee photo')}" loading="lazy">`;
+  } else if (kind === 'video' && post.media_url) {
+    media = `<video class="embed" controls playsinline preload="metadata" src="${esc(post.media_url)}"></video>`;
+  } else {
+    media = '<p>Media preview unavailable.</p>';
+  }
+
+  const ownerActions = history && isOwner()
+    ? `<div class="actions">
+         <button class="btn" type="button" onclick="editPost(${Number(post.id)})">Edit</button>
+         <button class="btn" type="button" onclick="deletePost(${Number(post.id)})">Delete</button>
+       </div>`
+    : '';
+
+  const statusLabel = post.status === 'draft' ? 'DRAFT' : kind.toUpperCase();
+
+  return `<article class="card">
+    ${media}
+    <h3>${esc(post.title || 'Untitled post')}</h3>
+    <p>${esc(post.caption || '')}</p>
+    <div class="postmeta">
+      <span>${esc(statusLabel)}</span>
+      <span>${esc(formatDate(post.created_at))}</span>
+    </div>
+    ${ownerActions}
+  </article>`;
+}
+
+function render() {
+  const activeFilter = document.querySelector('.filters button.active')?.dataset.filter || 'all';
+  const visiblePosts = posts.filter(post => {
+    return activeFilter === 'all' || displayKind(post) === activeFilter;
+  });
+
+  $('#posts').innerHTML = visiblePosts.length
+    ? visiblePosts.map(post => card(post)).join('')
+    : '<div class="empty">No published posts yet. Please check again soon.</div>';
+
+  $('#historyList').innerHTML = posts.length
+    ? posts.map(post => card(post, true)).join('')
+    : '<div class="empty">Your post history will appear here.</div>';
+
+  $('#count').textContent = posts.length + (posts.length === 1 ? ' post' : ' posts');
+}
+
+function updateAdminUI() {
+  const owner = isOwner();
+  $('#loginFields').hidden = owner;
+  $('#signOut').hidden = !owner;
+  $('#editorPanel').hidden = !owner;
+  $('#authMessage').textContent = owner
+    ? 'Signed in with the authorized owner account.'
+    : 'Sign in to manage Animee posts.';
+  render();
+}
+
+async function loadPosts() {
+  const { data, error } = await db
+    .from('posts')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Could not load posts:', error.message);
+    $('#posts').innerHTML = '<div class="empty">Could not load posts. Check your internet connection and Supabase settings.</div>';
+    $('#historyList').innerHTML = '<div class="empty">Post history is temporarily unavailable.</div>';
+    $('#count').textContent = 'Posts unavailable';
+    return;
+  }
+
+  posts = data || [];
+  render();
+}
+
+function setEditorMessage(message) {
+  $('#editorMessage').textContent = message;
+}
+
+function resetForm() {
+  editingId = null;
+  $('#title').value = '';
+  $('#caption').value = '';
+  $('#fburl').value = '';
+  $('#file').value = '';
+  $('#kind').value = 'video';
+  $('#fileWrap').hidden = false;
+  $('#urlWrap').hidden = true;
+  $('#file').accept = 'video/*';
+  $('#publish').textContent = 'Publish on website';
+  $('#cancelEdit').hidden = true;
+  setEditorMessage('');
+}
+
+function updateKindFields() {
+  const kind = $('#kind').value;
+  $('#urlWrap').hidden = kind !== 'facebook';
+  $('#fileWrap').hidden = kind === 'facebook';
+  $('#file').accept = kind === 'photo' ? 'image/*' : 'video/*';
+}
+
+function getStoragePath(publicUrl) {
+  if (!publicUrl) return null;
+  const marker = '/storage/v1/object/public/' + BUCKET + '/';
+  const index = publicUrl.indexOf(marker);
+  if (index === -1) return null;
+  return publicUrl.slice(index + marker.length).split('?')[0];
+}
+
+async function removeOldMedia(publicUrl) {
+  const path = getStoragePath(publicUrl);
+  if (!path) return;
+  const { error } = await db.storage.from(BUCKET).remove([path]);
+  if (error) console.warn('Could not remove old media:', error.message);
+}
+
+async function uploadMedia(file) {
+  const safeName = file.name.replace(/[^\w.-]/g, '_');
+  const path = OWNER_ID + '/' + Date.now() + '-' + safeName;
+
+  const { error } = await db.storage.from(BUCKET).upload(path, file, {
+    cacheControl: '3600',
+    upsert: false,
+    contentType: file.type || undefined
+  });
+
+  if (error) throw error;
+
+  const { data } = db.storage.from(BUCKET).getPublicUrl(path);
+  return data.publicUrl;
+}
+
+$('#adminToggle').addEventListener('click', () => {
+  const section = $('#admin');
+  section.classList.toggle('show');
+  if (section.classList.contains('show')) {
+    section.scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+$('#signIn').addEventListener('click', async () => {
+  const email = $('#adminEmail').value.trim();
+  const password = $('#adminPassword').value;
+
+  if (!email || !password) {
+    $('#authMessage').textContent = 'Enter your email and password.';
+    return;
+  }
+
+  $('#signIn').disabled = true;
+  $('#authMessage').textContent = 'Signing in…';
+
+  const { data, error } = await db.auth.signInWithPassword({ email, password });
+  $('#signIn').disabled = false;
+
+  if (error) {
+    $('#authMessage').textContent = 'Sign-in failed: ' + error.message;
+    return;
+  }
+
+  if (!data.user || data.user.id !== OWNER_ID) {
+    await db.auth.signOut();
+    currentUser = null;
+    updateAdminUI();
+    $('#authMessage').textContent = 'Access denied. This account is not the authorized Animee owner.';
+    return;
+  }
+
+  currentUser = data.user;
+  $('#adminPassword').value = '';
+  updateAdminUI();
+  await loadPosts();
+});
+
+$('#signOut').addEventListener('click', async () => {
+  const { error } = await db.auth.signOut();
+  if (error) {
+    $('#authMessage').textContent = 'Sign-out failed: ' + error.message;
+    return;
+  }
+  currentUser = null;
+  resetForm();
+  updateAdminUI();
+  await loadPosts();
+});
+
+$('#kind').addEventListener('change', updateKindFields);
+
+document.querySelectorAll('.filters button').forEach(button => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('.filters button').forEach(item => item.classList.remove('active'));
+    button.classList.add('active');
+    render();
+  });
+});
+
+$('#publish').addEventListener('click', async () => {
+  if (!isOwner()) {
+    setEditorMessage('Please sign in with the authorized owner account.');
+    return;
+  }
+
+  const kind = $('#kind').value;
+  const file = $('#file').files[0];
+  const title = $('#title').value.trim() || 'Animee update';
+  const caption = $('#caption').value.trim();
+  const facebookUrl = $('#fburl').value.trim();
+  const existing = editingId ? posts.find(post => Number(post.id) === Number(editingId)) : null;
+
+  if (kind === 'facebook' && !/^https:\/\/(www\.)?facebook\.com\//i.test(facebookUrl)) {
+    setEditorMessage('Enter a valid Facebook URL beginning with https://www.facebook.com/.');
+    return;
+  }
+
+  if (kind === 'photo' && file && !file.type.startsWith('image/')) {
+    setEditorMessage('Please choose an image file.');
+    return;
+  }
+
+  if (kind === 'video' && file && !file.type.startsWith('video/')) {
+    setEditorMessage('Please choose a video file.');
+    return;
+  }
+
+  const newMediaType = kind === 'photo' ? 'image' : kind;
+  let mediaUrl = null;
+
+  if (kind === 'photo' || kind === 'video') {
+    if (file) {
+      setEditorMessage('Uploading media…');
+    } else if (existing && existing.media_type === newMediaType && existing.media_url) {
+      mediaUrl = existing.media_url;
+    } else {
+      setEditorMessage('Choose a file from your device.');
+      return;
+    }
+  }
+
+  $('#publish').disabled = true;
+
+  try {
+    if (file && (kind === 'photo' || kind === 'video')) {
+      mediaUrl = await uploadMedia(file);
+    }
+
+    const payload = {
+      title,
+      caption,
+      media_type: newMediaType,
+      media_url: mediaUrl,
+      facebook_url: kind === 'facebook' ? facebookUrl : null,
+      status: 'published',
+      owner_id: OWNER_ID,
+      updated_at: new Date().toISOString()
+    };
+
+    let savedPost;
+    let saveError;
+
+    if (editingId) {
+      const result = await db.from('posts')
+        .update(payload)
+        .eq('id', editingId)
+        .select()
+        .single();
+      savedPost = result.data;
+      saveError = result.error;
+    } else {
+      const result = await db.from('posts')
+        .insert(payload)
+        .select()
+        .single();
+      savedPost = result.data;
+      saveError = result.error;
+    }
+
+    if (saveError) throw saveError;
+
+    if (existing && existing.media_url && existing.media_url !== mediaUrl) {
+      await removeOldMedia(existing.media_url);
+    }
+
+    resetForm();
+    setEditorMessage('Post saved and published on the Animee website.');
+    await loadPosts();
+  } catch (error) {
+    console.error('Saving post failed:', error);
+    setEditorMessage('Could not save the post: ' + (error.message || 'Unknown error'));
+  } finally {
+    $('#publish').disabled = false;
+  }
+});
+
+window.editPost = function(id) {
+  if (!isOwner()) return;
+
+  const post = posts.find(item => Number(item.id) === Number(id));
+  if (!post) return;
+
+  editingId = post.id;
+  $('#title').value = post.title || '';
+  $('#caption').value = post.caption || '';
+  $('#kind').value = displayKind(post);
+  $('#fburl').value = post.facebook_url || '';
+  $('#file').value = '';
+  updateKindFields();
+
+  $('#publish').textContent = 'Save changes';
+  $('#cancelEdit').hidden = false;
+  setEditorMessage('Editing post. Choose a new file only if you want to replace the current media.');
+
+  $('#admin').classList.add('show');
+  $('#admin').scrollIntoView({ behavior: 'smooth' });
+};
+
+window.deletePost = async function(id) {
+  if (!isOwner()) {
+    alert('Only the authorized owner can delete posts.');
+    return;
+  }
+
+  const post = posts.find(item => Number(item.id) === Number(id));
+  if (!post || !confirm('Delete this post from the Animee website?')) return;
+
+  const { error } = await db.from('posts').delete().eq('id', id);
+
+  if (error) {
+    alert('Could not delete the post: ' + error.message);
+    return;
+  }
+
+  if (post.media_url) await removeOldMedia(post.media_url);
+
+  if (Number(editingId) === Number(id)) resetForm();
+  await loadPosts();
+};
+
+$('#clear').addEventListener('click', resetForm);
+$('#cancelEdit').addEventListener('click', resetForm);
+$('#year').textContent = new Date().getFullYear();
+
+db.auth.onAuthStateChange((_event, session) => {
+  currentUser = session?.user || null;
+  updateAdminUI();
+  loadPosts();
+});
+
+(async function initialize() {
+  const { data, error } = await db.auth.getSession();
+
+  if (error) console.warn('Could not restore sign-in session:', error.message);
+
+  currentUser = data?.session?.user || null;
+
+  if (currentUser && currentUser.id !== OWNER_ID) {
+    await db.auth.signOut();
+    currentUser = null;
+  }
+
+  updateAdminUI();
+  await loadPosts();
+})();
 </script>
-</body></html><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-// The complete new Supabase connection code goes here.
-</script>
-</body></html>
+</body>
+</html>

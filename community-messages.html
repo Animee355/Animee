@@ -7,6 +7,78 @@
 <style>
 :root{color-scheme:dark;--bg:#06101f;--panel:#0c1b31;--line:#244262;--cyan:#65d9ff;--text:#f3f8ff;--muted:#a7bad1;--danger:#ff9eaf}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% -5%,#123d68,transparent 38%),radial-gradient(ellipse at 95% 15%,#092d4a,transparent 28%),var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif;min-height:100vh}a{color:var(--cyan)}button,input,textarea{font:inherit}button{cursor:pointer}.wrap{width:min(1100px,calc(100% - 30px));margin:auto}header{position:sticky;top:0;z-index:3;background:#06101fee;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.bar{min-height:68px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 0}.brand{font-weight:900;font-size:21px;letter-spacing:.08em;color:white;text-decoration:none}.brand span{color:var(--cyan)}nav{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}nav a,.btn{border:1px solid var(--line);border-radius:999px;padding:8px 13px;color:var(--text);background:#10223a;text-decoration:none;cursor:pointer}.primary{background:linear-gradient(100deg,#146be0,#168ad6);border-color:#2997e9;font-weight:800}.hero{padding:32px 0 18px}.eyebrow{color:var(--cyan);font-size:12px;letter-spacing:.14em;font-weight:800}.hero h1{font-size:clamp(30px,5vw,46px);line-height:1.08;margin:7px 0}.muted,small{color:var(--muted)}.layout{display:grid;grid-template-columns:320px minmax(0,1fr);gap:16px;align-items:start}.panel{background:linear-gradient(150deg,#10243c,#09182a);border:1px solid var(--line);border-radius:17px;padding:17px;margin-bottom:16px;box-shadow:0 15px 45px #0002}.panel h2{margin:0 0 7px;font-size:20px}label{display:block;color:#c6d9ee;font-size:13px;font-weight:700;margin:12px 0 5px}input,textarea{width:100%;border:1px solid #2a4968;border-radius:10px;background:#061321;color:white;padding:11px 12px;outline:none}input:focus,textarea:focus{border-color:var(--cyan)}textarea{min-height:75px;resize:vertical}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}.status{min-height:22px;color:var(--cyan);font-size:13px;overflow-wrap:anywhere}.error{color:var(--danger)}.success{color:#8de8c2}.member-results{display:grid;gap:8px;margin-top:10px}.member{display:flex;align-items:center;gap:9px;text-align:left;width:100%;border:1px solid var(--line);background:#08182a;color:var(--text);border-radius:11px;padding:10px}.member.active{border-color:var(--cyan);background:#123453}.avatar{width:38px;height:38px;flex:0 0 38px;border:1px solid #55ceff;border-radius:50%;display:grid;place-items:center;background:#123453;font-weight:900}.member strong{display:block;overflow-wrap:anywhere}.member small{display:block}.badge{font-size:11px;color:#d5f7ff;border:1px solid #3176a6;border-radius:99px;padding:2px 7px;margin-left:auto;white-space:nowrap}.chat{min-height:520px;display:flex;flex-direction:column}.chat-head{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}.messages{display:flex;flex-direction:column;gap:10px;flex:1;min-height:300px;max-height:52vh;overflow:auto;padding:3px 2px 16px}.bubble{max-width:min(82%,560px);border:1px solid #244262;background:#0b1a2c;border-radius:15px 15px 15px 4px;padding:10px 12px;align-self:flex-start;overflow-wrap:anywhere;white-space:pre-wrap}.bubble.mine{align-self:flex-end;background:#12385a;border-color:#27658b;border-radius:15px 15px 4px 15px}.bubble small{display:block;font-size:11px;margin-top:5px}.compose{border-top:1px solid var(--line);padding-top:12px}.compose textarea{min-height:65px}.empty{text-align:center;color:var(--muted);padding:25px 12px}.hidden{display:none!important}footer{text-align:center;color:#829ab5;font-size:13px;padding:24px 0 40px}@media(max-width:760px){.layout{grid-template-columns:1fr}.chat{min-height:420px}.messages{max-height:45vh}nav{margin-left:0}.hero{padding-top:25px}}
+
+/* Animee professional cinematic background system */
+:root{
+  --bg:#050b18;
+  --panel:#0a1729;
+  --panel2:#0d2038;
+  --line:#203e5d;
+  --cyan:#75ddff;
+  --text:#f4f8ff;
+  --muted:#a8bad0;
+}
+html{min-height:100%;background:#050b18;scroll-behavior:smooth}
+body{
+  position:relative;
+  isolation:isolate;
+  background-color:#050b18!important;
+  background-image:
+    radial-gradient(ellipse at 12% -8%,rgba(25,104,170,.32),transparent 42%),
+    radial-gradient(ellipse at 92% 12%,rgba(20,75,130,.22),transparent 34%),
+    radial-gradient(ellipse at 50% 100%,rgba(9,42,78,.2),transparent 48%),
+    linear-gradient(180deg,#050b18 0%,#071224 52%,#050b18 100%)!important;
+  background-attachment:fixed;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.25;
+  background-image:
+    radial-gradient(1px 1px at 7% 19%,rgba(210,242,255,.95) 99%,transparent 100%),
+    radial-gradient(1px 1px at 22% 71%,rgba(120,214,255,.8) 99%,transparent 100%),
+    radial-gradient(1px 1px at 38% 31%,rgba(210,242,255,.7) 99%,transparent 100%),
+    radial-gradient(1px 1px at 57% 83%,rgba(120,214,255,.7) 99%,transparent 100%),
+    radial-gradient(1px 1px at 72% 16%,rgba(210,242,255,.8) 99%,transparent 100%),
+    radial-gradient(1px 1px at 88% 58%,rgba(120,214,255,.8) 99%,transparent 100%),
+    radial-gradient(1px 1px at 94% 88%,rgba(210,242,255,.7) 99%,transparent 100%);
+  background-size:320px 260px;
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(115deg,transparent 0%,rgba(82,176,255,.025) 45%,transparent 72%);
+}
+body>*{position:relative;z-index:1}
+header{background:rgba(5,12,25,.86)!important;border-color:rgba(86,151,199,.25)!important;backdrop-filter:blur(18px) saturate(140%)}
+.panel,.post,.card,.sidebox,.admin,.member{
+  background:linear-gradient(145deg,rgba(14,32,54,.94),rgba(7,18,33,.96))!important;
+  border-color:rgba(77,133,177,.3)!important;
+  box-shadow:0 16px 48px rgba(0,0,0,.22),inset 0 1px 0 rgba(207,238,255,.025);
+}
+nav a,.btn,.smallbtn,button{
+  transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+nav a:hover,.btn:hover,.smallbtn:hover,button:hover{
+  border-color:rgba(117,221,255,.78)!important;
+  box-shadow:0 0 18px rgba(62,177,255,.12);
+}
+.primary,.btn.primary{
+  background:linear-gradient(110deg,#1267c9,#087fb4)!important;
+  border-color:#2997d5!important;
+  box-shadow:0 5px 18px rgba(13,111,202,.16);
+}
+input,textarea,select{
+  background:rgba(3,12,24,.82)!important;
+  border-color:rgba(73,119,158,.45)!important;
+}
+input:focus,textarea:focus,select:focus{
+  border-color:var(--cyan)!important;
+  box-shadow:0 0 0 3px rgba(117,221,255,.11)!important;
+}
+footer{color:#829ab5}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none!important}
+}
+
 </style></head>
 <body>
 <header><div class="wrap bar"><a class="brand" href="index.html">ANIM<span>EE</span></a><nav><a href="index.html">Home</a><a href="community.html">Member profiles</a><a href="community-feed.html">Community feed</a><a href="community-messages.html">Messages <span id="nav-unread"></span></a></nav></div></header>

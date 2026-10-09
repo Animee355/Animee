@@ -59,28 +59,58 @@ Deno.serve(async (req: Request) => {
   }
   if (messages[messages.length - 1]?.role !== "user") return reply(400, { error: "Please send a question." }, origin);
 
-  const systemPrompt = `You are Animee AI, a helpful, friendly general-purpose assistant for visitors to Animee — Where Anime Comes to Life. You can answer general knowledge questions and help with anime recommendations, series information, episode summaries, watch-order guidance, captions, and creator questions. Be clear, concise, respectful, and honest. Do not pretend to have checked live news, schedules, or current facts unless you have a tool that actually did so. Anime details can vary by adaptation; say when uncertain and recommend checking official sources for release dates or announcements. Never claim to be a human or the official representative of an anime studio. Do not provide full copyrighted scripts, episode transcripts, or pirated-streaming links; summaries and legal viewing guidance are fine. For medical, legal, financial, or other high-impact topics, provide general information and encourage qualified professional help when appropriate.`;
+  const systemPrompt = `You are Animee AI, a helpful, friendly general-purpose assistant for visitors to Animee — Where Anime Comes to Life. Answer general knowledge and anime questions. For factual questions—especially episode titles, cast, release dates, current news, recommendations, technical details, and anything that may have changed—use live web search to verify information before answering. Search more than one relevant source when useful, prioritizing official studios, publishers, broadcasters, government/academic sources, and established news outlets. Do not claim to search every website: the web index is not exhaustive. Cross-check important claims, distinguish official announcements from rumors, and clearly say when reliable sources disagree or evidence is insufficient. Keep the answer clear and concise, and cite sources using the provided web-search citations. For anime facts, prefer official franchise sources and trusted databases. Never invent a citation, source, quote, episode detail, or announcement. Do not claim to be human or an official studio representative. Do not provide full copyrighted scripts, episode transcripts, or pirated-streaming links; summaries and legal viewing guidance are fine. For medical, legal, financial, or other high-impact topics, provide general information and recommend qualified professional help when appropriate.`;
 
   try {
-    const upstream = await fetch("https://api.openai.com/v1/chat/completions", {
+    const upstream = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        messages: [{ role: "system", content: systemPrompt }, ...messages],
-        max_completion_tokens: 700,
-        temperature: 0.6,
+        tools: [{ type: "web_search", search_context_size: "high" }],
+        tool_choice: "auto",
+        include: ["web_search_call.action.sources"],
+        input: [
+          { role: "system", content: systemPrompt },
+          ...messages.map(message => ({ role: message.role, content: message.content })),
+        ],
+        max_output_tokens: 900,
       }),
     });
     const result = await upstream.json().catch(() => ({}));
     if (!upstream.ok) {
-      console.error("OpenAI request failed:", upstream.status, result?.error?.code || "unknown");
+      console.error("OpenAI Responses request failed:", upstream.status, result?.error?.code || "unknown");
       if (upstream.status === 429) return reply(429, { error: "Animee AI is busy right now. Please try again shortly." }, origin);
       return reply(502, { error: "Animee AI could not generate an answer right now. Please try again later." }, origin);
     }
-    const answer = result?.choices?.[0]?.message?.content;
-    if (typeof answer !== "string" || !answer.trim()) return reply(502, { error: "No answer was returned. Please try again." }, origin);
-    return reply(200, { answer: answer.trim() }, origin);
+
+    const output = Array.isArray(result?.output) ? result.output : [];
+    const answerParts: string[] = [];
+    const sourceMap = new Map<string, { title: string; url: string }>();
+    for (const item of output) {
+      if (item?.type === "message" && Array.isArray(item.content)) {
+        for (const part of item.content) {
+          if (part?.type === "output_text" && typeof part.text === "string") {
+            answerParts.push(part.text);
+            for (const annotation of (Array.isArray(part.annotations) ? part.annotations : [])) {
+              const url = annotation?.url_citation?.url || annotation?.url;
+              const title = annotation?.url_citation?.title || annotation?.title || url;
+              if (typeof url === "string" && /^https?:\/\//i.test(url)) sourceMap.set(url, { title: String(title || url), url });
+            }
+          }
+        }
+      }
+      if (item?.type === "web_search_call" && Array.isArray(item?.action?.sources)) {
+        for (const source of item.action.sources) {
+          if (typeof source?.url === "string" && /^https?:\/\//i.test(source.url)) {
+            sourceMap.set(source.url, { title: String(source.title || source.url), url: source.url });
+          }
+        }
+      }
+    }
+    const answer = answerParts.join("\n\n").trim();
+    if (!answer) return reply(502, { error: "No answer was returned. Please try again." }, origin);
+    return reply(200, { answer, sources: [...sourceMap.values()].slice(0, 8) }, origin);
   } catch (error) {
     console.error("Animee AI network error:", error);
     return reply(502, { error: "Could not reach the AI service. Please try again later." }, origin);

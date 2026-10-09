@@ -51,10 +51,10 @@ def parse_date(value):
         return ""
 
 def plain_summary(value):
-    value = re.sub(r"<(script|style)[^>]*>.*?</\\1>", " ", value or "", flags=re.I | re.S)
+    value = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", value or "", flags=re.I | re.S)
     value = re.sub(r"<[^>]+>", " ", value)
     value = unescape(value)
-    return re.sub(r"\\s+", " ", value).strip()[:260]
+    return re.sub(r"\s+", " ", value).strip()[:260]
 
 def categorize(title, summary):
     text = (title + " " + summary).lower()
@@ -149,7 +149,7 @@ def main():
             return 0
     items = sorted(unique.values(), key=sort_key, reverse=True)[:MAX_ITEMS]
     result = {"checked_at": now.isoformat(), "items": items, "sources": [source for source, _ in FEEDS if any(item.get("source") == source for item in items)]}
-    OUTPUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+    OUTPUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Saved {len(items)} unique stories from {success_count} working feed(s).")
     if errors:
         print("Some sources were unavailable: " + "; ".join(errors))

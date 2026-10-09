@@ -27,3 +27,29 @@ create policy "Animee owner can manage AI knowledge"
 grant select on public.ai_knowledge to anon, authenticated;
 grant insert, update, delete on public.ai_knowledge to authenticated;
 grant usage, select on sequence public.ai_knowledge_id_seq to authenticated;
+
+-- Seed a few verified basics so Animee AI knows the official page after setup.
+insert into public.ai_knowledge (title, category, content, is_active)
+select 'Official Animee Facebook page', 'Social links',
+       'The official Facebook page is https://www.facebook.com/animeeeeee/. When users ask for Animee Facebook, direct them to this URL.',
+       true
+where not exists (select 1 from public.ai_knowledge where title = 'Official Animee Facebook page');
+
+insert into public.ai_knowledge (title, category, content, is_active)
+select 'Animee brand and tagline', 'Animee brand',
+       'The page name is Animee. The brand tagline is “Animee — Where Anime Comes to Life.” Use the spelling Animee, not Animeee or Animee Zone, unless the owner explicitly changes it.',
+       true
+where not exists (select 1 from public.ai_knowledge where title = 'Animee brand and tagline');
+
+insert into public.ai_knowledge (title, category, content, is_active)
+select 'Animee posting schedule', 'Posting schedule',
+       'The owner currently schedules Facebook Reels at 7 AM, 3 PM, and 11 PM Philippines time. If asked about the schedule, mention that these are the current planned posting times and may change.',
+       true
+where not exists (select 1 from public.ai_knowledge where title = 'Animee posting schedule');
+
+insert into public.ai_knowledge (title, category, content, is_active)
+select 'Official Animee Instagram', 'Social links',
+       'The official Instagram profile is https://www.instagram.com/animee.media/.',
+       true
+where not exists (select 1 from public.ai_knowledge where title = 'Official Animee Instagram');
+

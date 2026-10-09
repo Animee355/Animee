@@ -2,6 +2,78 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Share anime thoughts and meet fans around the world on Animee."><title>Animee Community Feed</title>
 <style>
 :root{color-scheme:dark;--bg:#06101f;--panel:#0c1b31;--line:#244262;--cyan:#65d9ff;--text:#f3f8ff;--muted:#a7bad1}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 0%,#123d68,transparent 38%),radial-gradient(ellipse at 95% 15%,#092d4a,transparent 28%),var(--bg);color:var(--text);font:16px/1.55 system-ui,sans-serif}a{color:var(--cyan)}button,textarea{font:inherit}.wrap{width:min(900px,calc(100% - 30px));margin:auto}header{position:sticky;top:0;z-index:3;background:#06101fee;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.bar{min-height:68px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 0}.brand{font-weight:900;font-size:21px;letter-spacing:.08em;color:white;text-decoration:none}.brand span{color:var(--cyan)}nav{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}nav a,.btn{border:1px solid var(--line);border-radius:999px;padding:8px 13px;color:var(--text);background:#10223a;text-decoration:none;cursor:pointer}.primary{background:linear-gradient(100deg,#146be0,#168ad6);border-color:#2997e9;font-weight:800}.hero{padding:35px 0 20px}.eyebrow{font-size:12px;letter-spacing:.15em;color:var(--cyan);font-weight:800}.hero h1{font-size:clamp(30px,5vw,46px);line-height:1.1;margin:7px 0}.muted,small{color:var(--muted)}.panel,.post{background:linear-gradient(150deg,#10243c,#09182a);border:1px solid var(--line);border-radius:17px;padding:19px;margin:0 0 16px;box-shadow:0 15px 45px #0002}.panel h2{margin:0 0 5px}textarea{width:100%;min-height:100px;resize:vertical;background:#061321;color:white;border:1px solid #2a4968;border-radius:12px;padding:12px;outline:none}textarea:focus{border-color:var(--cyan)}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:11px}.status{color:var(--cyan);font-size:14px;overflow-wrap:anywhere}.error{color:#ff9eaf!important}.posthead{display:flex;gap:11px;align-items:center}.avatar{width:43px;height:43px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#184d7a,#13223d);border:1px solid #55ceff;font-weight:900;overflow:hidden}.postname{font-weight:800}.postbody{white-space:pre-wrap;overflow-wrap:anywhere;margin:16px 0}.tools{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:12px;margin-top:10px}.smallbtn{background:#0a192b;color:#d7e9fa;border:1px solid #2a4968;border-radius:999px;padding:7px 10px;cursor:pointer}.smallbtn.active{border-color:var(--cyan);background:#123858}.comments{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}.comment{padding:8px 0;border-bottom:1px solid #1b344e;overflow-wrap:anywhere}.comment-form{display:flex;gap:8px;margin-top:10px}.comment-form textarea{min-height:44px;flex:1}.hidden{display:none!important}.empty{text-align:center;padding:24px;color:var(--muted)}footer{text-align:center;color:#829ab5;font-size:13px;padding:24px 0 40px}@media(max-width:520px){.panel,.post{padding:14px}nav{margin-left:0}.comment-form{flex-direction:column}}
+
+/* Animee professional cinematic background system */
+:root{
+  --bg:#050b18;
+  --panel:#0a1729;
+  --panel2:#0d2038;
+  --line:#203e5d;
+  --cyan:#75ddff;
+  --text:#f4f8ff;
+  --muted:#a8bad0;
+}
+html{min-height:100%;background:#050b18;scroll-behavior:smooth}
+body{
+  position:relative;
+  isolation:isolate;
+  background-color:#050b18!important;
+  background-image:
+    radial-gradient(ellipse at 12% -8%,rgba(25,104,170,.32),transparent 42%),
+    radial-gradient(ellipse at 92% 12%,rgba(20,75,130,.22),transparent 34%),
+    radial-gradient(ellipse at 50% 100%,rgba(9,42,78,.2),transparent 48%),
+    linear-gradient(180deg,#050b18 0%,#071224 52%,#050b18 100%)!important;
+  background-attachment:fixed;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.25;
+  background-image:
+    radial-gradient(1px 1px at 7% 19%,rgba(210,242,255,.95) 99%,transparent 100%),
+    radial-gradient(1px 1px at 22% 71%,rgba(120,214,255,.8) 99%,transparent 100%),
+    radial-gradient(1px 1px at 38% 31%,rgba(210,242,255,.7) 99%,transparent 100%),
+    radial-gradient(1px 1px at 57% 83%,rgba(120,214,255,.7) 99%,transparent 100%),
+    radial-gradient(1px 1px at 72% 16%,rgba(210,242,255,.8) 99%,transparent 100%),
+    radial-gradient(1px 1px at 88% 58%,rgba(120,214,255,.8) 99%,transparent 100%),
+    radial-gradient(1px 1px at 94% 88%,rgba(210,242,255,.7) 99%,transparent 100%);
+  background-size:320px 260px;
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(115deg,transparent 0%,rgba(82,176,255,.025) 45%,transparent 72%);
+}
+body>*{position:relative;z-index:1}
+header{background:rgba(5,12,25,.86)!important;border-color:rgba(86,151,199,.25)!important;backdrop-filter:blur(18px) saturate(140%)}
+.panel,.post,.card,.sidebox,.admin,.member{
+  background:linear-gradient(145deg,rgba(14,32,54,.94),rgba(7,18,33,.96))!important;
+  border-color:rgba(77,133,177,.3)!important;
+  box-shadow:0 16px 48px rgba(0,0,0,.22),inset 0 1px 0 rgba(207,238,255,.025);
+}
+nav a,.btn,.smallbtn,button{
+  transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+nav a:hover,.btn:hover,.smallbtn:hover,button:hover{
+  border-color:rgba(117,221,255,.78)!important;
+  box-shadow:0 0 18px rgba(62,177,255,.12);
+}
+.primary,.btn.primary{
+  background:linear-gradient(110deg,#1267c9,#087fb4)!important;
+  border-color:#2997d5!important;
+  box-shadow:0 5px 18px rgba(13,111,202,.16);
+}
+input,textarea,select{
+  background:rgba(3,12,24,.82)!important;
+  border-color:rgba(73,119,158,.45)!important;
+}
+input:focus,textarea:focus,select:focus{
+  border-color:var(--cyan)!important;
+  box-shadow:0 0 0 3px rgba(117,221,255,.11)!important;
+}
+footer{color:#829ab5}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none!important}
+}
+
 </style></head><body>
 <header><div class="wrap bar"><a class="brand" href="index.html">ANIM<span>EE</span></a><nav><a href="index.html">Home</a><a href="community.html">Member profiles</a><a href="#feed">Community feed</a><a href="community-messages.html">Messages</a><button id="auth-nav" class="btn">Sign in</button></nav></div></header>
 <main class="wrap"><section class="hero"><div class="eyebrow">ANIMEE WORLDWIDE COMMUNITY</div><h1>Every fan has a story.<br><span style="color:var(--cyan)">Share yours.</span></h1><p class="muted">Talk anime, share your thoughts, react, and meet fans around the world. Be respectful and only post content you have the right to share.</p></section>

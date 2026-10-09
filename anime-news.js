@@ -173,17 +173,60 @@
     drawRankings(seasonEl, data.season, "Current season rankings are temporarily unavailable.");
     rankUpdatedEl.textContent = data.updated_at ? "Ranking data last updated " + dateLabel(data.updated_at) + " · data source: MyAnimeList via Jikan API" : "Ranking update time unavailable";
   };
+  const mapJikanItems = payload => (payload.data || []).slice(0, 10).map(anime => ({
+    title: anime.title_english || anime.title || anime.title_japanese || "Anime title",
+    url: anime.url || "",
+    image: ((anime.images || {}).webp || {}).large_image_url || (((anime.images || {}).jpg || {}).image_url || ""),
+    score: anime.score || null,
+    members: anime.members || null,
+    episodes: anime.episodes || null,
+    status: anime.status || "",
+    year: anime.year || (((anime.aired || {}).prop || {}).from || {}).year || null
+  })).filter(anime => safeUrl(anime.url));
+  async function fetchLiveRankings() {
+    const cacheKey = "animee-live-top10-v1";
+    try {
+      const cached = JSON.parse(localStorage.getItem(cacheKey) || "null");
+      if (cached && cached.savedAt && Date.now() - cached.savedAt < 30 * 60 * 1000 && cached.data) return cached.data;
+    } catch (_) {}
+    const endpoints = [
+      ["popular", "https://api.jikan.moe/v4/top/anime?filter=bypopularity&limit=10"],
+      ["airing", "https://api.jikan.moe/v4/top/anime?filter=airing&limit=10"],
+      ["season", "https://api.jikan.moe/v4/seasons/now?limit=10"]
+    ];
+    const result = {updated_at:new Date().toISOString(),source:"MyAnimeList data via Jikan API"};
+    for (let i = 0; i < endpoints.length; i++) {
+      const [key, endpoint] = endpoints[i];
+      if (i) await new Promise(resolve => window.setTimeout(resolve, 1200));
+      const response = await fetch(endpoint, {headers:{"Accept":"application/json"}});
+      if (!response.ok) throw new Error("Jikan " + key + " HTTP " + response.status);
+      result[key] = mapJikanItems(await response.json());
+    }
+    try { localStorage.setItem(cacheKey, JSON.stringify({savedAt:Date.now(),data:result})); } catch (_) {}
+    return result;
+  }
   async function loadRankings() {
     try {
       const url = new URL("anime-top10.json", new URL("./", location.href));
       url.searchParams.set("v", String(Math.floor(Date.now() / 60000)));
       const response = await fetch(url.href, {cache:"no-store",headers:{"Accept":"application/json"}});
       if (!response.ok) throw new Error("Anime rankings HTTP " + response.status);
-      const data = await response.json();
+      let data = await response.json();
+      if (!(data.popular || []).length || !(data.airing || []).length || !(data.season || []).length) {
+        try {
+          data = await fetchLiveRankings();
+        } catch (fallbackError) {
+          console.warn("Direct anime ranking refresh unavailable:", fallbackError);
+        }
+      }
       drawRankings(data);
     } catch (error) {
       console.warn("Animee rankings unavailable:", error);
-      rankUpdatedEl.textContent = "Could not refresh rankings. Please try again later.";
+      try {
+        drawRankings(await fetchLiveRankings());
+      } catch (_) {
+        rankUpdatedEl.textContent = "Could not refresh rankings. Please try again later.";
+      }
     }
   }
 

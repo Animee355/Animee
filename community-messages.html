@@ -126,6 +126,46 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 main.wrap>.hero h1 span:not(.shine){color:#07518a!important;background:none!important}
 .section-title small{color:#173b5b!important}
 </style>
+
+<style id="animee-skyblue-brand-refresh">
+/* Shared Animee sky-blue visual system; page functionality and member workflows remain unchanged. */
+:root{color-scheme:light;--brand-sky:#87CEEB;--brand-blue:#07518a;--bg:#87CEEB;--panel:#102d49;--panel2:#0b2036;--line:rgba(7,81,138,.35);--cyan:#75ddff;--text:#f4f8ff;--muted:#bfd4e7}
+html{min-height:100%;background:#87CEEB!important;scroll-behavior:smooth}
+body{background:#87CEEB!important;background-image:none!important;color:#082849!important;min-height:100vh}
+header{background:rgba(135,206,235,.96)!important;border-bottom:1px solid rgba(7,81,138,.25)!important;backdrop-filter:blur(14px);box-shadow:0 5px 20px rgba(7,55,95,.08)}
+.brand{color:#082849!important;text-shadow:none}
+.brand span{color:#07518a!important}
+nav a,.btn,.smallbtn{background:linear-gradient(145deg,#0b3152,#08223d)!important;color:#effaff!important;border:1px solid rgba(7,81,138,.38)!important;font-weight:700;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+nav a:hover,.btn:hover,.smallbtn:hover{transform:translateY(-1px);border-color:#75ddff!important;box-shadow:0 5px 16px rgba(7,55,95,.15)}
+.hero h1{color:#082849!important;letter-spacing:-.025em}
+.shine{background:linear-gradient(100deg,#073b6d,#0878b8,#07518a)!important;color:transparent!important;background-clip:text!important}
+.eyebrow{color:#07518a!important}
+.hero p,.muted,small{color:#173b5b}
+.panel,.post,.member,.message,.thread,.conversation,.profile-card,.card{
+ background:linear-gradient(145deg,#102d49,#071a2d)!important;
+ color:#f4f8ff!important;border:1px solid rgba(7,81,138,.28)!important;
+ box-shadow:0 12px 28px rgba(7,55,95,.16),inset 0 1px 0 rgba(255,255,255,.04)
+}
+.panel h2,.panel h3,.postname,.posthead strong{color:#f4f8ff}
+.panel .muted,.panel small,.post small,.member .muted{color:#bfd4e7}
+input,textarea,select{background:#061321!important;color:#f4f8ff!important;border-color:#315875!important}
+input:focus,textarea:focus,select:focus{border-color:#75ddff!important;box-shadow:0 0 0 3px rgba(117,221,255,.13)!important}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #07518a!important;outline-offset:3px}
+.tabs button,.filters button{background:#d8f3ff!important;color:#123e60!important;border-color:rgba(7,81,138,.22)!important}
+.tabs button.active,.filters button.active{background:#07518a!important;color:white!important}
+.primary{background:linear-gradient(100deg,#07518a,#0786bd)!important;border-color:#2997d5!important;color:#fff!important}
+footer{color:#173b5b!important}
+@media(max-width:700px){
+ .wrap{width:calc(100% - 24px)}
+ header .bar,.bar{gap:8px;padding:10px 0}
+ nav{margin-left:0;gap:6px}
+ nav a,.btn{padding:8px 10px;font-size:14px}
+ .hero{padding-top:28px}
+ .panel{padding:16px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
+</style>
+
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>

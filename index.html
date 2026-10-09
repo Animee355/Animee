@@ -6,6 +6,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Animee — Where Anime Comes to Life</title>
 <meta name="description" content="Animee — where anime comes to life. Discover anime posts, photos and videos.">
+<meta name="theme-color" content="#87CEEB">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Animee">
+<meta property="og:title" content="Animee — Where Anime Comes to Life">
+<meta property="og:description" content="Animee — where anime comes to life. Discover anime posts, photos and videos.">
+<meta name="twitter:card" content="summary">
 <style>
 :root{--bg:#08090f;--panel:#121520;--red:#ff202b;--cyan:#00c9f2;--gold:#ffd21c;--text:#f7f7fb;--muted:#aab0c2}
 *{box-sizing:border-box}
@@ -168,12 +174,25 @@ header{background:rgba(5,12,25,.88)!important;border-color:rgba(86,151,199,.25)!
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 <style id="animee-plain-skyblue-background">
-/* Plain sky-blue page background only; keep page content and panels unchanged. */
-html, body { background: #87CEEB !important; background-image: none !important; }
-body::before, body::after, .animee-character-art { display: none !important; content: none !important; }
+/* Animee accessibility and visual consistency: retain the requested plain sky-blue page background. */
+:root{--text:#f4f8ff;--muted:#b9cee3;--cyan:#75ddff}
+html,body{background:#87CEEB!important;background-image:none!important}
+body::before,body::after,.animee-character-art{display:none!important;content:none!important}
+body{color:#082849!important}
+.page>.hero h1,main.wrap>.hero h1{color:#082849!important}
+.page>.hero p,main.wrap>.hero p,main.wrap>.hero .muted{color:#173b5b!important}
+.hero .shine{background-image:linear-gradient(100deg,#073b6d,#0878b8)!important;color:transparent!important}
+.page>.hero .tag,main.wrap>.hero .eyebrow{color:#073b6d!important}
+footer{color:#173b5b!important}
+.panel,.post,.card,.sidebox,.admin,.member,.chat,.thread{color:#f4f8ff!important}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #07518a!important;outline-offset:3px}
+.skip-link{position:fixed!important;top:-70px;left:12px;z-index:99999;background:#082849!important;color:#fff!important;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:800;box-shadow:0 5px 18px #08284955}
+.skip-link:focus{top:12px}
+@media(max-width:600px){nav{gap:6px}nav a,.btn{padding:8px 10px;font-size:14px}.page{padding-left:14px;padding-right:14px}header{padding-left:12px;padding-right:12px}}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
 <div class="animee-character-art" aria-hidden="true">
 <svg viewBox="0 0 1440 900" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="gold"><stop stop-color="#ffb12e" stop-opacity=".55"/><stop offset="1" stop-color="#ffb12e" stop-opacity="0"/></radialGradient><radialGradient id="blue"><stop stop-color="#20bfff" stop-opacity=".55"/><stop offset="1" stop-color="#20bfff" stop-opacity="0"/></radialGradient><radialGradient id="violet"><stop stop-color="#883dff" stop-opacity=".55"/><stop offset="1" stop-color="#883dff" stop-opacity="0"/></radialGradient><linearGradient id="cloak" x2="1" y2="1"><stop stop-color="#355d9e"/><stop offset="1" stop-color="#080d1b"/></linearGradient><linearGradient id="galaxyBase" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#030715"/><stop offset=".48" stop-color="#0a1230"/><stop offset="1" stop-color="#120b2b"/></linearGradient><radialGradient id="nebulaCyan"><stop stop-color="#0e8fc9" stop-opacity=".36"/><stop offset=".55" stop-color="#1550a6" stop-opacity=".16"/><stop offset="1" stop-color="#14204c" stop-opacity="0"/></radialGradient><radialGradient id="nebulaViolet"><stop stop-color="#8a36e8" stop-opacity=".32"/><stop offset=".55" stop-color="#4a258e" stop-opacity=".16"/><stop offset="1" stop-color="#24144f" stop-opacity="0"/></radialGradient><radialGradient id="nebulaRose"><stop stop-color="#e05bba" stop-opacity=".18"/><stop offset="1" stop-color="#7b247e" stop-opacity="0"/></radialGradient></defs><!-- Galaxy backdrop: deep space, nebula clouds, stars, and distant worlds -->
@@ -224,17 +243,19 @@ body::before, body::after, .animee-character-art { display: none !important; con
 <div class="banner-copy"><span>WELCOME TO</span><strong>ANIMEE</strong><em>WHERE ANIME COMES TO LIFE</em></div>
 <div class="banner-chip">ANIME • FANTASY • ADVENTURE</div>
 </div>
-<nav>
+<nav aria-label="Main navigation">
 <a href="#latest">Latest posts</a>
 <a href="#history">Post history</a>
 <a href="#about">About Animee</a>
+<a href="community-feed.html">Community Feed</a>
+<a href="community-messages.html">Messages</a>
 <a href="community.html">Community</a>
 <span class="spacer"></span>
 <button class="btn" id="adminToggle" type="button">Admin sign in</button>
 </nav>
 </header>
 
-<div class="page">
+<div class="page" id="main-content">
 <section class="hero">
 <div>
 <span class="tag">WELCOME TO ANIMEE</span>

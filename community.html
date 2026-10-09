@@ -313,4 +313,6 @@ document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',(
 db.auth.onAuthStateChange((_event,session)=>{sessionUser=session?.user||null;updateAuthUI();if(sessionUser){loadOwnProfile();loadProfiles();}});
 (async()=>{const {data}=await db.auth.getSession();sessionUser=data?.session?.user||null;updateAuthUI();if(sessionUser)await loadOwnProfile();await loadProfiles();})();
 </script>
+<script src="./anime-news.js" defer></script>
+<script src="./animee-ai-chat.js" defer></script>
 </body></html>

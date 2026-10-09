@@ -1,0 +1,28 @@
+{
+  "id": "./index.html",
+  "name": "Animee — Where Anime Comes to Life",
+  "short_name": "Animee",
+  "description": "Animee — where anime comes to life. Discover anime posts and connect with the community.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
+  "background_color": "#06101f",
+  "theme_color": "#87CEEB",
+  "categories": [
+    "entertainment",
+    "social"
+  ],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

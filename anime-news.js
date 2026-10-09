@@ -37,7 +37,7 @@
       <div><h2 class="an-title" id="animee-news-title">📰 Latest Anime News</h2><p class="an-sub">Announcements, anime creators, studios, release dates and industry updates.</p></div>
       <div class="an-actions">
         <select id="animee-news-filter" aria-label="Filter anime news">
-          <option value="all">Latest Anime News</option>
+          <option value="all">All Categories</option>
           <option value="announcement">Announcements & releases</option>
           <option value="creator">Creators & Industry Updates</option>
         </select>

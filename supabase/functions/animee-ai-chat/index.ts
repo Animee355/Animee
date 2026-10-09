@@ -64,11 +64,11 @@ Deno.serve(async (req: Request) => {
   // with unrelated pages that happen to be mentioned elsewhere online.
   const latestQuestion = messages[messages.length - 1].content.toLowerCase();
   const asksAboutAnimeeFacebook =
-    /\\b(facebook|fb)\\b/.test(latestQuestion) &&
-    /\\b(page|profile|link|account|animee|follow|official|my|your|ours)\\b/.test(latestQuestion);
+    /\b(facebook|fb)\b/.test(latestQuestion) &&
+    /\b(page|profile|link|account|animee|follow|official|my|your|ours)\b/.test(latestQuestion);
   if (asksAboutAnimeeFacebook) {
     return reply(200, {
-      answer: "Animee’s official Facebook page is: https://www.facebook.com/animeeeeee/\\n\\nAnimee — Where Anime Comes to Life. 💙",
+      answer: "Animee’s official Facebook page is: https://www.facebook.com/animeeeeee/\n\nAnimee — Where Anime Comes to Life. 💙",
       sources: [{ title: "Official Animee Facebook page (provided by the page owner)", url: "https://www.facebook.com/animeeeeee/" }]
     }, origin);
   }

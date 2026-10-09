@@ -168,9 +168,9 @@
           '<div class="an-rank-meta">' + esc(meta.join(" · ") || anime.status || "View details") + '</div></div></article>';
       }).join("");
     };
-    drawRankings(popularEl, data.popular, "Popular anime rankings are temporarily unavailable.");
-    drawRankings(airingEl, data.airing, "Currently airing rankings are temporarily unavailable.");
-    drawRankings(seasonEl, data.season, "Current season rankings are temporarily unavailable.");
+    renderGroup(popularEl, data.popular, "Popular anime rankings are temporarily unavailable.");
+    renderGroup(airingEl, data.airing, "Currently airing rankings are temporarily unavailable.");
+    renderGroup(seasonEl, data.season, "Current season rankings are temporarily unavailable.");
     rankUpdatedEl.textContent = data.updated_at ? "Ranking data last updated " + dateLabel(data.updated_at) + " · data source: MyAnimeList via Jikan API" : "Ranking update time unavailable";
   };
   const mapJikanItems = payload => (payload.data || []).slice(0, 10).map(anime => ({

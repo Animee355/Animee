@@ -1,6 +1,6 @@
 /* Animee PWA service worker. Network-first for pages; never cache API/auth requests. */
-const CACHE_NAME = "animee-pwa-v5";
-const APP_SHELL = ["./index.html","./community.html","./community-feed.html","./community-messages.html","./community-reset-password.html","./offline.html","./manifest.webmanifest","./icon.svg","./pwa.js","./anime-news.js","./anime-news.json","./anime-top10.json"];
+const CACHE_NAME = "animee-pwa-v6";
+const APP_SHELL = ["./index.html","./community.html","./community-feed.html","./community-messages.html","./community-reset-password.html","./offline.html","./manifest.webmanifest","./icon.svg","./pwa.js","./animee-ai-chat.js","./anime-news.js","./anime-news.json","./anime-top10.json"];
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);

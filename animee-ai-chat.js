@@ -86,8 +86,9 @@
       thinking.remove();
       if (!response.ok) throw new Error(data.error || "The AI service is not ready yet.");
       const answer = data.answer || "I couldn't find an answer this time.";
-      const sources = Array.isArray(data.sources) ? data.sources.filter(s => s && typeof s.url === "string" && /^https?:\/\//i.test(s.url)).slice(0, 5) : [];
-      addMessage("assistant", answer + (sources.length ? "\n\nSources:\n" + sources.map(s => "- " + (s.title || s.url) + ": " + s.url).join("\n") : ""));
+      // Keep replies clean: do not automatically append a separate Sources list.
+      // Relevant citations may still be included naturally in the answer when useful.
+      addMessage("assistant", answer);
       history.push({ role: "assistant", content: answer });
       if (history.length > 10) history.splice(0, history.length - 10);
     } catch (error) {

@@ -250,5 +250,4 @@ $('#compose').addEventListener('submit',async e=>{e.preventDefault();if(!activeI
 async function init(){const s=await db.auth.getSession();user=s.data?.session?.user||null;if(!user){$('#signed-out').classList.remove('hidden');return;}$('#app').classList.remove('hidden');const p=await db.from('profiles').select('id,username,display_name,country').order('username').limit(1000);if(p.error){$('#member-status').textContent='Could not load members: '+p.error.message;$('#member-status').className='status error';return;}profiles=p.data||[];await loadMessages();const params=new URLSearchParams(location.search);const peer=params.get('to');if(peer&&profiles.some(p=>p.id===peer&&p.id!==user.id))await openPeer(peer);else{renderAll();searchMembers();}db.auth.onAuthStateChange((_event,session)=>{if(!session){location.href='community.html';}});}
 init();
 </script><script src="./anime-news.js" defer></script>
-<script src="./animee-ai-chat.js" defer></script>
 </body></html>

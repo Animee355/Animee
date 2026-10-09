@@ -23,22 +23,6 @@
     #animee-live-news .an-state{color:#d0e5f4;padding:14px 0}
     #animee-live-news .an-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:11px;color:#b8cce0;font-size:11px}
     #animee-live-news .an-disclaimer{margin:10px 0 0;color:#a9c2d7;font-size:11px}
-    #animee-live-news .an-rank-section{margin-top:22px;padding-top:17px;border-top:1px solid rgba(117,221,255,.25)}
-    #animee-live-news .an-rank-title{margin:0;color:#fff;font-size:18px;font-weight:900}
-    #animee-live-news .an-rank-note{margin:4px 0 12px;color:#bfd4e7;font-size:12px}
-    #animee-live-news .an-rank-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-    #animee-live-news .an-rank-card{display:flex;gap:10px;align-items:center;min-width:0;padding:9px;border:1px solid rgba(117,221,255,.2);border-radius:11px;background:rgba(2,13,27,.38)}
-    #animee-live-news .an-rank-card img{width:54px;height:76px;object-fit:cover;border-radius:7px;background:#16354d;flex-shrink:0}
-    #animee-live-news .an-rank-copy{min-width:0}
-    #animee-live-news .an-rank-card h4{margin:0 0 5px;font-size:12px;line-height:1.35;color:#fff;overflow-wrap:anywhere}
-    #animee-live-news .an-rank-card a{color:#8fe5ff;text-decoration:none}
-    #animee-live-news .an-rank-card a:hover{text-decoration:underline}
-    #animee-live-news .an-rank-meta{color:#bfd4e7;font-size:10px;line-height:1.45}
-    #animee-live-news .an-rank-number{font-weight:950;color:#75ddff;margin-right:4px}
-    #animee-live-news .an-rank-head{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap}
-    #animee-live-news .an-rank-head button{font-size:11px;padding:6px 9px}
-    #animee-live-news .an-rank-updated{font-size:10px;color:#a9c2d7;margin-top:9px}
-    @media(max-width:520px){#animee-live-news .an-rank-grid{grid-template-columns:1fr}#animee-live-news .an-rank-card img{width:48px;height:68px}}
     #animee-live-news[data-collapsed="true"] .an-content{display:none}
     @media(max-width:800px){#animee-live-news .an-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:520px){#animee-live-news{padding:12px}#animee-live-news .an-list{grid-template-columns:1fr}#animee-live-news .an-item{padding:12px}}
@@ -66,13 +50,6 @@
       <div class="an-list" id="animee-news-list"></div>
       <div class="an-foot"><span id="animee-news-updated">Checking news feed…</span><a href="https://www.crunchyroll.com/news/" target="_blank" rel="noopener noreferrer">Crunchyroll News ↗</a></div>
       <p class="an-disclaimer">Animee links to the original publishers. News reports may describe official announcements, but an article is not itself a primary studio announcement. Check the linked source for confirmation.</p>
-      <section class="an-rank-section" aria-labelledby="animee-rank-title">
-        <div class="an-rank-head"><div><h3 class="an-rank-title" id="animee-rank-title">🏆 Top 10 Popular Anime</h3><p class="an-rank-note">Rankings based on MyAnimeList data via Jikan. Popularity is not the same as weekly viewing figures.</p></div><button id="animee-rank-refresh" type="button">↻ Refresh rankings</button></div>
-        <div class="an-rank-grid" id="animee-rank-popular"><div class="an-state">Loading popular anime…</div></div>
-        <div class="an-rank-section"><h3 class="an-rank-title">🔥 Top 10 Currently Airing</h3><p class="an-rank-note">Anime ranked in the current airing list.</p><div class="an-rank-grid" id="animee-rank-airing"><div class="an-state">Loading airing anime…</div></div></div>
-        <div class="an-rank-section"><h3 class="an-rank-title">🍂 Current Season Anime</h3><p class="an-rank-note">Recent seasonal titles and new releases.</p><div class="an-rank-grid" id="animee-rank-season"><div class="an-state">Loading current season…</div></div></div>
-        <p class="an-rank-updated" id="animee-rank-updated">Checking ranking data…</p>
-      </section>
     </div>`;
   const header = document.querySelector("header");
   if (header) header.insertAdjacentElement("afterend", panel);
@@ -83,10 +60,6 @@
   const updatedEl = panel.querySelector("#animee-news-updated");
   const filterEl = panel.querySelector("#animee-news-filter");
   const toggleEl = panel.querySelector("#animee-news-toggle");
-  const popularEl = panel.querySelector("#animee-rank-popular");
-  const airingEl = panel.querySelector("#animee-rank-airing");
-  const seasonEl = panel.querySelector("#animee-rank-season");
-  const rankUpdatedEl = panel.querySelector("#animee-rank-updated");
   let items = [];
   let checkedAt = "";
 
@@ -143,126 +116,8 @@
     }
   }
 
-  const safeImage = value => {
-    try { const u = new URL(value); return u.protocol === "https:" ? u.href : ""; }
-    catch (_) { return ""; }
-  };
-  const drawRankings = data => {
-    const renderGroup = (target, entries, emptyText) => {
-      if (!Array.isArray(entries) || !entries.length) {
-        target.innerHTML = '<div class="an-state">' + esc(emptyText) + '</div>';
-        return;
-      }
-      target.innerHTML = entries.slice(0, 10).map((anime, index) => {
-        const url = safeUrl(anime.url);
-        const image = safeImage(anime.image);
-        if (!url) return "";
-        const meta = [];
-        if (anime.score) meta.push("⭐ " + Number(anime.score).toFixed(2));
-        if (anime.year) meta.push(String(anime.year));
-        if (anime.episodes) meta.push(String(anime.episodes) + " eps");
-        if (anime.members) meta.push(Number(anime.members).toLocaleString() + " members");
-        return '<article class="an-rank-card">' +
-          (image ? '<img loading="lazy" src="' + esc(image) + '" alt="" referrerpolicy="no-referrer">' : '') +
-          '<div class="an-rank-copy"><h4><span class="an-rank-number">#' + (index + 1) + '</span><a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + esc(anime.title || "Anime title") + '</a></h4>' +
-          '<div class="an-rank-meta">' + esc(meta.join(" · ") || anime.status || "View details") + '</div></div></article>';
-      }).join("");
-    };
-    renderGroup(popularEl, data.popular, "Popular anime rankings are temporarily unavailable.");
-    renderGroup(airingEl, data.airing, "Currently airing rankings are temporarily unavailable.");
-    renderGroup(seasonEl, data.season, "Current season rankings are temporarily unavailable.");
-    rankUpdatedEl.textContent = data.updated_at ? "Ranking data last updated " + dateLabel(data.updated_at) + " · data source: MyAnimeList via Jikan API" : "Ranking update time unavailable";
-  };
-  const mapJikanItems = payload => (payload.data || []).slice(0, 10).map(anime => ({
-    title: anime.title_english || anime.title || anime.title_japanese || "Anime title",
-    url: anime.url || "",
-    image: ((anime.images || {}).webp || {}).large_image_url || (((anime.images || {}).jpg || {}).image_url || ""),
-    score: anime.score || null,
-    members: anime.members || null,
-    episodes: anime.episodes || null,
-    status: anime.status || "",
-    year: anime.year || (((anime.aired || {}).prop || {}).from || {}).year || null
-  })).filter(anime => safeUrl(anime.url));
-  async function fetchLiveRankings() {
-    const cacheKey = "animee-live-top10-v1";
-    let cached = null;
-    try {
-      cached = JSON.parse(localStorage.getItem(cacheKey) || "null");
-      if (cached && cached.savedAt && Date.now() - cached.savedAt < 30 * 60 * 1000 && cached.data) return cached.data;
-    } catch (_) {}
-    const endpoints = [
-      ["popular", "https://api.jikan.moe/v4/top/anime?filter=bypopularity&limit=10"],
-      ["airing", "https://api.jikan.moe/v4/top/anime?filter=airing&limit=10"],
-      ["season", "https://api.jikan.moe/v4/seasons/now?limit=10"]
-    ];
-    const result = {updated_at:new Date().toISOString(),source:"MyAnimeList data via Jikan API",popular:[],airing:[],season:[]};
-    let succeeded = 0;
-    for (let i = 0; i < endpoints.length; i++) {
-      const [key, endpoint] = endpoints[i];
-      if (i) await new Promise(resolve => window.setTimeout(resolve, 1600));
-      let lastError = null;
-      for (let attempt = 0; attempt < 2; attempt++) {
-        try {
-          const response = await fetch(endpoint, {headers:{"Accept":"application/json"}});
-          if (!response.ok) {
-            const error = new Error("Jikan " + key + " HTTP " + response.status);
-            error.retryAfter = response.headers.get("Retry-After");
-            throw error;
-          }
-          const mapped = mapJikanItems(await response.json());
-          if (!mapped.length) throw new Error("Jikan " + key + " returned no anime");
-          result[key] = mapped;
-          succeeded++;
-          lastError = null;
-          break;
-        } catch (error) {
-          lastError = error;
-          if (attempt === 0) {
-            const waitSeconds = Math.min(8, Math.max(1, Number(error.retryAfter) || 2));
-            await new Promise(resolve => window.setTimeout(resolve, waitSeconds * 1000));
-          }
-        }
-      }
-      if (lastError) console.warn("Animee could not refresh " + key + " rankings:", lastError);
-    }
-    if (succeeded > 0) {
-      try { localStorage.setItem(cacheKey, JSON.stringify({savedAt:Date.now(),data:result})); } catch (_) {}
-      return result;
-    }
-    if (cached && cached.data) {
-      console.warn("Using cached Animee rankings because the live ranking service is unavailable.");
-      return cached.data;
-    }
-    throw new Error("All live ranking requests failed and no cached rankings are available.");
-  }
-  async function loadRankings() {
-    try {
-      const url = new URL("anime-top10.json", new URL("./", location.href));
-      url.searchParams.set("v", String(Math.floor(Date.now() / 60000)));
-      const response = await fetch(url.href, {cache:"no-store",headers:{"Accept":"application/json"}});
-      if (!response.ok) throw new Error("Anime rankings HTTP " + response.status);
-      let data = await response.json();
-      if (!(data.popular || []).length || !(data.airing || []).length || !(data.season || []).length) {
-        try {
-          data = await fetchLiveRankings();
-        } catch (fallbackError) {
-          console.warn("Direct anime ranking refresh unavailable:", fallbackError);
-        }
-      }
-      drawRankings(data);
-    } catch (error) {
-      console.warn("Animee rankings unavailable:", error);
-      try {
-        drawRankings(await fetchLiveRankings());
-      } catch (_) {
-        rankUpdatedEl.textContent = "Could not refresh rankings. Please try again later.";
-      }
-    }
-  }
-
   filterEl.addEventListener("change", draw);
   panel.querySelector("#animee-news-refresh").addEventListener("click", () => loadNews(true));
-  panel.querySelector("#animee-rank-refresh").addEventListener("click", loadRankings);
   toggleEl.addEventListener("click", () => {
     const collapsed = panel.dataset.collapsed !== "true";
     panel.dataset.collapsed = String(collapsed);
@@ -270,7 +125,5 @@
     toggleEl.setAttribute("aria-expanded", String(!collapsed));
   });
   loadNews(true);
-  loadRankings();
   window.setInterval(() => loadNews(false), 5 * 60 * 1000);
-  window.setInterval(loadRankings, 5 * 60 * 1000);
 })();

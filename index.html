@@ -451,41 +451,7 @@ footer{color:#173b5b!important}
 <p id="editorMessage" class="status" role="status" aria-live="polite"></p>
 </div>
 
-<div id="aiKnowledgePanel" hidden style="margin-top:24px;padding-top:18px;border-top:1px solid #29435b">
-  <h3>🧠 Teach Animee AI</h3>
-  <p style="color:#a8bad0">Add facts about Animee, your official links, posting schedule, policies, and preferred answers. Active notes become available to Animee AI for everyone.</p>
-  <div class="admin-grid">
-    <div>
-      <label for="aiKnowledgeTitle">Knowledge title</label>
-      <input id="aiKnowledgeTitle" maxlength="160" placeholder="e.g. Official Animee Facebook page">
-    </div>
-    <div>
-      <label for="aiKnowledgeCategory">Category</label>
-      <select id="aiKnowledgeCategory">
-        <option value="Animee brand">Animee brand</option>
-        <option value="Social links">Social links</option>
-        <option value="Posting schedule">Posting schedule</option>
-        <option value="Community policy">Community policy</option>
-        <option value="Anime facts">Anime facts</option>
-        <option value="Other">Other</option>
-      </select>
-    </div>
-    <div class="wide">
-      <label for="aiKnowledgeContent">What should Animee AI know?</label>
-      <textarea id="aiKnowledgeContent" maxlength="5000" style="min-height:130px" placeholder="Write clear facts and instructions. Example: Our official Facebook page is https://www.facebook.com/animeeeeee/"></textarea>
-    </div>
-    <div>
-      <label><input id="aiKnowledgeActive" type="checkbox" checked style="width:auto;margin-right:7px">Active — let AI use this note</label>
-    </div>
-  </div>
-  <div class="actions">
-    <button class="btn primary" id="aiKnowledgeSave" type="button">Save knowledge</button>
-    <button class="btn" id="aiKnowledgeCancel" type="button" hidden>Cancel edit</button>
-    <button class="btn" id="aiKnowledgeReload" type="button">Refresh knowledge</button>
-  </div>
-  <p id="aiKnowledgeMessage" class="status" role="status" aria-live="polite"></p>
-  <div id="aiKnowledgeList" style="display:grid;gap:8px;margin-top:12px"></div>
-</div>
+
 </section>
 </main>
 
@@ -644,8 +610,6 @@ function updateAdminUI() {
   $('#loginFields').hidden = owner;
   $('#signOut').hidden = !owner;
   $('#editorPanel').hidden = !owner;
-  $('#aiKnowledgePanel').hidden = !owner;
-  if (owner) loadAIKnowledge();
   $('#authMessage').textContent = owner
     ? 'Signed in with the authorized owner account.'
     : currentUser
@@ -989,130 +953,6 @@ $('#posts').addEventListener('submit', async event => {
 });
 
 
-let editingKnowledgeId = null;
-let aiKnowledgeRows = [];
-
-function setAIKnowledgeMessage(message, isError = false) {
-  const element = $('#aiKnowledgeMessage');
-  element.textContent = message;
-  element.style.color = isError ? '#ff9eaf' : '#75ddff';
-}
-
-function resetAIKnowledgeForm() {
-  editingKnowledgeId = null;
-  $('#aiKnowledgeTitle').value = '';
-  $('#aiKnowledgeCategory').value = 'Animee brand';
-  $('#aiKnowledgeContent').value = '';
-  $('#aiKnowledgeActive').checked = true;
-  $('#aiKnowledgeSave').textContent = 'Save knowledge';
-  $('#aiKnowledgeCancel').hidden = true;
-}
-
-function renderAIKnowledge() {
-  const list = $('#aiKnowledgeList');
-  if (!aiKnowledgeRows.length) {
-    list.innerHTML = '<p style="color:#a8bad0">No saved knowledge yet. Add the first note above.</p>';
-    return;
-  }
-  list.innerHTML = aiKnowledgeRows.map(item => `
-    <article style="padding:12px;border:1px solid #29435b;border-radius:10px;background:#081525">
-      <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap">
-        <strong>${esc(item.title)}</strong>
-        <span style="font-size:12px;color:${item.is_active ? '#75ddff' : '#ffcf7a'}">${item.is_active ? 'Active' : 'Paused'} · ${esc(item.category)}</span>
-      </div>
-      <p style="white-space:pre-wrap;overflow-wrap:anywhere;color:#b8cce0;margin:8px 0">${esc(item.content)}</p>
-      <div class="actions">
-        <button class="btn" type="button" data-ai-knowledge-edit="${item.id}">Edit</button>
-        <button class="btn" type="button" data-ai-knowledge-toggle="${item.id}">${item.is_active ? 'Pause' : 'Activate'}</button>
-        <button class="btn" type="button" data-ai-knowledge-delete="${item.id}">Delete</button>
-      </div>
-    </article>`).join('');
-}
-
-async function loadAIKnowledge() {
-  if (!isOwner()) return;
-  $('#aiKnowledgeList').textContent = 'Loading saved knowledge…';
-  const { data, error } = await db.from('ai_knowledge')
-    .select('id,title,category,content,is_active,updated_at')
-    .order('updated_at', { ascending: false })
-    .limit(100);
-  if (error) {
-    aiKnowledgeRows = [];
-    $('#aiKnowledgeList').textContent = 'Knowledge storage is not set up yet. Run supabase-ai-knowledge.sql in the Supabase SQL Editor, then refresh this panel.';
-    setAIKnowledgeMessage('Database setup required before you can save AI knowledge.', true);
-    return;
-  }
-  aiKnowledgeRows = data || [];
-  renderAIKnowledge();
-  setAIKnowledgeMessage('Loaded ' + aiKnowledgeRows.length + ' saved knowledge note(s).');
-}
-
-$('#aiKnowledgeSave').addEventListener('click', async () => {
-  if (!isOwner()) return setAIKnowledgeMessage('Sign in with the Animee owner account first.', true);
-  const title = $('#aiKnowledgeTitle').value.trim();
-  const content = $('#aiKnowledgeContent').value.trim();
-  const category = $('#aiKnowledgeCategory').value;
-  const is_active = $('#aiKnowledgeActive').checked;
-  if (!title || !content) return setAIKnowledgeMessage('Enter a title and the knowledge you want the AI to learn.', true);
-  if (title.length > 160 || content.length > 5000) return setAIKnowledgeMessage('The title or content is too long.', true);
-  const button = $('#aiKnowledgeSave');
-  button.disabled = true;
-  setAIKnowledgeMessage('Saving knowledge…');
-  try {
-    const payload = { title, content, category, is_active, updated_at: new Date().toISOString() };
-    const result = editingKnowledgeId
-      ? await db.from('ai_knowledge').update(payload).eq('id', editingKnowledgeId).select().single()
-      : await db.from('ai_knowledge').insert(payload).select().single();
-    if (result.error) throw result.error;
-    resetAIKnowledgeForm();
-    setAIKnowledgeMessage('Saved. Animee AI can use this note in new questions.');
-    await loadAIKnowledge();
-  } catch (error) {
-    setAIKnowledgeMessage('Could not save: ' + (error.message || 'Unknown error'), true);
-  } finally {
-    button.disabled = false;
-  }
-});
-
-$('#aiKnowledgeCancel').addEventListener('click', resetAIKnowledgeForm);
-$('#aiKnowledgeReload').addEventListener('click', loadAIKnowledge);
-$('#aiKnowledgeList').addEventListener('click', async event => {
-  const editId = event.target.closest('[data-ai-knowledge-edit]')?.dataset.aiKnowledgeEdit;
-  const toggleId = event.target.closest('[data-ai-knowledge-toggle]')?.dataset.aiKnowledgeToggle;
-  const deleteId = event.target.closest('[data-ai-knowledge-delete]')?.dataset.aiKnowledgeDelete;
-  if (editId) {
-    const item = aiKnowledgeRows.find(row => String(row.id) === String(editId));
-    if (!item) return;
-    editingKnowledgeId = item.id;
-    $('#aiKnowledgeTitle').value = item.title;
-    $('#aiKnowledgeCategory').value = item.category || 'Other';
-    $('#aiKnowledgeContent').value = item.content;
-    $('#aiKnowledgeActive').checked = item.is_active;
-    $('#aiKnowledgeSave').textContent = 'Update knowledge';
-    $('#aiKnowledgeCancel').hidden = false;
-    $('#aiKnowledgeTitle').focus();
-    return;
-  }
-  if (toggleId) {
-    const item = aiKnowledgeRows.find(row => String(row.id) === String(toggleId));
-    if (!item || !isOwner()) return;
-    const { error } = await db.from('ai_knowledge').update({ is_active: !item.is_active, updated_at: new Date().toISOString() }).eq('id', item.id);
-    if (error) return setAIKnowledgeMessage('Could not update note: ' + error.message, true);
-    await loadAIKnowledge();
-    return;
-  }
-  if (deleteId) {
-    const item = aiKnowledgeRows.find(row => String(row.id) === String(deleteId));
-    if (!item || !isOwner() || !confirm('Delete this AI knowledge note?')) return;
-    const { error } = await db.from('ai_knowledge').delete().eq('id', item.id);
-    if (error) return setAIKnowledgeMessage('Could not delete note: ' + error.message, true);
-    if (String(editingKnowledgeId) === String(item.id)) resetAIKnowledgeForm();
-    await loadAIKnowledge();
-    setAIKnowledgeMessage('Knowledge note deleted.');
-  }
-});
-
-
 $('#clear').addEventListener('click', resetForm);
 $('#cancelEdit').addEventListener('click', resetForm);
 $('#year').textContent = new Date().getFullYear();
@@ -1135,6 +975,5 @@ db.auth.onAuthStateChange((_event, session) => {
 })();
 </script>
 <script src="./anime-news.js" defer></script>
-<script src="./animee-ai-chat.js" defer></script>
 </body>
 </html>

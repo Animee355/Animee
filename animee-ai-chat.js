@@ -80,7 +80,7 @@
           "apikey": SUPABASE_PUBLIC_KEY,
           "Authorization": "Bearer " + SUPABASE_PUBLIC_KEY
         },
-        body: JSON.stringify({ messages: [...history.slice(-8), { role: "user", content: message }] })
+        body: JSON.stringify({ messages: history.slice(-10) })
       });
       const data = await response.json().catch(() => ({}));
       thinking.remove();

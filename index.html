@@ -193,6 +193,92 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 .page>.hero .gradient{background-image:linear-gradient(90deg,#073b6d,#075a91,#0a4677)!important}
 main.wrap>.hero h1 span:not(.shine){color:#07518a!important;background:none!important}
 .section-title small{color:#173b5b!important}
+
+/* Animee visual refresh — sky-blue brand, polished layout, existing features preserved */
+:root{
+  --brand-sky:#87ceeb;
+  --brand-blue:#07518a;
+  --brand-deep:#061a30;
+  --cyan:#75ddff;
+  --text:#f4f8ff;
+  --muted:#b8cce0;
+}
+html{background:var(--brand-sky)!important}
+body{
+  background:#87CEEB!important;
+  background-image:none!important;
+  color:#082849;
+}
+header{
+  max-width:1240px;
+  padding:18px 20px 0;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+}
+.animee-banner{
+  min-height:220px;
+  border:2px solid rgba(7,81,138,.28);
+  border-radius:20px;
+  background:linear-gradient(115deg,#bdefff 0%,#87ceeb 42%,#4da9d8 100%)!important;
+  box-shadow:0 14px 32px rgba(7,55,95,.20),inset 0 1px 0 rgba(255,255,255,.7);
+}
+.banner-art{opacity:.14;mix-blend-mode:multiply}
+.banner-copy{max-width:90%;text-shadow:0 2px 10px rgba(255,255,255,.45)}
+.banner-copy span{color:#07518a;text-shadow:none}
+.banner-copy strong{color:#082849;-webkit-text-stroke:0;text-shadow:0 2px 0 rgba(255,255,255,.4),0 8px 22px rgba(7,55,95,.18)}
+.banner-copy strong .logo-a{color:#e5283b;text-shadow:2px 3px 0 rgba(105,0,18,.18),0 0 14px rgba(255,255,255,.25)}
+.banner-copy em{color:#073b63;text-shadow:none}
+.banner-copy em .tag-anime{color:#d5233b}
+.page{max-width:1240px;padding:0 20px 52px}
+.hero{padding:30px 0 22px}
+.hero h1{color:#082849;letter-spacing:-.035em}
+.hero p{color:#173b5b}
+.hero .gradient{background-image:linear-gradient(90deg,#073b6d,#0878b8,#07518a)!important}
+.tag{color:#07518a}
+nav{gap:8px;padding:16px 0 12px}
+nav a,.btn{
+  color:#eaf8ff;
+  background:linear-gradient(145deg,#0b3152,#08223d);
+  border:1px solid rgba(7,81,138,.32);
+  box-shadow:0 4px 12px rgba(7,55,95,.12);
+  font-weight:700;
+}
+nav a:hover,.btn:hover{transform:translateY(-1px);background:#10466f}
+nav a:focus-visible,.btn:focus-visible{outline:3px solid #07518a;outline-offset:3px}
+.section-title h2{color:#082849}
+.section-title small{color:#173b5b!important}
+.filters button{background:#d8f3ff;color:#123e60;border:1px solid rgba(7,81,138,.18)}
+.filters button.active{background:#07518a;color:white}
+.card,.sidebox,.admin{
+  background:linear-gradient(145deg,#102d49,#071a2d)!important;
+  border:1px solid rgba(7,81,138,.25)!important;
+  border-radius:16px;
+  box-shadow:0 12px 28px rgba(7,55,95,.17),inset 0 1px 0 rgba(255,255,255,.045);
+}
+.card{padding:16px}
+.card h3,.sidebox h3{color:#f4f8ff}
+.card p,.sidebox p{color:#c3d8e9}
+.embed{background:#061321}
+.empty{color:#173b5b;border-color:rgba(7,81,138,.35);background:rgba(255,255,255,.25)}
+.follow{background:linear-gradient(100deg,#07518a,#0786bd);box-shadow:0 7px 18px rgba(7,81,138,.22)}
+.admin{color:#f4f8ff}
+.admin label{color:#d7eafa}
+.website-comments{border-color:rgba(117,221,255,.25)}
+footer{color:#173b5b!important}
+.skip-link{background:#082849!important;color:white!important}
+@media(max-width:600px){
+  header{padding:12px 12px 0}
+  .animee-banner{min-height:150px;aspect-ratio:2.1/1;border-radius:14px}
+  .banner-copy{max-width:86%}
+  .banner-copy strong{font-size:clamp(27px,8vw,46px)}
+  .banner-copy span{font-size:8px;letter-spacing:.16em}
+  .banner-copy em{font-size:8px;letter-spacing:0}
+  .page{padding-left:14px;padding-right:14px}
+  nav{padding-top:12px}
+}
+
 </style>
 </head>
 <body>

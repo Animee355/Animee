@@ -107,8 +107,25 @@ def fetch_jikan(path):
         "https://api.jikan.moe/v4/" + path,
         headers={"User-Agent": "AnimeeNewsBot/1.0 (+https://animee355.github.io/Animee/)", "Accept": "application/json"},
     )
-    with urllib.request.urlopen(request, timeout=25) as response:
-        payload = json.loads(response.read(4_000_000).decode("utf-8"))
+    last_error = None
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(request, timeout=25) as response:
+                payload = json.loads(response.read(4_000_000).decode("utf-8"))
+            break
+        except Exception as exc:
+            last_error = exc
+            if attempt == 3:
+                raise
+            retry_after = 0
+            if hasattr(exc, "headers") and exc.headers:
+                try:
+                    retry_after = int(exc.headers.get("Retry-After", "0"))
+                except (TypeError, ValueError):
+                    retry_after = 0
+            time.sleep(max(retry_after, 2 ** attempt))
+    else:
+        raise last_error
     results = []
     for item in payload.get("data", []):
         title = item.get("title_english") or item.get("title") or item.get("title_japanese") or ""

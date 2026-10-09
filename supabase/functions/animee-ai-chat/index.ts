@@ -59,6 +59,20 @@ Deno.serve(async (req: Request) => {
   }
   if (messages[messages.length - 1]?.role !== "user") return reply(400, { error: "Please send a question." }, origin);
 
+  // Deterministic owner-verified answers for Animee's own official page links.
+  // These must bypass web search, which can confuse a user-provided Facebook URL
+  // with unrelated pages that happen to be mentioned elsewhere online.
+  const latestQuestion = messages[messages.length - 1].content.toLowerCase();
+  const asksAboutAnimeeFacebook =
+    /\\b(facebook|fb)\\b/.test(latestQuestion) &&
+    /\\b(page|profile|link|account|animee|follow|official|my|your|ours)\\b/.test(latestQuestion);
+  if (asksAboutAnimeeFacebook) {
+    return reply(200, {
+      answer: "Animee’s official Facebook page is: https://www.facebook.com/animeeeeee/\\n\\nAnimee — Where Anime Comes to Life. 💙",
+      sources: [{ title: "Official Animee Facebook page (provided by the page owner)", url: "https://www.facebook.com/animeeeeee/" }]
+    }, origin);
+  }
+
   // Read the shared Animee knowledge base. Only active notes are public-readable via RLS.
   let ownerKnowledge = "";
   try {

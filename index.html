@@ -68,4 +68,8 @@ $('#export').onclick=()=>{const blob=new Blob([JSON.stringify(posts.map(({data,.
 $('#importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const items=JSON.parse(r.result);if(Array.isArray(items)){posts=items;save();alert('Imported post list. Media files are not included in JSON exports.')}else alert('Invalid JSON list')}catch{alert('Could not read JSON file')}};r.readAsText(f)};
 $('#year').textContent=new Date().getFullYear();load();
 </script>
+</body></html><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// The complete new Supabase connection code goes here.
+</script>
 </body></html>

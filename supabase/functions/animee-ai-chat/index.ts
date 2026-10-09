@@ -116,7 +116,7 @@ If the user directly provides or confirms an official Animee link, accept it as 
       body: JSON.stringify({
         model: "gpt-4.1-mini",
         tools: [{ type: "web_search", search_context_size: "high" }],
-        tool_choice: "required",
+        tool_choice: "auto",
         include: ["web_search_call.action.sources"],
         input: [
           { role: "system", content: systemPrompt },

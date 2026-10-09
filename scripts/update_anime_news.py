@@ -13,6 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "anime-news.json"
+RANKINGS_OUTPUT = ROOT / "anime-top10.json"
 FEEDS = [
     ("Crunchyroll News", "https://cr-news-api-service.prd.crunchyrollsvc.com/v1/en-US/rss"),
     ("Anime News Network", "https://www.animenewsnetwork.com/all/rss.xml?ann-edition=us"),
@@ -101,7 +102,71 @@ def parse_feed(source, url):
         })
     return found
 
+def fetch_jikan(path):
+    request = urllib.request.Request(
+        "https://api.jikan.moe/v4/" + path,
+        headers={"User-Agent": "AnimeeNewsBot/1.0 (+https://animee355.github.io/Animee/)", "Accept": "application/json"},
+    )
+    with urllib.request.urlopen(request, timeout=25) as response:
+        payload = json.loads(response.read(4_000_000).decode("utf-8"))
+    results = []
+    for item in payload.get("data", []):
+        title = item.get("title_english") or item.get("title") or item.get("title_japanese") or ""
+        url = item.get("url") or ""
+        if not title or not url.startswith("https://"):
+            continue
+        images = item.get("images") or {}
+        image = (images.get("webp") or {}).get("large_image_url") or (images.get("jpg") or {}).get("image_url") or ""
+        results.append({
+            "title": plain_summary(title)[:180],
+            "url": url,
+            "image": image if image.startswith("https://") else "",
+            "score": item.get("score"),
+            "members": item.get("members"),
+            "episodes": item.get("episodes"),
+            "status": item.get("status") or "",
+            "year": (item.get("year") or ((item.get("aired") or {}).get("prop") or {}).get("from") or {}).get("year") if isinstance(item.get("year") or ((item.get("aired") or {}).get("prop") or {}).get("from"), dict) else item.get("year"),
+            "season": item.get("season") or "",
+        })
+    return results[:10]
+
+def update_rankings():
+    now = datetime.now(timezone.utc)
+    previous = {}
+    if RANKINGS_OUTPUT.exists():
+        try:
+            previous = json.loads(RANKINGS_OUTPUT.read_text(encoding="utf-8"))
+        except Exception:
+            previous = {}
+    result = dict(previous)
+    result["updated_at"] = now.isoformat()
+    errors = []
+    endpoints = [
+        ("popular", "top/anime?filter=bypopularity&limit=10"),
+        ("airing", "top/anime?filter=airing&limit=10"),
+        ("season", "seasons/now?limit=10"),
+    ]
+    successful = 0
+    for key, endpoint in endpoints:
+        try:
+            result[key] = fetch_jikan(endpoint)
+            successful += 1
+            print("Fetched " + key + " anime: " + str(len(result[key])))
+        except Exception as exc:
+            errors.append(key + ": " + str(exc))
+            print("Could not refresh " + key + " anime: " + str(exc), file=sys.stderr)
+        time.sleep(1.2)
+    if successful:
+        result["source"] = "MyAnimeList data via Jikan API"
+        result["source_url"] = "https://docs.jikan.moe/usage/top/anime/"
+        RANKINGS_OUTPUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+        print("Saved anime rankings to " + str(RANKINGS_OUTPUT))
+    else:
+        print("No anime ranking endpoint responded; preserving existing rankings.", file=sys.stderr)
+    return successful > 0
+
 def main():
+    update_rankings()
     all_items = []
     success_count = 0
     errors = []

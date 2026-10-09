@@ -170,7 +170,14 @@ footer{color:#173b5b!important}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
 </style>
 
-</head>
+<style id="animee-social-footer-polish">
+.animee-social-footer{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding-top:28px!important;padding-bottom:32px!important;text-align:center;color:#082849!important}
+.animee-social-footer strong{font-size:clamp(15px,2vw,19px);color:#082849}
+.animee-social-footer nav{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;margin:0}
+.animee-social-footer nav a{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border:1px solid rgba(8,40,73,.24);border-radius:999px;background:rgba(255,255,255,.38);color:#082849!important;text-decoration:none;font-size:13px;font-weight:800}
+.animee-social-footer nav a:hover{background:rgba(255,255,255,.75)}
+.animee-social-footer small{color:#173b5b;font-size:12px}
+</style></head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 
@@ -260,7 +267,16 @@ footer{color:#173b5b!important}
 </aside>
 </div>
 </main>
-<footer class="wrap">© <span id="year"></span> Animee — Where Anime Comes to Life!<br>Built for anime fans around the world.</footer>
+<footer class="wrap animee-social-footer">
+<strong>ANIMEE — Where Anime Comes to Life. 💙</strong>
+<nav aria-label="Official Animee social links">
+<a href="https://www.facebook.com/animeeeeee/" target="_blank" rel="noopener noreferrer">Facebook ↗</a>
+<a href="https://www.tiktok.com/@animee.media" target="_blank" rel="noopener noreferrer">TikTok ↗</a>
+<a href="https://www.instagram.com/animee.media/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+<a href="index.html">Animee Home</a>
+</nav>
+<small>Built for anime fans around the world.</small>
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 'use strict';

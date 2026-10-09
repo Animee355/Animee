@@ -128,7 +128,13 @@ If the user directly provides or confirms an official Animee link, accept it as 
     const result = await upstream.json().catch(() => ({}));
     if (!upstream.ok) {
       console.error("OpenAI Responses request failed:", upstream.status, result?.error?.code || "unknown");
-      if (upstream.status === 429) return reply(429, { error: "Animee AI is busy right now. Please try again shortly." }, origin);
+      if (upstream.status === 429) {
+        const apiErrorCode = String(result?.error?.code || result?.error?.type || "");
+        if (apiErrorCode === "insufficient_quota") {
+          return reply(503, { error: "Animee AI has reached its OpenAI API usage limit. The site owner needs to check OpenAI billing and usage limits, then try again." }, origin);
+        }
+        return reply(429, { error: "Animee AI is temporarily rate-limited by the AI service. Please wait a minute and try again." }, origin);
+      }
       return reply(502, { error: "Animee AI could not generate an answer right now. Please try again later." }, origin);
     }
 

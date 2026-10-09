@@ -165,6 +165,27 @@
         const answer = typeof data.answer === "string" ? data.answer.trim() : "";
         if (!answer) throw new Error("I couldn't create an answer just now. Please try again.");
         pending.textContent = answer;
+        if (Array.isArray(data.sources) && data.sources.length) {
+          const sourceWrap = document.createElement("div");
+          sourceWrap.style.cssText = "margin-top:9px;padding-top:8px;border-top:1px solid #315875;font-size:11px;display:grid;gap:5px";
+          const sourceTitle = document.createElement("strong");
+          sourceTitle.textContent = "Sources";
+          sourceWrap.appendChild(sourceTitle);
+          data.sources.slice(0, 8).forEach(source => {
+            try {
+              const url = new URL(source.url);
+              if (!["https:", "http:"].includes(url.protocol)) return;
+              const link = document.createElement("a");
+              link.href = url.href;
+              link.target = "_blank";
+              link.rel = "noopener noreferrer";
+              link.textContent = source.title || url.hostname;
+              link.style.cssText = "color:#8fe5ff;overflow-wrap:anywhere";
+              sourceWrap.appendChild(link);
+            } catch (_) {}
+          });
+          if (sourceWrap.children.length > 1) pending.appendChild(sourceWrap);
+        }
         history.push({ role: "assistant", content: answer });
       } catch (err) {
         pending.remove();

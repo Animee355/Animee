@@ -84,9 +84,9 @@
     const url = safeUrl(item.url);
     if (!url) return "";
     let host = "";
-    try { host = new URL(url).hostname.replace(/^www\\./i, ""); } catch (_) {}
+    try { host = new URL(url).hostname.replace(/^www\./i, ""); } catch (_) {}
     const storyText = String(item.title || "") + " " + String(item.summary || "");
-    const unconfirmed = /\\b(rumou?r|unconfirmed|speculation|speculative|not confirmed|unverified)\\b/i.test(storyText);
+    const unconfirmed = /\b(rumou?r|unconfirmed|speculation|speculative|not confirmed|unverified)\b/i.test(storyText);
     const statusLabel = unconfirmed ? "RUMOR / UNCONFIRMED" : "NEWS REPORT";
     const publishedDate = item.published && !Number.isNaN(new Date(item.published).getTime()) ? "Published " + dateLabel(item.published) : "Publication date not provided";
     return `<article class="an-item">

@@ -595,7 +595,7 @@ img,video,iframe{max-width:100%}
 </div>
 <div class="wide" id="fileWrap">
 <label for="file">Choose media from your device</label>
-<input type="file" id="file" accept="video/*">
+<input type="file" id="file" accept="video/*" aria-describedby="fileHelp">
 <p id="fileHelp" style="font-size:12px;color:#aab0c2">Choose a file from your device. Large uploads may be limited by your Supabase Storage settings.</p>
 </div>
 <div class="wide">
@@ -657,6 +657,8 @@ const SUPABASE_URL = 'https://mnfzpbwhvierboadwctz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_XV2dfLKtRHyIRcQBcwlaXA_QX61BvXW';
 const OWNER_ID = '991aadfe-375e-41b1-b709-a4e0cbf74512';
 const BUCKET = 'animee-media';
+// Practical limit for standard Supabase Storage uploads.
+const MAX_MEDIA_SIZE = 50 * 1024 * 1024; // 50 MiB
 
 const $ = selector => document.querySelector(selector);
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -857,10 +859,10 @@ function updateKindFields() {
   $('#fileWrap').hidden = false;
   $('#file').accept = kind === 'photo' ? 'image/*' : kind === 'audio' ? 'audio/*' : 'video/*';
   $('#fileHelp').textContent = kind === 'audio'
-    ? 'Choose MP3, M4A, WAV, OGG, or another audio file supported by your browser. Upload size depends on your Supabase Storage settings.'
+    ? 'Choose MP3, M4A, WAV, OGG, or another audio file supported by your browser. Maximum upload size: 50 MB.'
     : kind === 'photo'
-      ? 'Choose an image file from your device.'
-      : 'Choose a video file from your device. Large uploads may be limited by your Supabase Storage settings.';
+      ? 'Choose an image file from your device. Maximum upload size: 50 MB.'
+      : 'Choose a video file from your device. Maximum upload size: 50 MB; compress larger videos before uploading.';
 }
 
 function getStoragePath(publicUrl) {
@@ -879,6 +881,15 @@ async function removeOldMedia(publicUrl) {
 }
 
 async function uploadMedia(file) {
+  if (!file) throw new Error('Choose a media file from your device.');
+  if (file.size > MAX_MEDIA_SIZE) {
+    throw new Error('This file is larger than 50 MB. Please compress it or choose a smaller file.');
+  }
+  const allowedType = file.type.startsWith('image/') || file.type.startsWith('video/') || file.type.startsWith('audio/');
+  if (!allowedType) {
+    throw new Error('Unsupported file type. Choose an image, video, or audio file.');
+  }
+
   const safeName = file.name.replace(/[^\w.-]/g, '_');
   const path = OWNER_ID + '/' + Date.now() + '-' + safeName;
 

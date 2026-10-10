@@ -351,6 +351,13 @@ img,video,iframe{max-width:100%}
 #animee-welcome-gate .welcome-chips{display:flex;flex-wrap:wrap;gap:7px}
 #animee-welcome-gate .welcome-chips button{border:1px solid #acd9e9;border-radius:999px;padding:8px 11px;background:#f8fdff;color:#174769;font-size:11px;font-weight:800;cursor:pointer;transition:background .15s ease,border-color .15s ease}
 #animee-welcome-gate .welcome-chips button:hover{background:#dff6ff;border-color:#4ba9d4}
+#animee-welcome-gate .welcome-live-trending{margin-top:14px;padding:11px 12px;border:1px solid #a9d9ec;border-radius:13px;background:rgba(255,255,255,.62);max-width:500px}
+#animee-welcome-gate .welcome-live-heading{display:flex;align-items:center;gap:7px;margin-bottom:8px;color:#245b78;font-size:10px;font-weight:950;letter-spacing:.13em}
+#animee-welcome-gate .welcome-live-dot{width:7px;height:7px;border-radius:50%;background:#16a765;box-shadow:0 0 0 4px #16a76520}
+#animee-welcome-gate .welcome-live-picks{display:flex;flex-wrap:wrap;gap:7px}
+#animee-welcome-gate .welcome-live-picks button{border:1px solid #acd9e9;border-radius:999px;padding:7px 10px;background:#fff;color:#174769;font-size:11px;font-weight:850;cursor:pointer}
+#animee-welcome-gate .welcome-live-picks button:hover{background:#dff6ff;border-color:#4ba9d4}
+#animee-welcome-gate .welcome-live-status{color:#58788d;font-size:11px}
 #animee-welcome-gate .welcome-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:24px}
 #animee-welcome-gate .welcome-enter{display:inline-flex;justify-content:center;align-items:center;gap:10px;min-height:50px;padding:13px 22px;border:1px solid #07518a;border-radius:999px;background:linear-gradient(110deg,#07518a,#0786bd);color:white;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 10px 24px #07518a30;transition:transform .18s ease,filter .18s ease}
 #animee-welcome-gate .welcome-enter:hover{transform:translateY(-2px);filter:brightness(1.08)}
@@ -389,6 +396,10 @@ img,video,iframe{max-width:100%}
           <button type="button" data-animee-query="A-Rank Party">🛡️ A-Rank Party</button>
           <button type="button" data-animee-query="Magic Maker">🔮 Magic Maker</button>
         </div>
+      </div>
+      <div class="welcome-live-trending" aria-label="Live trending anime picks">
+        <div class="welcome-live-heading"><span class="welcome-live-dot" aria-hidden="true"></span><span>LIVE AIRING PICKS</span></div>
+        <div class="welcome-live-picks" id="animee-welcome-live-trending" aria-live="polite"><span class="welcome-live-status">Loading current anime rankings…</span></div>
       </div>
       <div class="welcome-actions"><button class="welcome-enter" id="animee-enter-site" type="button">Enter Animee <span aria-hidden="true">→</span></button><span class="welcome-hint">Anime news • Community • Fan moments</span></div>
     </div>
@@ -1133,6 +1144,30 @@ db.auth.onAuthStateChange((_event, session) => {
       if (latest) latest.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 450);
   };
+  const livePicks = document.getElementById('animee-welcome-live-trending');
+  if (livePicks) {
+    window.addEventListener('animee:trending-loaded', event => {
+      const items = Array.isArray(event.detail) ? event.detail.slice(0, 3) : [];
+      livePicks.replaceChildren();
+      if (!items.length) {
+        const status = document.createElement('span');
+        status.className = 'welcome-live-status';
+        status.textContent = 'Live picks are unavailable right now. Enter Animee to browse.';
+        livePicks.appendChild(status);
+        return;
+      }
+      items.forEach((item, index) => {
+        const title = String(item.title_english || item.title || '').trim();
+        if (!title) return;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = (index + 1) + '. ' + title;
+        button.title = 'Search Animee posts for ' + title;
+        button.addEventListener('click', () => runSearch(title));
+        livePicks.appendChild(button);
+      });
+    });
+  }
   if (searchForm && searchInput) {
     searchForm.addEventListener('submit', event => {
       event.preventDefault();

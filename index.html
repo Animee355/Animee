@@ -350,9 +350,9 @@ img,video,iframe{max-width:100%}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 </style>
-<link rel="canonical" href="https://animee355.github.io/Animee/">
+
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","name":"ANIMEE","url":"https://animee355.github.io/Animee/","description":"Anime news, announcements, creator updates, fan posts, and community discussions.","inLanguage":"en"}
+{"@context":"https://schema.org","@type":"WebSite","name":"ANIMEE","url":"https://animee.animeepages.workers.dev/","description":"Anime news, announcements, creator updates, fan posts, and community discussions.","inLanguage":"en"}
 </script>
 <link rel="stylesheet" href="./animee-design-system.css">
 <link rel="stylesheet" href="./animee-discover.css">
@@ -1239,7 +1239,7 @@ db.auth.onAuthStateChange((_event, session) => {
   const qr = gate.querySelector('img');
   if (qr) qr.addEventListener('error', () => {
     const help = gate.querySelector('.welcome-qr-help');
-    if (help) help.textContent = 'QR image could not load. You can still open Animee by visiting animee355.github.io/Animee/';
+    if (help) help.textContent = 'QR image could not load. You can still open Animee by visiting animee.animeepages.workers.dev/';
   }, { once: true });
   const searchForm = document.getElementById('animee-welcome-search-form');
   const searchInput = document.getElementById('animee-welcome-search');

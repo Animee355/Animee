@@ -2,7 +2,7 @@
 (() => {
   "use strict";
   const API = "https://graphql.anilist.co";
-  const watchUrl = (title) => "https://anikoto.cz/home";
+  const watchUrl = (title) => "https://anikoto.cz/search?keyword=" + encodeURIComponent(String(title || "").trim());
   const $ = (id) => document.getElementById(id);
   const escapeHTML = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const titleOf = (media) => media?.title?.english || media?.title?.romaji || media?.title?.native || "Untitled anime";
@@ -83,13 +83,15 @@
     const query=$("discover-query")?.value.trim()||"";
     const genre=$("discover-genre")?.value||"";
     const el=$("discover-results");
-    if(!query&&!genre){el.innerHTML='<p class="discover-note">Enter a title or choose a genre first.</p>';return;}
+    if(!query&&!genre){el.innerHTML='<p class="discover-note">Enter an anime title or choose a genre to browse. Search results will include a direct Anikoto link.</p>';return;}
     el.innerHTML='<div class="discover-loading">Searching the anime catalog…</div>';
     const queryText=`query($search:String, $genres:[String]) { Page(page:1, perPage:15) { media(type:ANIME, search:$search, genre_in:$genres, sort:TRENDING_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } siteUrl averageScore seasonYear format genres startDate { year } } } }`;
     try{
       const data=await gql(queryText,{search:query||null,genres:genre?[genre]:null});
       const items=data?.Page?.media||[];
-      el.innerHTML=items.length?items.map(posterCard).join(""):'<div class="discover-empty">No matches found. Try another title or genre.</div>';
+      el.innerHTML=items.length
+        ? items.map(posterCard).join("")
+        : `<div class="discover-empty">No matching titles in the catalog. You can search Anikoto directly for “${escapeHTML(query || genre)}”.<br><a class="discover-action" href="${watchUrl(query || genre)}" target="_blank" rel="noopener">Find and watch on Anikoto ↗</a></div>`;
     }catch(e){el.innerHTML='<div class="discover-empty">Search is temporarily unavailable. Please try again shortly.</div>';}
   }
   $("discover-search-form")?.addEventListener("submit",searchAnime);

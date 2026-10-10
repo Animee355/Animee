@@ -121,7 +121,7 @@
           ["fbclid", "gclid"].forEach(key => parsed.searchParams.delete(key));
           [...parsed.searchParams.keys()].filter(key => key.toLowerCase().startsWith("utm_")).forEach(key => parsed.searchParams.delete(key));
           parsed.hash = "";
-          canonical = parsed.href.replace(/\\/$/, "");
+          canonical = parsed.href.endsWith("/") ? parsed.href.slice(0, -1) : parsed.href;
         } catch (_) { return false; }
         const titleKey = normalizeTitle(item.title);
         if (!titleKey || seenUrls.has(canonical) || seenTitles.has(titleKey)) return false;

@@ -69,6 +69,7 @@ nav .admin-nav-btn:hover{color:#fff;border-color:#75ddff;background:#0b2b47}
 .admin label{display:block;font-size:13px;color:#c4cada;margin-bottom:5px}
 .admin input,.admin textarea,.admin select{width:100%;padding:10px;background:#080a11;border:1px solid #343949;border-radius:8px;color:white}
 .admin textarea{min-height:78px;resize:vertical}
+.audio-post{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid rgba(117,221,255,.2);border-radius:12px;background:#050b18}.audio-post-icon{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:50%;background:#102b47;color:#a9e8ff;font-size:24px}.audio-post audio.embed{min-width:0;width:100%;height:42px;max-height:none;aspect-ratio:auto;background:transparent;border-radius:8px}
 .admin .wide{grid-column:1/-1}
 .warn{border-left:3px solid var(--gold);padding:10px 12px;background:#2a2513;color:#f4e7b2;border-radius:6px;font-size:13px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
@@ -587,11 +588,12 @@ img,video,iframe{max-width:100%}
 <label for="kind">Post type</label>
 <select id="kind">
 <option value="video">Video from device</option>
+<option value="audio">Audio / MP3 from device</option>
 <option value="photo">Photo from device</option>
 </select>
 </div>
 <div class="wide" id="fileWrap">
-<label for="file">Choose video or photo</label>
+<label for="file">Choose media from your device</label>
 <input type="file" id="file" accept="video/*">
 <p id="fileHelp" style="font-size:12px;color:#aab0c2">Choose a file from your device. Large uploads may be limited by your Supabase Storage settings.</p>
 </div>
@@ -717,6 +719,8 @@ function card(post, history = false) {
     media = `<img class="embed" style="object-fit:contain" src="${esc(post.media_url)}" alt="${esc(post.title || 'Animee photo')}" loading="lazy">`;
   } else if (kind === 'video' && post.media_url) {
     media = `<video class="embed" controls playsinline preload="metadata" src="${esc(post.media_url)}"></video>`;
+  } else if (kind === 'audio' && post.media_url) {
+    media = `<div class="audio-post"><div class="audio-post-icon" aria-hidden="true">♫</div><audio class="embed" controls preload="metadata" src="${esc(post.media_url)}">Your browser does not support audio playback.</audio></div>`;
   } else {
     media = '<p>Media preview unavailable.</p>';
   }
@@ -850,7 +854,12 @@ function resetForm() {
 function updateKindFields() {
   const kind = $('#kind').value;
   $('#fileWrap').hidden = false;
-  $('#file').accept = kind === 'photo' ? 'image/*' : 'video/*';
+  $('#file').accept = kind === 'photo' ? 'image/*' : kind === 'audio' ? 'audio/*' : 'video/*';
+  $('#fileHelp').textContent = kind === 'audio'
+    ? 'Choose MP3, M4A, WAV, OGG, or another audio file supported by your browser. Upload size depends on your Supabase Storage settings.'
+    : kind === 'photo'
+      ? 'Choose an image file from your device.'
+      : 'Choose a video file from your device. Large uploads may be limited by your Supabase Storage settings.';
 }
 
 function getStoragePath(publicUrl) {
@@ -970,10 +979,15 @@ $('#publish').addEventListener('click', async () => {
     return;
   }
 
+  if (kind === 'audio' && file && !file.type.startsWith('audio/')) {
+    setEditorMessage('Please choose an audio file, such as MP3 or WAV.');
+    return;
+  }
+
   const newMediaType = kind === 'photo' ? 'image' : kind;
   let mediaUrl = null;
 
-  if (kind === 'photo' || kind === 'video') {
+  if (kind === 'photo' || kind === 'video' || kind === 'audio') {
     if (file) {
       setEditorMessage('Uploading media…');
     } else if (existing && existing.media_type === newMediaType && existing.media_url) {
@@ -987,7 +1001,7 @@ $('#publish').addEventListener('click', async () => {
   $('#publish').disabled = true;
 
   try {
-    if (file && (kind === 'photo' || kind === 'video')) {
+    if (file && (kind === 'photo' || kind === 'video' || kind === 'audio')) {
       mediaUrl = await uploadMedia(file);
     }
 

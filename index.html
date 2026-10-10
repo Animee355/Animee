@@ -1159,7 +1159,7 @@ db.auth.onAuthStateChange((_event, session) => {
   const playablePostsFor = query => {
     const normalized = String(query || '').trim().toLocaleLowerCase();
     if (!normalized || !Array.isArray(posts)) return [];
-    const terms = normalized.split(/\\s+/).filter(term => term.length > 2);
+    const terms = normalized.split(/\s+/).filter(term => term.length > 2);
     return posts.filter(post => {
       const kind = String(post.media_type || '').toLocaleLowerCase();
       const status = String(post.status || 'published').toLocaleLowerCase();

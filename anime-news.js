@@ -9,6 +9,7 @@
     #animee-live-news .an-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
     #animee-live-news .an-title{margin:0;font-size:clamp(18px,3vw,24px);font-weight:900;color:#fff}
     #animee-live-news .an-sub{color:#bfd4e7;font-size:12px;margin:3px 0 0}
+    #animee-live-news .an-live-clock{display:inline-block;margin-top:7px;padding:5px 9px;border:1px solid rgba(117,221,255,.3);border-radius:8px;background:rgba(2,13,27,.45);color:#a9edff;font-size:11px;font-variant-numeric:tabular-nums}
     #animee-live-news .an-actions{display:flex;gap:7px;flex-wrap:wrap}
     #animee-live-news button{border:1px solid #315875;border-radius:999px;padding:8px 11px;background:#0b3152;color:#f4f8ff;font:inherit;font-weight:750;cursor:pointer}
     #animee-live-news button:focus-visible,#animee-live-news a:focus-visible{outline:3px solid #75ddff;outline-offset:2px}
@@ -35,7 +36,7 @@
   panel.setAttribute("aria-labelledby", "animee-news-title");
   panel.innerHTML = `
     <div class="an-head">
-      <div><h2 class="an-title" id="animee-news-title">📰 Anime News</h2><p class="an-sub">Fresh stories from anime publishers, studios, creators and the wider industry.</p></div>
+      <div><h2 class="an-title" id="animee-news-title">📰 Anime News</h2><p class="an-sub">Fresh stories from anime publishers, studios, creators and the wider industry.</p><div class="an-live-clock" id="animee-news-live-clock" aria-live="off">🟢 LIVE · Reading your local time…</div></div>
       <div class="an-actions">
         <button id="animee-news-refresh" type="button">↻ Refresh</button>
         <button id="animee-news-toggle" type="button" aria-expanded="true">Hide news</button>
@@ -54,11 +55,18 @@
   const stateEl = panel.querySelector("#animee-news-state");
   const sectionsEl = panel.querySelector("#animee-news-sections");
   const updatedEl = panel.querySelector("#animee-news-updated");
+  const liveClockEl = panel.querySelector("#animee-news-live-clock");
   const toggleEl = panel.querySelector("#animee-news-toggle");
   let items = [];
   let checkedAt = "";
 
   const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  const updateLocalClock = () => {
+    const now = new Date();
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "device local time";
+    const formatted = now.toLocaleString(undefined, {weekday:"short", month:"short", day:"numeric", year:"numeric", hour:"numeric", minute:"2-digit", second:"2-digit"});
+    liveClockEl.textContent = "🟢 LIVE · " + formatted + " · " + timeZone;
+  };
   const dateLabel = value => {
     const d = new Date(value);
     return Number.isNaN(d.getTime()) ? "Date unavailable" : d.toLocaleString(undefined,{month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit"});
@@ -76,6 +84,7 @@
       <h4>${esc(item.title || "Anime news update")}</h4>
       ${item.summary ? `<p>${esc(item.summary)}</p>` : ""}
       <div class="an-meta"><span>${esc(dateLabel(item.published))}</span></div>
+      ${item.location ? `<div class="an-meta" style="margin-top:5px"><span>📍 ${esc(item.location)}</span></div>` : ""}
       <p style="margin:9px 0 0"><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Read original story ↗</a></p>
     </article>`;
   };
@@ -151,6 +160,8 @@
     toggleEl.textContent = collapsed ? "Show news" : "Hide news";
     toggleEl.setAttribute("aria-expanded", String(!collapsed));
   });
+  updateLocalClock();
+  window.setInterval(updateLocalClock, 1000);
   loadNews(true);
   window.setInterval(() => loadNews(false), 5 * 60 * 1000);
 })();

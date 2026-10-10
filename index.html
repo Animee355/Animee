@@ -859,10 +859,10 @@ function updateKindFields() {
   $('#fileWrap').hidden = false;
   $('#file').accept = kind === 'photo' ? 'image/*' : kind === 'audio' ? 'audio/*' : 'video/*';
   $('#fileHelp').textContent = kind === 'audio'
-    ? 'Choose MP3, M4A, WAV, OGG, or another audio file supported by your browser. Maximum upload size: 50 MB.'
+    ? 'Choose MP3, M4A, WAV, OGG, or another audio file supported by your browser. Maximum upload size: 500 MB.'
     : kind === 'photo'
-      ? 'Choose an image file from your device. Maximum upload size: 50 MB.'
-      : 'Choose a video file from your device. Maximum upload size: 50 MB; compress larger videos before uploading.';
+      ? 'Choose an image file from your device. Maximum upload size: 500 MB.'
+      : 'Choose a video file from your device. Maximum upload size: 500 MB.';
 }
 
 function getStoragePath(publicUrl) {
@@ -883,7 +883,7 @@ async function removeOldMedia(publicUrl) {
 async function uploadMedia(file) {
   if (!file) throw new Error('Choose a media file from your device.');
   if (file.size > MAX_MEDIA_SIZE) {
-    throw new Error('This file is larger than 50 MB. Please compress it or choose a smaller file.');
+    throw new Error('This file is larger than 500 MB. Please choose a smaller file.');
   }
   const allowedType = file.type.startsWith('image/') || file.type.startsWith('video/') || file.type.startsWith('audio/');
   if (!allowedType) {

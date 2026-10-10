@@ -57,7 +57,22 @@ def plain_summary(value):
 
 def categorize(title, summary):
     text = (title + " " + summary).lower()
-    announcement = ("announces", "announcement", "announced", "reveals", "revealed", "confirms", "confirmed", "official", "release date", "premiere date", "new trailer", "new season", "season 2", "season 3", "season 4", "broadcast date", "air date")
+    # Keep the feed focused on anime, manga, adaptations, and the people who make them.
+    relevant = (
+        "anime", "animation", "manga", "manhwa", "webtoon", "light novel",
+        "visual novel", "voice actor", "voice actress", "mangaka", "animator",
+        "anime studio", "anime film", "anime movie", "anime series", "anime adaptation",
+        "japanese animation", "season 2", "season 3", "season 4", "season 5"
+    )
+    irrelevant = (
+        "switch 2 review", "playstation review", "xbox review", "pc game review",
+        "this week in games", "video game review", "arcade cabinet", "game review"
+    )
+    if any(term in text for term in irrelevant) and not any(term in text for term in ("anime", "manga", "anime adaptation")):
+        return None, None
+    if not any(term in text for term in relevant):
+        return None, None
+    announcement = ("announces", "announcement", "announced", "reveals", "revealed", "confirms", "confirmed", "official", "release date", "premiere date", "new trailer", "new season", "season 2", "season 3", "season 4", "broadcast date", "air date", "debut", "premiere", "cast")
     creator = ("interview", "mangaka", "creator", "director", "voice actor", "voice actress", "animator", "animation studio", "studio ", "author", "illustrator", "staff", "producer", "composer", "artist", "industry")
     if any(term in text for term in announcement):
         return "announcement", "Announcements & releases"
@@ -88,6 +103,8 @@ def parse_feed(source, url):
             continue
         summary = plain_summary(summary)
         category, label = categorize(title, summary)
+        if category is None:
+            continue
         found.append({
             "title": plain_summary(title)[:220],
             "url": link,

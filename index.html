@@ -658,8 +658,7 @@ const SUPABASE_URL = 'https://mnfzpbwhvierboadwctz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_XV2dfLKtRHyIRcQBcwlaXA_QX61BvXW';
 const OWNER_ID = '991aadfe-375e-41b1-b709-a4e0cbf74512';
 const BUCKET = 'animee-media';
-// Practical limit for standard Supabase Storage uploads.
-// Must match the animee-media bucket limit in Supabase Storage.
+// Must match the animee-media bucket limit in Supabase Storage (500 MiB).
 const MAX_MEDIA_SIZE = 500 * 1024 * 1024; // 500 MiB
 
 const $ = selector => document.querySelector(selector);
@@ -861,7 +860,7 @@ function updateKindFields() {
   $('#fileWrap').hidden = false;
   $('#file').accept = kind === 'photo' ? 'image/*' : kind === 'audio' ? 'audio/*' : 'video/*';
   $('#fileHelp').textContent = kind === 'audio'
-    ? 'Choose MP3, M4A, WAV, OGG, or another audio file supported by your browser. Maximum upload size: 500 MB.'
+    ? 'Choose MP3, M4A, WAV, OGG, or another audio file supported by your browser. Maximum upload size: 500 MiB (about 524 MB).'
     : kind === 'photo'
       ? 'Choose an image file from your device. Maximum upload size: 500 MB.'
       : 'Choose a video file from your device. Maximum upload size: 500 MB.';
@@ -885,7 +884,7 @@ async function removeOldMedia(publicUrl) {
 async function uploadMedia(file) {
   if (!file) throw new Error('Choose a media file from your device.');
   if (file.size > MAX_MEDIA_SIZE) {
-    throw new Error('This file is larger than 500 MB. Please choose a smaller file.');
+    throw new Error('This file is larger than 500 MiB (about 524 MB). Please choose a smaller file.');
   }
   const allowedType = file.type.startsWith('image/') || file.type.startsWith('video/') || file.type.startsWith('audio/');
   if (!allowedType) {
@@ -911,7 +910,8 @@ async function uploadMedia(file) {
 
   await new Promise((resolve, reject) => {
     const upload = new window.tus.Upload(file, {
-      endpoint: SUPABASE_URL + '/storage/v1/upload/resumable',
+      // Supabase recommends the direct Storage hostname for large TUS uploads.
+      endpoint: 'https://mnfzpbwhvierboadwctz.storage.supabase.co/storage/v1/upload/resumable',
       retryDelays: [0, 3000, 5000, 10000, 20000],
       chunkSize: 6 * 1024 * 1024,
       uploadDataDuringCreation: true,

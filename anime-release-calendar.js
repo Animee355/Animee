@@ -87,14 +87,43 @@
     const day = broadcast.day || "";
     const time = broadcast.time || "";
     const zone = broadcast.timezone || "";
-    const parts = [];
-    if (day) parts.push(day);
-    if (time) parts.push(time);
-    if (zone) parts.push(zone.replace(/_/g, " "));
-    if (parts.length) return parts.join(" · ");
+    const sourceParts = [];
+    if (day) sourceParts.push(day);
+    if (time) sourceParts.push(time);
+    if (zone) sourceParts.push(zone.replace(/_/g, " "));
+    const sourceText = sourceParts.length ? sourceParts.join(" · ") : "";
+    const localDate = nextBroadcastLocal(day, time, zone);
+    if (localDate) return "Your time: " + localDate.toLocaleString(undefined, {weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}) + (sourceText ? " · Source: " + sourceText : "");
+    if (sourceText) return sourceText;
     const start = safeDate(item.aired && item.aired.from);
-    if (start) return "Premiere: " + start.toLocaleDateString(undefined, {year:"numeric",month:"short",day:"numeric"});
+    if (start) return "Premiere date: " + start.toLocaleDateString(undefined, {year:"numeric",month:"short",day:"numeric"});
     return "Broadcast time TBA";
+  }
+
+  function nextBroadcastLocal(day, time, zone) {
+    if (!day || !time || !zone) return null;
+    const dayIndex = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"].indexOf(String(day).toLowerCase().replace(/s$/, ""));
+    const match = String(time).match(/^(\\d{1,2}):(\\d{2})/);
+    if (dayIndex < 0 || !match) return null;
+    const wantedHour = Number(match[1]), wantedMinute = Number(match[2]);
+    try {
+      const fmt = new Intl.DateTimeFormat("en-US", {timeZone:zone,year:"numeric",month:"2-digit",day:"2-digit",weekday:"long",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
+      const partsOf = date => Object.fromEntries(fmt.formatToParts(date).filter(p => p.type !== "literal").map(p => [p.type,p.value]));
+      const now = new Date();
+      const current = partsOf(now);
+      const currentDay = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"].indexOf(String(current.weekday).toLowerCase());
+      let delta = (dayIndex - currentDay + 7) % 7;
+      if (delta === 0 && (Number(current.hour) > wantedHour || (Number(current.hour) === wantedHour && Number(current.minute) >= wantedMinute))) delta = 7;
+      const base = new Date(Date.UTC(Number(current.year), Number(current.month)-1, Number(current.day)+delta, wantedHour, wantedMinute));
+      const target = Date.UTC(base.getUTCFullYear(),base.getUTCMonth(),base.getUTCDate(),wantedHour,wantedMinute);
+      let epoch = target;
+      for (let i=0;i<4;i++) {
+        const shown = partsOf(new Date(epoch));
+        const shownAsUTC = Date.UTC(Number(shown.year),Number(shown.month)-1,Number(shown.day),Number(shown.hour),Number(shown.minute));
+        epoch += target - shownAsUTC;
+      }
+      return new Date(epoch);
+    } catch (_) { return null; }
   }
 
   function dateChip(item) {
@@ -116,7 +145,6 @@
     grid.innerHTML = filtered.map(item => {
       const title = item.title_english || item.title || "Untitled anime";
       const score = Number.isFinite(Number(item.score)) && Number(item.score) > 0 ? "⭐ " + Number(item.score).toFixed(1) : "";
-      const image = item.images && item.images.jpg && item.images.jpg.image_url;
       const genres = Array.isArray(item.genres) ? item.genres.slice(0,3).map(g => g.name).filter(Boolean).join(" · ") : "";
       return `<article class="rc-card">
         <div class="rc-meta"><span class="rc-chip">${dateChip(item)}</span>${score ? `<span class="rc-chip">${score}</span>` : ""}</div>

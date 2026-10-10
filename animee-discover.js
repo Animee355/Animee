@@ -32,6 +32,8 @@
   const trendingQuery = `query { Page(page:1, perPage:8) { media(type:ANIME, sort:TRENDING_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } bannerImage siteUrl description(asHtml:false) averageScore trending seasonYear format genres status startDate { year } } } }`;
   const popularQuery = `query { Page(page:1, perPage:10) { media(type:ANIME, sort:POPULARITY_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } siteUrl averageScore seasonYear format genres startDate { year } } } }`;
   const upcomingQuery = `query { Page(page:1, perPage:10) { media(type:ANIME, status:NOT_YET_RELEASED, sort:POPULARITY_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } siteUrl averageScore seasonYear format genres startDate { year month day } } } }`;
+  const releasingQuery = `query { Page(page:1, perPage:10) { media(type:ANIME, status:RELEASING, sort:TRENDING_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } averageScore seasonYear format genres startDate { year } } } }`;
+  const completedQuery = `query { Page(page:1, perPage:10) { media(type:ANIME, status:FINISHED, sort:POPULARITY_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } averageScore seasonYear format genres startDate { year } } } }`;
   const airingQuery = `query($from:Int!, $to:Int!) { Page(page:1, perPage:12) { airingSchedules(airingAt_greater:$from, airingAt_lesser:$to, sort:TIME) { airingAt episode media { id title { english romaji native } coverImage { large medium } siteUrl averageScore seasonYear format genres } } } }`;
   function renderSpotlight(items) {
     const el=$("discover-spotlight");
@@ -77,6 +79,24 @@
       const items=data?.Page?.media||[];
       $("discover-upcoming").innerHTML=items.map((item)=>posterCard(item,`<p class="discover-episode">${item.startDate?.year?escapeHTML([item.startDate.year,item.startDate.month,item.startDate.day].filter(Boolean).join("-")):"Release date TBA"}</p>`)).join("")||'<div class="discover-empty">No upcoming titles are listed right now.</div>';
     }catch(e){showError("discover-upcoming","Upcoming anime could not load right now.");}
+    try{
+      const data=await gql(popularQuery);
+      const items=data?.Page?.media||[];
+      const el=$("discover-popular");
+      if(el) el.innerHTML=items.map((item,i)=>posterCard(item,`<p class="discover-episode">Popularity #${i+1}</p>`)).join("")||'<div class="discover-empty">No popular titles are available right now.</div>';
+    }catch(e){showError("discover-popular","Popular anime could not load right now.");}
+    try{
+      const data=await gql(releasingQuery);
+      const items=data?.Page?.media||[];
+      const el=$("discover-airing-now");
+      if(el) el.innerHTML=items.map(posterCard).join("")||'<div class="discover-empty">No currently airing titles are listed right now.</div>';
+    }catch(e){showError("discover-airing-now","Currently airing anime could not load right now.");}
+    try{
+      const data=await gql(completedQuery);
+      const items=data?.Page?.media||[];
+      const el=$("discover-completed");
+      if(el) el.innerHTML=items.map(posterCard).join("")||'<div class="discover-empty">No completed titles are listed right now.</div>';
+    }catch(e){showError("discover-completed","Completed anime could not load right now.");}
   }
   async function searchAnime(event) {
     event?.preventDefault();
@@ -95,6 +115,8 @@
     }catch(e){el.innerHTML='<div class="discover-empty">Search is temporarily unavailable. Please try again shortly.</div>';}
   }
   $("discover-search-form")?.addEventListener("submit",searchAnime);
-  $("discover-genre")?.addEventListener("change",()=>{if($("discover-query")?.value.trim())searchAnime();});
+  $("discover-genre")?.addEventListener("change",()=>{if($("discover-query")?.value.trim()||$("discover-genre")?.value)searchAnime();});
+  $("discover-genre-pills")?.addEventListener("click",(event)=>{const button=event.target.closest("[data-genre]");if(!button)return;const genre=button.dataset.genre;const select=$("discover-genre");if(select){select.value=genre;}const input=$("discover-query");if(input)input.value="";searchAnime();$("discover-results")?.scrollIntoView({behavior:"smooth",block:"start"});});
+  $("discover-letters")?.addEventListener("click",(event)=>{const button=event.target.closest("[data-letter]");if(!button)return;const letter=button.dataset.letter;const input=$("discover-query");if(input)input.value=letter;const select=$("discover-genre");if(select)select.value="";searchAnime();$("discover-results")?.scrollIntoView({behavior:"smooth",block:"start"});});
   if($("animee-discover")){loadCatalog();loadAiring();}
 })();

@@ -902,7 +902,7 @@ async function uploadMedia(file) {
     throw new Error('Your owner session expired. Sign in again before uploading.');
   }
 
-  const safeName = file.name.replace(/[^\\w.-]/g, '_');
+  const safeName = file.name.replace(/[^\w.-]/g, '_');
   const path = OWNER_ID + '/' + Date.now() + '-' + safeName;
   const { data: publicData } = db.storage.from(BUCKET).getPublicUrl(path);
   const progressLabel = percent => {

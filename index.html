@@ -332,6 +332,7 @@ img,video,iframe{max-width:100%}
 <link rel="stylesheet" href="./animee-design-system.css">
 </head>
 <body>
+<div id="animee-brand-loader" role="status" aria-live="polite" aria-label="Loading Animee"><div class="animee-loader-mark"><span>A</span><i></i></div><strong>ANIMEE</strong><p>WHERE ANIME COMES TO LIFE</p><div class="animee-loader-track"><span></span></div><small>Preparing your anime world…</small></div>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 
 <div class="animee-character-art" aria-hidden="true">
@@ -1005,6 +1006,7 @@ db.auth.onAuthStateChange((_event, session) => {
   await loadPosts();
 })();
 </script>
+<script src="./animee-loader.js" defer></script>
 <script src="./anime-news.js" defer></script>
 <script src="./animee-official-announcements.js" defer></script>
 <script src="./animee-confirmed-tracker.js" defer></script>

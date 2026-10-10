@@ -1,0 +1,49 @@
+/* Animee anime discovery hub — inspired by modern anime catalog layouts */
+.discover-shell{margin:12px 0 30px;padding:clamp(16px,2.6vw,28px);border:1px solid rgba(117,221,255,.2);border-radius:24px;background:linear-gradient(145deg,rgba(8,23,42,.96),rgba(5,13,27,.94));box-shadow:0 24px 70px rgba(0,0,0,.25);color:#f4f8ff}
+.discover-heading,.discover-section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.discover-eyebrow{display:block;margin-bottom:6px;color:#75ddff;font-size:10px;font-weight:900;letter-spacing:.19em}
+.discover-heading h2{font-size:clamp(25px,3.3vw,38px);line-height:1.08;margin:0 0 8px;letter-spacing:-.035em}
+.discover-heading p{margin:0;color:#a8bad0;font-size:14px}
+.discover-more,.discover-text-link{color:#9be8ff;text-decoration:none;font-size:13px;font-weight:800}
+.discover-more{padding:10px 14px;border:1px solid #286184;border-radius:12px;background:#0d2740;white-space:nowrap}
+.discover-spotlight{position:relative;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(230px,.8fr);min-height:300px;overflow:hidden;margin-top:20px;border:1px solid #294665;border-radius:20px;background:#081426}
+.discover-spotlight-art{position:absolute;inset:0;background-position:center 35%;background-size:cover;opacity:.42}
+.discover-spotlight-art:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#071426 0%,rgba(7,20,38,.94) 28%,rgba(7,20,38,.64) 62%,rgba(7,20,38,.2)),linear-gradient(0deg,#071426 0%,transparent 55%)}
+.discover-spotlight-copy{position:relative;z-index:1;align-self:end;padding:clamp(22px,4vw,38px);max-width:760px}
+.discover-pill{display:inline-flex;align-items:center;padding:5px 9px;border:1px solid #3e9fc5;border-radius:999px;color:#a6ecff;background:#0a2943;font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.discover-spotlight h3{font-size:clamp(25px,4vw,43px);line-height:1.06;margin:13px 0 10px;letter-spacing:-.03em}
+.discover-spotlight p{max-width:650px;color:#c0cede;font-size:14px;line-height:1.65;margin:0 0 17px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.discover-spotlight-meta{display:flex;gap:8px;flex-wrap:wrap;color:#c3d8e9;font-size:12px;margin-bottom:18px}
+.discover-spotlight-actions{display:flex;gap:9px;flex-wrap:wrap}
+.discover-action{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:10px 14px;border:1px solid #3b8bb3;border-radius:10px;color:white;text-decoration:none;font-weight:850;font-size:13px;background:#096ca8}
+.discover-action.secondary{background:rgba(5,17,32,.78);border-color:#3c5873}
+.discover-spotlight-side{position:relative;z-index:1;display:flex;align-items:end;justify-content:end;padding:20px}
+.discover-spotlight-side img{width:min(220px,90%);max-height:280px;object-fit:cover;object-position:top;border:1px solid #8bdfff66;border-radius:12px;box-shadow:0 20px 55px #0009}
+.discover-section{margin-top:30px}
+.discover-section-head{margin-bottom:13px}
+.discover-section-head h3{font-size:clamp(19px,2.4vw,24px);margin:0;line-height:1.2}
+.discover-note{color:#93a9c0;font-size:12px;margin:0}
+.discover-card-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.discover-poster-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}
+.discover-anime-card{min-width:0;overflow:hidden;border:1px solid #233d58;border-radius:13px;background:linear-gradient(155deg,#10243b,#091625);transition:transform .18s ease,border-color .18s ease}
+.discover-anime-card:hover{transform:translateY(-3px);border-color:#60c9f5}
+.discover-poster-link{display:block;position:relative;aspect-ratio:3/4.15;overflow:hidden;background:#0a1524}
+.discover-poster-link img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s ease}
+.discover-anime-card:hover .discover-poster-link img{transform:scale(1.035)}
+.discover-score{position:absolute;left:8px;top:8px;padding:4px 7px;border-radius:6px;background:#04101dd9;color:#ffe08a;font-size:11px;font-weight:900}
+.discover-anime-info{padding:10px}
+.discover-anime-info h4{margin:0 0 5px;font-size:13px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:35px}
+.discover-anime-info h4 a{color:#f4f8ff;text-decoration:none}
+.discover-anime-info p{margin:0;color:#94abc2;font-size:11px;line-height:1.45}
+.discover-anime-info .discover-episode{color:#8de5ff;font-weight:800;margin-top:5px}
+.discover-search-form{display:grid;grid-template-columns:minmax(160px,1fr) minmax(145px,.45fr) auto;gap:9px;margin:12px 0 15px}
+.discover-search-form input,.discover-search-form select{min-width:0;width:100%;padding:12px 13px;border:1px solid #294967;border-radius:10px;background:#061321!important;color:#f4f8ff;font:inherit}
+.discover-search-form button{border:1px solid #2a9cd2;border-radius:10px;padding:10px 16px;background:linear-gradient(110deg,#1267c9,#087fb4);color:white;font-weight:850;cursor:pointer}
+.discover-search-results{min-height:45px}
+.discover-loading{padding:20px;color:#9eb6cd;border:1px dashed #2a4967;border-radius:12px;grid-column:1/-1}
+.discover-empty{grid-column:1/-1;padding:20px;border:1px dashed #2a4967;border-radius:12px;color:#9eb6cd;text-align:center}
+.discover-attribution{margin:24px 0 0;color:#7e99b4;font-size:11px;line-height:1.6}
+.discover-sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:850px){.discover-poster-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.discover-card-row{grid-template-columns:repeat(3,minmax(0,1fr))}.discover-spotlight{grid-template-columns:minmax(0,1fr) 190px}}
+@media(max-width:600px){.discover-shell{padding:14px;border-radius:17px}.discover-spotlight{grid-template-columns:1fr;min-height:340px}.discover-spotlight-art{background-position:center}.discover-spotlight-side{display:none}.discover-spotlight-copy{align-self:end;padding:21px}.discover-spotlight-art:after{background:linear-gradient(0deg,#071426 3%,rgba(7,20,38,.83) 45%,rgba(7,20,38,.35) 100%)}.discover-poster-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.discover-card-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.discover-search-form{grid-template-columns:1fr 1fr}.discover-search-form input{grid-column:1/-1}.discover-search-form button{grid-column:1/-1}.discover-anime-info{padding:8px}.discover-heading{align-items:start}.discover-more{margin-top:2px}}
+@media(prefers-reduced-motion:reduce){.discover-anime-card,.discover-poster-link img{transition:none}}

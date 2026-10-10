@@ -167,6 +167,16 @@ body>*:not(.animee-character-art){position:relative;z-index:1}
 @media(max-width:700px){.animee-character-art{opacity:.23}.animee-character-art svg{width:150%;max-width:none;transform:translateX(-17%)}}
 @media(prefers-reduced-transparency:reduce){.animee-character-art{opacity:.3}}
 
+
+/* Prominent live local clock */
+.animee-clock{max-width:1240px;margin:18px auto 0;padding:0 20px}
+.animee-clock-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:20px 26px;border:1px solid rgba(91,195,255,.48);border-radius:18px;background:linear-gradient(115deg,rgba(8,48,82,.97),rgba(8,26,51,.97) 60%,rgba(21,49,88,.97));box-shadow:0 12px 32px rgba(0,25,55,.3),inset 0 1px 0 rgba(220,246,255,.12)}
+.animee-clock-label{font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:#9adfff}
+.animee-clock-time{font-size:clamp(38px,6vw,66px);font-weight:950;line-height:1.08;letter-spacing:.025em;font-variant-numeric:tabular-nums;color:#f4fbff;text-shadow:0 0 24px rgba(68,190,255,.22)}
+.animee-clock-date{margin-top:6px;color:#c1e8ff;font-size:clamp(14px,2vw,17px);font-weight:650}
+.animee-clock-zone{padding:9px 12px;border-radius:10px;background:rgba(93,194,255,.12);border:1px solid rgba(122,213,255,.25);color:#c5edff;font-size:12px;font-weight:800;white-space:nowrap}
+@media(max-width:600px){.animee-clock{padding:0 12px;margin-top:12px}.animee-clock-inner{padding:16px 17px;gap:10px}.animee-clock-time{font-size:clamp(36px,10vw,52px)}.animee-clock-zone{font-size:11px}}
+
 </style>
 <style id="animee-cinematic-background-v2">
 /* Unified Animee cinematic background: deep black, galaxy glow, original anime-inspired heroes */
@@ -491,6 +501,13 @@ img,video,iframe{max-width:100%}
 </div>
 </nav>
 </header>
+
+<section class="animee-clock" id="animee-live-clock" aria-label="Live local time">
+  <div class="animee-clock-inner">
+    <div><div class="animee-clock-label">🕒 Your Local Time · Live</div><div class="animee-clock-time" id="animee-clock-time" aria-live="off">--:--:--</div><div class="animee-clock-date" id="animee-clock-date">Loading local date…</div></div>
+    <div class="animee-clock-zone" id="animee-clock-zone">LOCAL TIME ZONE</div>
+  </div>
+</section>
 
 <div class="page" id="main-content">
 <section class="hero">
@@ -1296,5 +1313,25 @@ db.auth.onAuthStateChange((_event, session) => {
 
 <script src="./animee-discover.js" defer></script>
 <script src="./animee-bottom-panels.js" defer></script>
+
+<script>
+(function(){
+  const timeEl=document.getElementById('animee-clock-time');
+  const dateEl=document.getElementById('animee-clock-date');
+  const zoneEl=document.getElementById('animee-clock-zone');
+  if(!timeEl||!dateEl||!zoneEl)return;
+  function updateAnimeeClock(){
+    const now=new Date();
+    timeEl.textContent=new Intl.DateTimeFormat(undefined,{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(now);
+    dateEl.textContent=new Intl.DateTimeFormat(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(now);
+    const zone=Intl.DateTimeFormat().resolvedOptions().timeZone||'Local time';
+    zoneEl.textContent=zone.replaceAll('_',' ');
+    zoneEl.title='Uses the local time zone set on your device';
+  }
+  updateAnimeeClock();
+  window.setInterval(updateAnimeeClock,1000);
+})();
+</script>
+
 </body>
 </html>

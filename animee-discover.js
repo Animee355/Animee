@@ -29,7 +29,7 @@
     return `<article class="discover-anime-card"><a class="discover-poster-link" href="${url}" target="_blank" rel="noopener" aria-label="Find ${title} on Anikoto">${image ? `<img src="${image}" alt="${title}" loading="lazy" decoding="async">` : ""}${score ? `<span class="discover-score">★ ${score}</span>` : ""}</a><div class="discover-anime-info"><h4><a href="${url}" target="_blank" rel="noopener">${title}</a></h4><p>${escapeHTML([format,year].filter(Boolean).join(" · "))}</p>${genres ? `<p>${genres}</p>` : ""}${extra}</div></article>`;
   };
   const showError = (id, message) => { const el=$(id); if(el) el.innerHTML=`<div class="discover-empty">${escapeHTML(message)}<br><a class="discover-text-link" href="https://anikoto.cz/home" target="_blank" rel="noopener">Find anime on Anikoto ↗</a></div>`; };
-  const trendingQuery = `query { Page(page:1, perPage:8) { media(type:ANIME, sort:TRENDING_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } bannerImage siteUrl description(asHtml:false) averageScore trending seasonYear format genres status startDate { year } } } }`;
+  const trendingQuery = `query { Page(page:1, perPage:10) { media(type:ANIME, sort:TRENDING_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } bannerImage siteUrl description(asHtml:false) averageScore trending seasonYear format genres status startDate { year } } } }`;
   const popularQuery = `query { Page(page:1, perPage:10) { media(type:ANIME, sort:POPULARITY_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } siteUrl averageScore seasonYear format genres startDate { year } } } }`;
   const upcomingQuery = `query { Page(page:1, perPage:10) { media(type:ANIME, status:NOT_YET_RELEASED, sort:POPULARITY_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } siteUrl averageScore seasonYear format genres startDate { year month day } } } }`;
   const releasingQuery = `query { Page(page:1, perPage:10) { media(type:ANIME, status:RELEASING, sort:TRENDING_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } averageScore seasonYear format genres startDate { year } } } }`;
@@ -68,35 +68,33 @@
     }catch(e){showError("discover-airing","Episode schedule could not load right now.");}
   }
   async function loadCatalog() {
-    try{
-      const data=await gql(trendingQuery);
-      const items=data?.Page?.media||[];
-      renderSpotlight(items.slice(0,6));
-      $("discover-trending").innerHTML=items.slice(0,10).map((item,i)=>posterCard(item,`<p class="discover-episode">Trending #${i+1}</p>`)).join("")||'<div class="discover-empty">No trending titles available right now.</div>';
-    }catch(e){showError("discover-spotlight","Anime spotlight could not load right now.");showError("discover-trending","Trending titles could not load right now.");}
-    try{
-      const data=await gql(upcomingQuery);
-      const items=data?.Page?.media||[];
-      $("discover-upcoming").innerHTML=items.map((item)=>posterCard(item,`<p class="discover-episode">${item.startDate?.year?escapeHTML([item.startDate.year,item.startDate.month,item.startDate.day].filter(Boolean).join("-")):"Release date TBA"}</p>`)).join("")||'<div class="discover-empty">No upcoming titles are listed right now.</div>';
-    }catch(e){showError("discover-upcoming","Upcoming anime could not load right now.");}
-    try{
-      const data=await gql(popularQuery);
-      const items=data?.Page?.media||[];
-      const el=$("discover-popular");
-      if(el) el.innerHTML=items.map((item,i)=>posterCard(item,`<p class="discover-episode">Popularity #${i+1}</p>`)).join("")||'<div class="discover-empty">No popular titles are available right now.</div>';
-    }catch(e){showError("discover-popular","Popular anime could not load right now.");}
-    try{
-      const data=await gql(releasingQuery);
-      const items=data?.Page?.media||[];
-      const el=$("discover-airing-now");
-      if(el) el.innerHTML=items.map(item=>posterCard(item)).join("")||'<div class="discover-empty">No currently airing titles are listed right now.</div>';
-    }catch(e){showError("discover-airing-now","Currently airing anime could not load right now.");}
-    try{
-      const data=await gql(completedQuery);
-      const items=data?.Page?.media||[];
-      const el=$("discover-completed");
-      if(el) el.innerHTML=items.map(item=>posterCard(item)).join("")||'<div class="discover-empty">No completed titles are listed right now.</div>';
-    }catch(e){showError("discover-completed","Completed anime could not load right now.");}
+    // Load each catalog row independently so one slow category does not delay the others.
+    const jobs = [
+      { query: trendingQuery, target: "discover-trending", label: "Trending titles", render: items => {
+        renderSpotlight(items.slice(0, 6));
+        return items.map((item, i) => posterCard(item, `<p class="discover-episode">Trending #${i + 1}</p>`)).join("");
+      }},
+      { query: upcomingQuery, target: "discover-upcoming", label: "Upcoming anime", render: items =>
+        items.map(item => posterCard(item, `<p class="discover-episode">${item.startDate?.year ? escapeHTML([item.startDate.year, item.startDate.month, item.startDate.day].filter(Boolean).join("-")) : "Release date TBA"}</p>`)).join("")
+      },
+      { query: popularQuery, target: "discover-popular", label: "Popular anime", render: items =>
+        items.map((item, i) => posterCard(item, `<p class="discover-episode">Popularity #${i + 1}</p>`)).join("")
+      },
+      { query: releasingQuery, target: "discover-airing-now", label: "Currently airing anime", render: items => items.map(posterCard).join("") },
+      { query: completedQuery, target: "discover-completed", label: "Completed anime", render: items => items.map(posterCard).join("") }
+    ];
+    await Promise.all(jobs.map(async job => {
+      try {
+        const data = await gql(job.query);
+        const items = data?.Page?.media || [];
+        const el = $(job.target);
+        if (el) el.innerHTML = job.render(items) || `<div class="discover-empty">No ${escapeHTML(job.label.toLowerCase())} are listed right now.</div>`;
+        if (job.target === "discover-trending" && !items.length) showError("discover-spotlight", "Spotlight is temporarily unavailable.");
+      } catch (e) {
+        showError(job.target, job.label + " could not load right now.");
+        if (job.target === "discover-trending") showError("discover-spotlight", "Anime spotlight could not load right now.");
+      }
+    }));
   }
   async function searchAnime(event) {
     event?.preventDefault();

@@ -89,13 +89,13 @@
       const data=await gql(releasingQuery);
       const items=data?.Page?.media||[];
       const el=$("discover-airing-now");
-      if(el) el.innerHTML=items.map(posterCard).join("")||'<div class="discover-empty">No currently airing titles are listed right now.</div>';
+      if(el) el.innerHTML=items.map(item=>posterCard(item)).join("")||'<div class="discover-empty">No currently airing titles are listed right now.</div>';
     }catch(e){showError("discover-airing-now","Currently airing anime could not load right now.");}
     try{
       const data=await gql(completedQuery);
       const items=data?.Page?.media||[];
       const el=$("discover-completed");
-      if(el) el.innerHTML=items.map(posterCard).join("")||'<div class="discover-empty">No completed titles are listed right now.</div>';
+      if(el) el.innerHTML=items.map(item=>posterCard(item)).join("")||'<div class="discover-empty">No completed titles are listed right now.</div>';
     }catch(e){showError("discover-completed","Completed anime could not load right now.");}
   }
   async function searchAnime(event) {

@@ -135,18 +135,57 @@ def main():
         except Exception:
             pass
 
-    unique = {}
-    for item in all_items:
-        link = item.get("url", "").strip()
-        if not link:
-            continue
-        unique.setdefault(link, item)
+    # Sort newest-first before deduplication so the freshest publisher entry wins.
     def sort_key(item):
         try:
-            return datetime.fromisoformat(item.get("published", "").replace("Z", "+00:00")).timestamp()
+            date = parse_date(item.get("published", ""))
+            return datetime.fromisoformat(date.replace("Z", "+00:00")).timestamp() if date else 0
         except Exception:
             return 0
-    items = sorted(unique.values(), key=sort_key, reverse=True)[:MAX_ITEMS]
+
+    def canonical_url(value):
+        from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
+        try:
+            parts = urlsplit((value or "").strip())
+            if parts.scheme not in ("http", "https") or not parts.netloc:
+                return ""
+            tracking = {"fbclid", "gclid", "mc_cid", "mc_eid"}
+            query = [(k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True)
+                     if not (k.lower().startswith("utm_") or k.lower() in tracking)]
+            path = parts.path.rstrip("/") or "/"
+            return urlunsplit((parts.scheme.lower(), parts.netloc.lower(), path, urlencode(query), ""))
+        except Exception:
+            return ""
+
+    def normalized_title(value):
+        value = unescape(str(value or "")).lower()
+        value = re.sub(r"\b(official|breaking|exclusive|watch|video)\b", " ", value)
+        return re.sub(r"[^a-z0-9]+", " ", value).strip()
+
+    from difflib import SequenceMatcher
+    unique = []
+    seen_urls = set()
+    seen_titles = []
+    for item in sorted(all_items, key=sort_key, reverse=True):
+        url = canonical_url(item.get("url", ""))
+        title = normalized_title(item.get("title", ""))
+        if not url or not title or url in seen_urls:
+            continue
+        # Exact/near-exact headline matching across publishers avoids repeated stories.
+        duplicate = False
+        for previous_title in seen_titles:
+            if title == previous_title or (min(len(title), len(previous_title)) >= 28 and
+                    SequenceMatcher(None, title, previous_title).ratio() >= 0.88):
+                duplicate = True
+                break
+        if duplicate:
+            continue
+        seen_urls.add(url)
+        seen_titles.append(title)
+        unique.append(item)
+        if len(unique) >= MAX_ITEMS:
+            break
+    items = unique
     result = {"checked_at": now.isoformat(), "items": items, "sources": [source for source, _ in FEEDS if any(item.get("source") == source for item in items)]}
     OUTPUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Saved {len(items)} unique stories from {success_count} working feed(s).")

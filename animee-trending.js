@@ -115,6 +115,9 @@
       const result = await response.json();
       entries = Array.isArray(result.data) ? result.data.filter(item => item && item.title) : [];
       render();
+      window.dispatchEvent(new CustomEvent("animee:trending-loaded", {
+        detail: entries.slice(0, 3).map(item => ({ title: item.title || "", title_english: item.title_english || "" }))
+      }));
       updated.textContent = "🟢 Last updated: " + new Date().toLocaleString(undefined, {year:"numeric",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}) + " · " + (Intl.DateTimeFormat().resolvedOptions().timeZone || "device local time");
     } catch (error) {
       console.warn("Animee trending ranking unavailable:", error);

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://animee.animeepages.workers.dev/sitemap.xml
+Sitemap: https://animee355.github.io/Animee/sitemap.xml

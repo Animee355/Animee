@@ -47,3 +47,15 @@
 @media(max-width:850px){.discover-poster-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.discover-card-row{grid-template-columns:repeat(3,minmax(0,1fr))}.discover-spotlight{grid-template-columns:minmax(0,1fr) 190px}}
 @media(max-width:600px){.discover-shell{padding:14px;border-radius:17px}.discover-spotlight{grid-template-columns:1fr;min-height:340px}.discover-spotlight-art{background-position:center}.discover-spotlight-side{display:none}.discover-spotlight-copy{align-self:end;padding:21px}.discover-spotlight-art:after{background:linear-gradient(0deg,#071426 3%,rgba(7,20,38,.83) 45%,rgba(7,20,38,.35) 100%)}.discover-poster-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.discover-card-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.discover-search-form{grid-template-columns:1fr 1fr}.discover-search-form input{grid-column:1/-1}.discover-search-form button{grid-column:1/-1}.discover-anime-info{padding:8px}.discover-heading{align-items:start}.discover-more{margin-top:2px}}
 @media(prefers-reduced-motion:reduce){.discover-anime-card,.discover-poster-link img{transition:none}}
+
+
+/* Anikoto-inspired catalog navigation and category sections, with Animee branding */
+.discover-quick-access{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 8px;padding:12px;border:1px solid #244663;border-radius:14px;background:rgba(5,17,31,.82)}
+.discover-quick-access a{display:inline-flex;align-items:center;min-height:36px;padding:8px 12px;border:1px solid #2c4d6b;border-radius:999px;background:#0d2740;color:#dff6ff;text-decoration:none;font-size:12px;font-weight:800}
+.discover-quick-access a:hover{border-color:#75ddff;background:#123653}
+.discover-genre-pills{display:flex;flex-wrap:wrap;gap:8px}
+.discover-genre-pills button,.discover-letters button{border:1px solid #2d4e6c;border-radius:999px;padding:9px 13px;background:#0b2036;color:#dff6ff;font-size:12px;font-weight:800;cursor:pointer;transition:background .15s ease,border-color .15s ease,transform .15s ease}
+.discover-genre-pills button:hover,.discover-letters button:hover{background:#10436a;border-color:#75ddff;transform:translateY(-1px)}
+.discover-letters{display:flex;flex-wrap:wrap;gap:6px}
+.discover-letters button{min-width:36px;padding:8px 10px}
+@media(max-width:600px){.discover-quick-access{gap:6px;padding:9px}.discover-quick-access a{font-size:11px;padding:8px 10px}.discover-genre-pills{gap:6px}.discover-genre-pills button{padding:8px 10px}.discover-letters{gap:5px}.discover-letters button{min-width:32px;padding:7px 8px}}

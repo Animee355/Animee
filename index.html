@@ -596,7 +596,7 @@ img,video,iframe{max-width:100%}
 <div class="wide" id="fileWrap">
 <label for="file">Choose media from your device</label>
 <input type="file" id="file" accept="video/*" aria-describedby="fileHelp">
-<p id="fileHelp" style="font-size:12px;color:#aab0c2">Choose a file from your device. Large uploads may be limited by your Supabase Storage settings.</p>
+<p id="fileHelp" style="font-size:12px;color:#aab0c2">Choose a file from your device. Maximum size: 500 MB. Large videos upload in resumable chunks; keep this page open.</p>
 </div>
 <div class="wide">
 <label for="caption">Caption / description</label>
@@ -650,6 +650,7 @@ img,video,iframe{max-width:100%}
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
 <script>
 'use strict';
 
@@ -891,19 +892,56 @@ async function uploadMedia(file) {
     throw new Error('Unsupported file type. Choose an image, video, or audio file.');
   }
 
-  const safeName = file.name.replace(/[^\w.-]/g, '_');
-  const path = OWNER_ID + '/' + Date.now() + '-' + safeName;
+  if (!window.tus || typeof window.tus.Upload !== 'function') {
+    throw new Error('The resumable upload library did not load. Refresh the page and try again.');
+  }
 
-  const { error } = await db.storage.from(BUCKET).upload(path, file, {
-    cacheControl: '3600',
-    upsert: false,
-    contentType: file.type || undefined
+  const { data: sessionData, error: sessionError } = await db.auth.getSession();
+  const accessToken = sessionData?.session?.access_token;
+  if (sessionError || !accessToken) {
+    throw new Error('Your owner session expired. Sign in again before uploading.');
+  }
+
+  const safeName = file.name.replace(/[^\\w.-]/g, '_');
+  const path = OWNER_ID + '/' + Date.now() + '-' + safeName;
+  const { data: publicData } = db.storage.from(BUCKET).getPublicUrl(path);
+  const progressLabel = percent => {
+    setEditorMessage('Uploading ' + Math.round(percent) + '% — keep this page open until the upload finishes.');
+  };
+
+  await new Promise((resolve, reject) => {
+    const upload = new window.tus.Upload(file, {
+      endpoint: SUPABASE_URL + '/storage/v1/upload/resumable',
+      retryDelays: [0, 3000, 5000, 10000, 20000],
+      chunkSize: 6 * 1024 * 1024,
+      uploadDataDuringCreation: true,
+      removeFingerprintOnSuccess: true,
+      headers: {
+        authorization: 'Bearer ' + accessToken,
+        apikey: SUPABASE_KEY,
+        'x-upsert': 'false'
+      },
+      metadata: {
+        bucketName: BUCKET,
+        objectName: path,
+        contentType: file.type || 'application/octet-stream',
+        cacheControl: '3600'
+      },
+      onError(error) {
+        reject(new Error('Resumable upload failed: ' + (error.message || 'Check your connection and try again.')));
+      },
+      onProgress(bytesUploaded, bytesTotal) {
+        progressLabel(bytesTotal ? bytesUploaded / bytesTotal * 100 : 0);
+      },
+      onSuccess() {
+        progressLabel(100);
+        resolve();
+      }
+    });
+    upload.start();
   });
 
-  if (error) throw error;
-
-  const { data } = db.storage.from(BUCKET).getPublicUrl(path);
-  return data.publicUrl;
+  return publicData.publicUrl;
 }
 
 $('#adminToggle').addEventListener('click', () => {

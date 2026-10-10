@@ -204,6 +204,36 @@ img,video,iframe{max-width:100%}
 <meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://animee355.github.io/Animee/community-messages.html">
 <link rel="stylesheet" href="./animee-design-system.css">
+<style id="animee-community-experience-polish">
+/* Shared community experience: consistent navigation, readable profiles, and comfortable mobile layouts. */
+.community-route-nav{display:flex;gap:9px;flex-wrap:wrap;margin:-2px 0 22px;padding:10px;border:1px solid rgba(7,81,138,.22);border-radius:15px;background:rgba(255,255,255,.38);box-shadow:0 7px 18px rgba(7,55,95,.06)}
+.community-route-nav a{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:9px 14px;border:1px solid rgba(7,81,138,.2);border-radius:999px;background:rgba(255,255,255,.7);color:#082849!important;text-decoration:none;font-size:13px;font-weight:850;transition:transform .18s ease,background .18s ease,border-color .18s ease}
+.community-route-nav a:hover{transform:translateY(-1px);border-color:#1687bb;background:#fff}
+.community-route-nav a.is-current{background:linear-gradient(110deg,#07518a,#087fbd);color:#fff!important;border-color:#07518a;box-shadow:0 5px 14px rgba(7,81,138,.18)}
+.profile-head{padding:14px;border:1px solid rgba(117,221,255,.22);border-radius:15px;background:linear-gradient(135deg,rgba(117,221,255,.09),rgba(255,255,255,.025))}
+.profile-meta{line-height:1.65}.members{align-items:stretch}
+.member{transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.member:hover{transform:translateY(-2px);border-color:rgba(117,221,255,.65)!important;box-shadow:0 10px 22px rgba(0,0,0,.13)}
+#member-list .member{min-height:100px}
+#posts .post{overflow:hidden}#posts .posthead{align-items:flex-start}#posts .postname{line-height:1.35;overflow-wrap:anywhere}
+#posts .postbody{font-size:15px;line-height:1.75;overflow-wrap:anywhere}#posts .tools{align-items:center}#posts .smallbtn{min-height:36px}
+#posts .comments{border-color:rgba(117,221,255,.2)}#posts .comment{line-height:1.65}#posts .comment-form textarea{min-width:0}
+#member-results .member,#threads .member{min-width:0;overflow-wrap:anywhere}
+#member-results .member span:nth-child(2),#threads .member span:nth-child(2){min-width:0}
+#member-results .member small,#threads .member small{overflow-wrap:anywhere;line-height:1.45}
+.chat-head{position:sticky;top:0;background:linear-gradient(145deg,#102d49,#071a2d);z-index:1;padding-top:4px}
+.messages{overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#315875 transparent}
+.bubble{line-height:1.65;box-shadow:0 4px 12px rgba(0,0,0,.1)}.bubble.mine{background:linear-gradient(135deg,#124a72,#12385a)}
+input,textarea,select{max-width:100%}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #07518a!important;outline-offset:3px}
+@media(max-width:640px){
+ .community-route-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:7px;margin-bottom:17px}
+ .community-route-nav a{gap:4px;flex-direction:column;text-align:center;padding:8px 4px;min-height:58px;font-size:11px;line-height:1.25}
+ .community-route-nav a span{font-size:16px}.profile-head{gap:11px;padding:11px}
+ #posts .postbody{font-size:14px}.bubble{max-width:92%;padding:9px 10px}
+}
+@media(prefers-reduced-motion:reduce){.community-route-nav a,.member{transition:none}.community-route-nav a:hover,.member:hover{transform:none}}
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -238,6 +268,7 @@ img,video,iframe{max-width:100%}
 
 <header><div class="wrap bar"><a class="brand" href="index.html">ANIM<span>EE</span></a><nav aria-label="Main navigation"><a href="index.html">Home</a><a href="community.html">Member profiles</a><a href="community-feed.html">Community feed</a><a href="community-messages.html">Messages <span id="nav-unread"></span></a></nav></div></header>
 <main id="main-content" class="wrap"><section class="hero"><div class="eyebrow">ANIMEE MEMBER CONNECTIONS</div><h1>Private messages.<br><span style="color:var(--cyan)">One anime community.</span></h1><p class="muted">Connect one-to-one with registered Animee members. Only the sender and recipient can access each message.</p></section>
+<nav class="community-route-nav" aria-label="Community sections"><a href="community.html"><span aria-hidden="true">👤</span> Member Profiles</a><a href="community-feed.html"><span aria-hidden="true">💬</span> Discussion Feed</a><a href="community-messages.html" class="is-current" aria-current="page"><span aria-hidden="true">✉️</span> Private Messages</a></nav>
 <div id="signed-out" class="panel hidden"><h2>🔐 Sign in to message</h2><p class="muted">You need an Animee member account to send and read private messages.</p><a class="btn primary" href="community.html">Sign in / Create account</a></div>
 <div id="app" class="layout hidden">
 <aside class="panel"><h2>💬 Your conversations</h2><p class="muted">Choose a conversation or find a member to message.</p><label for="member-search">Find a member</label><input id="member-search" type="search" placeholder="Search username or display name"><div id="member-results" class="member-results"></div><p id="member-status" class="status"></p><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><h2>📨 Recent chats</h2><div id="threads" class="member-results"><div class="empty">Loading messages…</div></div></aside>

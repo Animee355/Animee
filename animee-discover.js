@@ -1,7 +1,8 @@
-/* Animee discovery catalog. Metadata and artwork supplied by AniList's public GraphQL API. */
+/* Animee discovery catalog. Public anime metadata; watch links open Anikoto. */
 (() => {
   "use strict";
   const API = "https://graphql.anilist.co";
+  const watchUrl = (title) => "https://anikoto.cz/home";
   const $ = (id) => document.getElementById(id);
   const escapeHTML = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const titleOf = (media) => media?.title?.english || media?.title?.romaji || media?.title?.native || "Untitled anime";
@@ -20,14 +21,14 @@
   const posterCard = (media, extra = "") => {
     const title = escapeHTML(titleOf(media));
     const image = escapeHTML(media?.coverImage?.large || media?.coverImage?.medium || "");
-    const url = escapeHTML(media?.siteUrl || "https://anilist.co/search/anime");
+    const url = escapeHTML(watchUrl(titleOf(media)));
     const score = media?.averageScore ? (Number(media.averageScore)/10).toFixed(1) : "";
     const year = media?.seasonYear || media?.startDate?.year || "";
     const format = media?.format ? media.format.replaceAll("_"," ") : "ANIME";
     const genres = (media?.genres || []).slice(0,2).map(escapeHTML).join(" · ");
-    return `<article class="discover-anime-card"><a class="discover-poster-link" href="${url}" target="_blank" rel="noopener" aria-label="View ${title} on AniList">${image ? `<img src="${image}" alt="${title}" loading="lazy" decoding="async">` : ""}${score ? `<span class="discover-score">★ ${score}</span>` : ""}</a><div class="discover-anime-info"><h4><a href="${url}" target="_blank" rel="noopener">${title}</a></h4><p>${escapeHTML([format,year].filter(Boolean).join(" · "))}</p>${genres ? `<p>${genres}</p>` : ""}${extra}</div></article>`;
+    return `<article class="discover-anime-card"><a class="discover-poster-link" href="${url}" target="_blank" rel="noopener" aria-label="Find ${title} on Anikoto">${image ? `<img src="${image}" alt="${title}" loading="lazy" decoding="async">` : ""}${score ? `<span class="discover-score">★ ${score}</span>` : ""}</a><div class="discover-anime-info"><h4><a href="${url}" target="_blank" rel="noopener">${title}</a></h4><p>${escapeHTML([format,year].filter(Boolean).join(" · "))}</p>${genres ? `<p>${genres}</p>` : ""}${extra}</div></article>`;
   };
-  const showError = (id, message) => { const el=$(id); if(el) el.innerHTML=`<div class="discover-empty">${escapeHTML(message)}<br><a class="discover-text-link" href="https://anilist.co/search/anime" target="_blank" rel="noopener">Browse anime on AniList ↗</a></div>`; };
+  const showError = (id, message) => { const el=$(id); if(el) el.innerHTML=`<div class="discover-empty">${escapeHTML(message)}<br><a class="discover-text-link" href=watchUrl(titleOf(media)) target="_blank" rel="noopener">Find anime on Anikoto ↗</a></div>`; };
   const trendingQuery = `query { Page(page:1, perPage:8) { media(type:ANIME, sort:TRENDING_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } bannerImage siteUrl description(asHtml:false) averageScore trending seasonYear format genres status startDate { year } } } }`;
   const popularQuery = `query { Page(page:1, perPage:10) { media(type:ANIME, sort:POPULARITY_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } siteUrl averageScore seasonYear format genres startDate { year } } } }`;
   const upcomingQuery = `query { Page(page:1, perPage:10) { media(type:ANIME, status:NOT_YET_RELEASED, sort:POPULARITY_DESC, isAdult:false) { id title { english romaji native } coverImage { large medium } siteUrl averageScore seasonYear format genres startDate { year month day } } } }`;
@@ -43,7 +44,7 @@
       const banner=escapeHTML(item.bannerImage||item.coverImage?.large||"");
       const cover=escapeHTML(item.coverImage?.large||"");
       const details=[item.format?.replaceAll("_"," "),item.seasonYear,item.averageScore?`★ ${(item.averageScore/10).toFixed(1)}`:null].filter(Boolean).map(escapeHTML).join(" · ");
-      el.innerHTML=`<div class="discover-spotlight-art" style="background-image:url('${banner}')"></div><div class="discover-spotlight-copy"><span class="discover-pill">✦ Featured anime · ${active+1} / ${items.length}</span><h3>${title}</h3><p>${description}</p><div class="discover-spotlight-meta">${details}</div><div class="discover-spotlight-actions"><a class="discover-action" href="${escapeHTML(item.siteUrl||"https://anilist.co/search/anime")}" target="_blank" rel="noopener">Anime details ↗</a><button class="discover-action secondary" type="button" id="discover-next">${active===items.length-1?"Back to first":"Next spotlight"} →</button></div></div><div class="discover-spotlight-side">${cover?`<img src="${cover}" alt="${title} poster" loading="lazy">`:""}</div>`;
+      el.innerHTML=`<div class="discover-spotlight-art" style="background-image:url('${banner}')"></div><div class="discover-spotlight-copy"><span class="discover-pill">✦ Featured anime · ${active+1} / ${items.length}</span><h3>${title}</h3><p>${description}</p><div class="discover-spotlight-meta">${details}</div><div class="discover-spotlight-actions"><a class="discover-action" href="${watchUrl(titleOf(item))}" target="_blank" rel="noopener">Watch on Anikoto ↗</a><button class="discover-action secondary" type="button" id="discover-next">${active===items.length-1?"Back to first":"Next spotlight"} →</button></div></div><div class="discover-spotlight-side">${cover?`<img src="${cover}" alt="${title} poster" loading="lazy">`:""}</div>`;
       $("discover-next")?.addEventListener("click",()=>{active=(active+1)%items.length;render();});
     };
     render();

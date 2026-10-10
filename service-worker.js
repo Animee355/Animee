@@ -1,6 +1,6 @@
 /* Animee PWA service worker. Network-first for pages; never cache API/auth requests. */
-const CACHE_NAME = "animee-pwa-v20";
-const APP_SHELL = ["./index.html","./anime-library.html","./community.html","./community-feed.html","./community-messages.html","./community-reset-password.html","./offline.html","./manifest.webmanifest","./icon.svg","./pwa.js","./animee-loader.js","./animee-design-system.css","./anime-news.js","./anime-news.json","./anime-release-calendar.js","./animee-trending.js","./animee-official-announcements.js","./animee-confirmed-tracker.js","./animee-confirmed-announcements.json"];
+const CACHE_NAME = "animee-pwa-v21";
+const APP_SHELL = ["./index.html","./anime-library.html","./community.html","./community-feed.html","./community-messages.html","./community-reset-password.html","./offline.html","./manifest.webmanifest","./icon.svg","./pwa.js","./animee-loader.js","./animee-design-system.css","./animee-discover.css","./animee-discover.js","./anime-news.js","./anime-news.json","./anime-release-calendar.js","./animee-trending.js","./animee-official-announcements.js","./animee-confirmed-tracker.js","./animee-confirmed-announcements.json"];
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);

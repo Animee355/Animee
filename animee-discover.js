@@ -80,7 +80,7 @@
       { query: popularQuery, target: "discover-popular", label: "Popular anime", render: items =>
         items.map((item, i) => posterCard(item, `<p class="discover-episode">Popularity #${i + 1}</p>`)).join("")
       },
-      { query: releasingQuery, target: "discover-airing-now", label: "Currently airing anime", render: items => items.map(posterCard).join("") },
+      { query: releasingQuery, target: "discover-airing-now", label: "Currently airing anime", render: items => items.map(item => posterCard(item)).join("") },
       { query: completedQuery, target: "discover-completed", label: "Completed anime", render: items => items.map(posterCard).join("") }
     ];
     await Promise.all(jobs.map(async job => {

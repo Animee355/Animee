@@ -55,8 +55,10 @@
     <div class="rc-foot">Schedule data provided by Jikan, using MyAnimeList data. Broadcast times and dates can change; check the linked listing or official anime channels before watching. “TBA” means a precise time was not available.</div>
   `;
 
+  const newsPanel = document.getElementById("animee-live-news");
   const header = document.querySelector("body > header");
-  if (header) header.insertAdjacentElement("afterend", panel);
+  if (newsPanel) newsPanel.insertAdjacentElement("afterend", panel);
+  else if (header) header.insertAdjacentElement("afterend", panel);
   else document.body.prepend(panel);
 
   const grid = panel.querySelector("#animee-release-grid");

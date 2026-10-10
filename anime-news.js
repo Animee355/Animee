@@ -20,6 +20,10 @@
     #animee-live-news .an-item h4{font-size:15px;line-height:1.35;margin:0 0 8px;color:#fff}
     #animee-live-news .an-item p{font-size:12px;color:#bfd4e7;margin:0 0 9px;overflow-wrap:anywhere}
     #animee-live-news .an-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:11px;color:#b8d8ec}
+    #animee-live-news .an-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+    #animee-live-news .an-badge{display:inline-flex;align-items:center;border:1px solid rgba(143,229,255,.35);border-radius:999px;padding:3px 7px;font-size:10px;font-weight:850;letter-spacing:.04em;color:#c8f4ff;background:rgba(14,67,94,.55)}
+    #animee-live-news .an-badge.an-unconfirmed{border-color:#e7ad63;color:#ffe0ae;background:rgba(112,63,12,.25)}
+    #animee-live-news .an-source-host{overflow-wrap:anywhere}
     #animee-live-news .an-item a{color:#8fe5ff;font-weight:800;text-decoration:none}
     #animee-live-news .an-item a:hover{text-decoration:underline}
     #animee-live-news .an-state{color:#d0e5f4;padding:14px 0}
@@ -46,7 +50,7 @@
       <div class="an-state" id="animee-news-state" role="status" aria-live="polite">Loading the latest anime news…</div>
       <div id="animee-news-sections"></div>
       <div class="an-foot"><span id="animee-news-updated">Checking news feed…</span><a href="https://www.crunchyroll.com/news/" target="_blank" rel="noopener noreferrer">Crunchyroll News ↗</a></div>
-      <p class="an-disclaimer">Animee links to original publishers. A news report is not necessarily a primary studio announcement; check the linked source for confirmation.</p>
+      <p class="an-disclaimer">Accuracy note: “News report” identifies coverage from the linked publisher, not an official studio confirmation. Stories explicitly described as rumors or unconfirmed are labeled accordingly. Always open the original source before treating a release date, sequel, or announcement as confirmed.</p>
     </div>`;
   const header = document.querySelector("header");
   if (header) header.insertAdjacentElement("afterend", panel);
@@ -79,11 +83,18 @@
   const renderCard = item => {
     const url = safeUrl(item.url);
     if (!url) return "";
+    let host = "";
+    try { host = new URL(url).hostname.replace(/^www\\./i, ""); } catch (_) {}
+    const storyText = String(item.title || "") + " " + String(item.summary || "");
+    const unconfirmed = /\\b(rumou?r|unconfirmed|speculation|speculative|not confirmed|unverified)\\b/i.test(storyText);
+    const statusLabel = unconfirmed ? "RUMOR / UNCONFIRMED" : "NEWS REPORT";
+    const publishedDate = item.published && !Number.isNaN(new Date(item.published).getTime()) ? "Published " + dateLabel(item.published) : "Publication date not provided";
     return `<article class="an-item">
-      <div class="an-meta"><span>${esc(item.source || "Anime news")}</span></div>
+      <div class="an-badges"><span class="an-badge">${esc(statusLabel)}</span><span class="an-badge">${esc("PUBLISHER: " + (item.source || "Unknown"))}</span></div>
       <h4>${esc(item.title || "Anime news update")}</h4>
       ${item.summary ? `<p>${esc(item.summary)}</p>` : ""}
-      <div class="an-meta"><span>${esc(dateLabel(item.published))}</span></div>
+      <div class="an-meta"><span>${esc(publishedDate)}</span></div>
+      <div class="an-meta an-source-host" style="margin-top:5px"><span>Source: ${esc(host || item.source || "Publisher link")}</span></div>
       ${item.location ? `<div class="an-meta" style="margin-top:5px"><span>📍 ${esc(item.location)}</span></div>` : ""}
       <p style="margin:9px 0 0"><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Read original story ↗</a></p>
     </article>`;

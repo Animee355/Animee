@@ -330,6 +330,7 @@ img,video,iframe{max-width:100%}
 {"@context":"https://schema.org","@type":"WebSite","name":"Animee","url":"https://animee355.github.io/Animee/","description":"Anime news, announcements, creator updates, fan posts, and community discussions.","inLanguage":"en"}
 </script>
 <link rel="stylesheet" href="./animee-design-system.css">
+<link rel="stylesheet" href="./animee-discover.css">
 
 <style id="animee-welcome-gate-styles">
 #animee-welcome-gate{position:fixed;inset:0;z-index:100001;display:grid;place-items:center;overflow-y:auto;padding:24px;background:radial-gradient(ellipse at 18% 12%,#bcecff 0,transparent 38%),radial-gradient(ellipse at 88% 88%,#4fa7d5 0,transparent 38%),linear-gradient(135deg,#e7f9ff,#87ceeb 56%,#62b8e2);color:#082849;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;opacity:1;visibility:visible;transition:opacity .28s ease,visibility .28s ease}
@@ -485,6 +486,16 @@ img,video,iframe{max-width:100%}
 <p>Anime moments, fantasy worlds, and the latest posts — all in one place.</p>
 </div>
 <a class="follow" href="https://www.facebook.com/animeeeeee/" target="_blank" rel="noopener">Follow Animee on Facebook ↗</a>
+</section>
+
+<section id="animee-discover" class="discover-shell" aria-labelledby="discover-title">
+  <div class="discover-heading"><div><span class="discover-eyebrow">YOUR NEXT FAVORITE STARTS HERE</span><h2 id="discover-title">Explore the Anime Universe</h2><p>Discover trending series, new episodes, upcoming releases, and anime by genre.</p></div><a class="discover-more" href="https://anilist.co/search/anime" target="_blank" rel="noopener">Explore all anime ↗</a></div>
+  <div id="discover-spotlight" class="discover-spotlight"><div class="discover-loading">✨ Loading anime spotlight…</div></div>
+  <section class="discover-section" aria-labelledby="discover-airing-title"><div class="discover-section-head"><div><span class="discover-eyebrow">FOLLOW THE RELEASES</span><h3 id="discover-airing-title">📺 Latest Episode Schedule</h3></div><span class="discover-note">Upcoming episodes · next 7 days</span></div><div id="discover-airing" class="discover-card-row"><div class="discover-loading">Checking episode schedules…</div></div></section>
+  <section class="discover-section" aria-labelledby="discover-trending-title"><div class="discover-section-head"><div><span class="discover-eyebrow">WHAT FANS ARE WATCHING</span><h3 id="discover-trending-title">🔥 Trending Anime</h3></div><a class="discover-text-link" href="https://anilist.co/search/anime?sort=TRENDING_DESC" target="_blank" rel="noopener">View ranking ↗</a></div><div id="discover-trending" class="discover-poster-grid"><div class="discover-loading">Loading trending titles…</div></div></section>
+  <section class="discover-section" aria-labelledby="discover-upcoming-title"><div class="discover-section-head"><div><span class="discover-eyebrow">COMING SOON</span><h3 id="discover-upcoming-title">🗓️ Upcoming Anime</h3></div><a class="discover-text-link" href="https://anilist.co/search/anime?status=NOT_YET_RELEASED" target="_blank" rel="noopener">See more ↗</a></div><div id="discover-upcoming" class="discover-poster-grid"><div class="discover-loading">Finding upcoming releases…</div></div></section>
+  <section class="discover-section" aria-labelledby="discover-search-title"><div class="discover-section-head"><div><span class="discover-eyebrow">FIND YOUR NEXT SERIES</span><h3 id="discover-search-title">🔎 Browse Anime</h3></div></div><form id="discover-search-form" class="discover-search-form"><label class="discover-sr-only" for="discover-query">Search anime titles</label><input id="discover-query" type="search" placeholder="Search anime titles…" autocomplete="off"><label class="discover-sr-only" for="discover-genre">Choose genre</label><select id="discover-genre"><option value="">All genres</option><option>Action</option><option>Adventure</option><option>Comedy</option><option>Drama</option><option>Fantasy</option><option>Horror</option><option>Mystery</option><option>Romance</option><option>Sci-Fi</option><option>Slice of Life</option><option>Sports</option><option>Supernatural</option></select><button type="submit">Search anime</button></form><div id="discover-results" class="discover-poster-grid discover-search-results" aria-live="polite"><p class="discover-note">Search by title or choose a genre to explore the catalog.</p></div></section>
+  <p class="discover-attribution">Anime metadata and artwork are loaded from AniList. Animee links to information pages; episode availability depends on official platforms in your region.</p>
 </section>
 
 <div class="animee-feature-rail" aria-label="Explore Animee features">
@@ -1185,5 +1196,6 @@ db.auth.onAuthStateChange((_event, session) => {
 })();
 </script>
 
+<script src="./animee-discover.js" defer></script>
 </body>
 </html>

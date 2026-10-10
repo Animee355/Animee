@@ -1,8 +1,8 @@
 {
   "id": "./index.html",
-  "name": "Animee — Where Anime Comes to Life",
-  "short_name": "Animee",
-  "description": "Animee — where anime comes to life. Discover anime posts and connect with the community.",
+  "name": "ANIMEE — Where Anime Comes to Life",
+  "short_name": "ANIMEE",
+  "description": "ANIMEE — Where anime comes to life. Discover anime updates, explore anime titles, and connect with the community.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

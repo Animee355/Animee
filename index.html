@@ -373,6 +373,10 @@ img,video,iframe{max-width:100%}
 @media(prefers-reduced-motion:reduce){#animee-welcome-gate,#animee-welcome-gate .welcome-enter{transition:none}#animee-welcome-gate .welcome-enter:hover{transform:none}}
 </style>
 
+
+<style id="animee-quick-watch-styles">
+.animee-quick-watch{position:fixed;inset:0;z-index:100010;display:none;align-items:center;justify-content:center;padding:18px}.animee-quick-watch.is-open{display:flex}.animee-quick-watch-backdrop{position:absolute;inset:0;background:rgba(2,8,18,.82);backdrop-filter:blur(7px)}.animee-quick-watch-panel{position:relative;z-index:1;width:min(850px,100%);max-height:min(92vh,900px);overflow:auto;padding:clamp(17px,3vw,28px);border:1px solid #8edfff66;border-radius:20px;background:linear-gradient(145deg,#0c2137,#050e1b);color:#f5fbff;box-shadow:0 28px 90px #0009}.animee-quick-watch-close{position:absolute;right:12px;top:10px;width:40px;height:40px;border:1px solid #42627e;border-radius:50%;background:#102b44;color:white;font-size:25px;cursor:pointer}.animee-quick-watch-eyebrow{margin:0 45px 7px 0;color:#83e3ff;font-size:10px;font-weight:900;letter-spacing:.18em}.animee-quick-watch-panel h2{margin:0 44px 15px 0;font-size:clamp(21px,4vw,30px);line-height:1.2}.animee-quick-watch-panel video{display:block;width:100%;max-height:55vh;aspect-ratio:16/9;background:#000;border-radius:12px}.animee-quick-watch-caption{color:#c2d8e9;font-size:14px;white-space:pre-wrap}.animee-quick-watch-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.animee-quick-watch-list button{max-width:100%;border:1px solid #315675;border-radius:9px;padding:9px 12px;background:#0c1c2d;color:#dff6ff;cursor:pointer;text-align:left}.animee-quick-watch-list button.active{border-color:#73d9ff;background:#124e73;color:white}.animee-quick-watch-note{margin:13px 0 0;color:#89a6bf;font-size:11px}.animee-quick-watch-fallback{grid-column:1/-1;padding:12px 14px;border:1px solid #e2b95d66;border-radius:10px;background:#fff4cf;color:#624800;font-size:13px}@media(max-width:540px){.animee-quick-watch{padding:8px}.animee-quick-watch-panel{padding:17px 12px;border-radius:15px}.animee-quick-watch-panel video{max-height:45vh}}
+</style>
 </head>
 <body>
 
@@ -1148,13 +1152,89 @@ db.auth.onAuthStateChange((_event, session) => {
   }, { once: true });
   const searchForm = document.getElementById('animee-welcome-search-form');
   const searchInput = document.getElementById('animee-welcome-search');
-  const runSearch = query => {
-    animeeSearchQuery = String(query || '').trim();
+  const isSecureVideoUrl = value => {
+    try { return new URL(String(value || ''), window.location.href).protocol === 'https:'; }
+    catch (_) { return false; }
+  };
+  const playablePostsFor = query => {
+    const normalized = String(query || '').trim().toLocaleLowerCase();
+    if (!normalized || !Array.isArray(posts)) return [];
+    const terms = normalized.split(/\\s+/).filter(term => term.length > 2);
+    return posts.filter(post => {
+      const kind = String(post.media_type || '').toLocaleLowerCase();
+      const status = String(post.status || 'published').toLocaleLowerCase();
+      if (status !== 'published' || !['video','mp4','webm','external_video'].includes(kind) || !isSecureVideoUrl(post.media_url)) return false;
+      const haystack = [post.title, post.caption].map(value => String(value || '').toLocaleLowerCase()).join(' ');
+      return haystack.includes(normalized) || (terms.length > 0 && terms.every(term => haystack.includes(term)));
+    }).sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+  };
+  const openVideoPicker = (query, matches) => {
+    let modal = document.getElementById('animee-quick-watch');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'animee-quick-watch';
+      modal.className = 'animee-quick-watch';
+      modal.innerHTML = '<div class="animee-quick-watch-backdrop" data-watch-close></div><section class="animee-quick-watch-panel" role="dialog" aria-modal="true" aria-labelledby="animee-quick-watch-title"><button class="animee-quick-watch-close" type="button" aria-label="Close video player" data-watch-close>×</button><p class="animee-quick-watch-eyebrow">ANIMEE QUICK WATCH</p><h2 id="animee-quick-watch-title"></h2><video id="animee-quick-watch-video" controls playsinline preload="metadata"></video><p id="animee-quick-watch-caption" class="animee-quick-watch-caption"></p><div id="animee-quick-watch-list" class="animee-quick-watch-list"></div><p class="animee-quick-watch-note">Playing videos published in Animee’s own video library.</p></section>';
+      document.body.appendChild(modal);
+      modal.querySelectorAll('[data-watch-close]').forEach(button => button.addEventListener('click', () => {
+        const video = document.getElementById('animee-quick-watch-video');
+        if (video) { video.pause(); video.removeAttribute('src'); video.load(); }
+        modal.classList.remove('is-open');
+      }));
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && modal.classList.contains('is-open')) modal.querySelector('[data-watch-close]')?.click();
+      });
+    }
+    const title = document.getElementById('animee-quick-watch-title');
+    const video = document.getElementById('animee-quick-watch-video');
+    const caption = document.getElementById('animee-quick-watch-caption');
+    const list = document.getElementById('animee-quick-watch-list');
+    title.textContent = query + ' — Watch on Animee';
+    const playPost = post => {
+      if (!post || !isSecureVideoUrl(post.media_url)) return;
+      video.pause();
+      video.src = post.media_url;
+      video.load();
+      video.play().catch(() => {});
+      caption.textContent = post.caption || 'Now playing: ' + (post.title || query);
+      list.querySelectorAll('button').forEach(button => button.classList.toggle('active', button.dataset.postId === String(post.id)));
+    };
+    list.replaceChildren();
+    matches.forEach((post, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.postId = String(post.id);
+      button.textContent = (index + 1) + '. ' + (post.title || query);
+      button.addEventListener('click', () => playPost(post));
+      list.appendChild(button);
+    });
+    enter();
+    modal.classList.add('is-open');
+    playPost(matches[0]);
+  };
+  const runSearch = (query, preferVideo = false) => {
+    const title = String(query || '').trim();
+    if (!title) return;
+    if (preferVideo) {
+      const matches = playablePostsFor(title);
+      if (matches.length) {
+        openVideoPicker(title, matches);
+        return;
+      }
+    }
+    animeeSearchQuery = title;
     enter();
     window.setTimeout(() => {
       if (typeof render === 'function') render();
       const latest = document.getElementById('latest');
       if (latest) latest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (preferVideo) {
+        const notice = document.createElement('p');
+        notice.className = 'animee-quick-watch-fallback';
+        notice.textContent = 'No published Animee video matched “' + title + '” yet. Showing matching posts instead.';
+        const postsContainer = document.getElementById('posts');
+        if (postsContainer) postsContainer.prepend(notice);
+      }
     }, 450);
   };
   const livePicks = document.getElementById('animee-welcome-live-trending');
@@ -1176,7 +1256,7 @@ db.auth.onAuthStateChange((_event, session) => {
         button.type = 'button';
         button.textContent = (index + 1) + '. ' + title;
         button.title = 'Search Animee posts for ' + title;
-        button.addEventListener('click', () => runSearch(title));
+        button.addEventListener('click', () => runSearch(title, true));
         livePicks.appendChild(button);
       });
     });
@@ -1187,7 +1267,7 @@ db.auth.onAuthStateChange((_event, session) => {
       runSearch(searchInput.value);
     });
     gate.querySelectorAll('[data-animee-query]').forEach(button => {
-      button.addEventListener('click', () => runSearch(button.getAttribute('data-animee-query')));
+      button.addEventListener('click', () => runSearch(button.getAttribute('data-animee-query'), true));
     });
     document.getElementById('animee-enter-site')?.addEventListener('click', () => { animeeSearchQuery = ''; });
     document.getElementById('animee-welcome-close')?.addEventListener('click', () => { animeeSearchQuery = ''; });

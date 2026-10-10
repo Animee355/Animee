@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-09T23:15:44.690482+00:00",
+  "checked_at": "2026-10-10T00:24:11.109569+00:00",
   "items": [
     {
       "title": "GROTESQQQUE Anime Film Review",
@@ -14,16 +14,6 @@
     {
       "title": "North American Anime, Manga Releases, October 4-10",
       "url": "https://www.animenewsnetwork.com/news/2026-10-09/north-american-anime-manga-releases-october-4-10/.242519",
-      "source": "Anime News Network",
-      "published": "2026-10-09T21:00:00+00:00",
-      "summary": "Devil Survivor 2: The Animation anime; The Apothecary Diaries: Xiaolan's Story, My Journey to Her, Blue Lock Full Color Selection manga ship",
-      "author": "",
-      "category": "all",
-      "category_label": "Latest anime news"
-    },
-    {
-      "title": "North American Anime, Manga Releases, October 4-10",
-      "url": "https://www.animenewsnetwork.com/news/2026-10-05/north-american-anime-manga-releases-october-4-10/.242519",
       "source": "Anime News Network",
       "published": "2026-10-09T21:00:00+00:00",
       "summary": "Devil Survivor 2: The Animation anime; The Apothecary Diaries: Xiaolan's Story, My Journey to Her, Blue Lock Full Color Selection manga ship",
@@ -54,16 +44,6 @@
     {
       "title": "Yen Press Licenses Fate/strange Fake, Kino's Journey, Spice and Wolf Diner: Gourmet Exploration, More Manga/Novels",
       "url": "https://www.animenewsnetwork.com/news/2026-10-09/yen-press-licenses-fate-strange-fake-kino-journey-spice-and-wolf-diner-gourmet-exploration-more-/.242640",
-      "source": "Anime News Network",
-      "published": "2026-10-09T18:45:00+00:00",
-      "summary": "Also: The Girls Adrift Among the Stars , Dungeon Master: Creating a Hot Spring Dungeon , more",
-      "author": "",
-      "category": "all",
-      "category_label": "Latest anime news"
-    },
-    {
-      "title": "Yen Press Licenses Fate/strange Fake, Kino's Journey, Spice and Wolf Diner: Gourmet Exploration, More Manga/Novels",
-      "url": "https://www.animenewsnetwork.com/news/2026-10-08/yen-press-licenses-fate-strange-fake-kino-journey-spice-and-wolf-diner-gourmet-exploration-more-/.242640",
       "source": "Anime News Network",
       "published": "2026-10-09T18:45:00+00:00",
       "summary": "Also: The Girls Adrift Among the Stars , Dungeon Master: Creating a Hot Spring Dungeon , more",
@@ -598,6 +578,26 @@
       "published": "2026-10-08T21:25:00+00:00",
       "summary": "A new trailer and visual was released during NYCC",
       "author": "Kyle Cardine",
+      "category": "announcement",
+      "category_label": "Announcements & releases"
+    },
+    {
+      "title": "Everyone's Darling Has a Secret Anime Releases Teaser Trailer",
+      "url": "https://crunchyroll.com/news/latest/2026/10/8/everyones-darling-has-a-secret-anime-teaser-trailer",
+      "source": "Crunchyroll News",
+      "published": "2026-10-08T21:07:00+00:00",
+      "summary": "Crunchyroll will stream the anime when it premieres in April 2027",
+      "author": "Paul Chapman",
+      "category": "all",
+      "category_label": "Latest anime news"
+    },
+    {
+      "title": "Berserk of Gluttony Season 2 Anime Releases Teaser Trailer",
+      "url": "https://crunchyroll.com/news/latest/2026/10/8/berserk-of-gluttony-season-2-anime-teaser-trailer",
+      "source": "Crunchyroll News",
+      "published": "2026-10-08T21:02:00+00:00",
+      "summary": "The newest season of Berserk of Gluttony premieres in 2027",
+      "author": "Paul Chapman",
       "category": "announcement",
       "category_label": "Announcements & releases"
     }

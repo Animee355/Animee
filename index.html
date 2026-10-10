@@ -30,6 +30,13 @@ nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:16px 0}
 nav a,.btn{color:white;text-decoration:none;border:1px solid #343949;background:#151925;border-radius:999px;padding:9px 14px;cursor:pointer}
 nav a:hover,.btn:hover{border-color:var(--cyan)}
 nav .spacer{flex:1}
+.nav-signin-group{display:flex;align-items:center;gap:8px;margin-left:auto}
+nav .member-nav-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 18px;border:1px solid #48bfff;border-radius:12px;background:linear-gradient(120deg,#0879cf,#07518a);color:#fff;font-size:15px;font-weight:950;letter-spacing:.01em;box-shadow:0 5px 18px rgba(0,111,201,.25);white-space:nowrap}
+nav .member-nav-btn::before{content:"👤";font-size:16px}
+nav .member-nav-btn:hover{background:linear-gradient(120deg,#1595ed,#0869a8);border-color:#a3e9ff;transform:translateY(-1px)}
+nav .admin-nav-btn{padding:6px 9px;border:1px solid rgba(117,221,255,.35);border-radius:8px;background:rgba(7,25,43,.7);color:#a9c5da;font-size:11px;font-weight:650;white-space:nowrap}
+nav .admin-nav-btn:hover{color:#fff;border-color:#75ddff;background:#0b2b47}
+@media(max-width:700px){.nav-signin-group{width:100%;margin-left:0;justify-content:flex-end}nav .member-nav-btn{padding:11px 14px;font-size:14px}nav .admin-nav-btn{padding:6px 8px;font-size:10px}}
 .page{max-width:1200px;margin:auto;padding:0 20px 50px}
 .hero{padding:26px 0 20px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .hero h1{font-size:clamp(28px,4vw,48px);line-height:1.08;margin:0 0 8px}
@@ -478,7 +485,10 @@ img,video,iframe{max-width:100%}
 <a href="community-messages.html">Messages</a>
 <a href="community.html">Community</a>
 <span class="spacer"></span>
-<button class="btn" id="adminToggle" type="button">Admin sign in</button>
+<div class="nav-signin-group" aria-label="Sign in options">
+  <a class="member-nav-btn" href="community.html">Member Sign In / Join</a>
+  <button class="admin-nav-btn" id="adminToggle" type="button">Admin Sign In</button>
+</div>
 </nav>
 </header>
 

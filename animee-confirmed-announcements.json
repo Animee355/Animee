@@ -1,0 +1,48 @@
+{
+  "updated_at": "2026-10-10",
+  "note": "Curated from directly linked official publisher or production-company announcements. Dates and status are only shown when the linked source explicitly supports them. This list is not exhaustive and is not a live scrape of every official site.",
+  "items": [
+    {
+      "id": "sao-original-movie-2028",
+      "title": "Sword Art Online — New Original Anime Film",
+      "status": "Confirmed",
+      "status_detail": "Officially announced; planned for 2028",
+      "date_label": "Release window",
+      "date_value": "2028",
+      "date_iso": "2028-01-01",
+      "announcement_date": "2026-07-07",
+      "synopsis": "A completely new original theatrical film has been announced. The official announcement names the project and its 2028 release year.",
+      "source_name": "Aniplex Official News",
+      "source_url": "https://news.aniplex.co.jp/detail.html?id=70791",
+      "confidence": "official"
+    },
+    {
+      "id": "fate-strange-fake-new-series",
+      "title": "Fate/strange Fake — New Series",
+      "status": "Confirmed",
+      "status_detail": "New series confirmed; release date not announced in this source",
+      "date_label": "Release date",
+      "date_value": "TBA",
+      "date_iso": "",
+      "announcement_date": "2026-08-22",
+      "synopsis": "Aniplex announced production of a new series and released a promotional video and teaser visual. No release date is stated in the linked announcement.",
+      "source_name": "Aniplex Official News",
+      "source_url": "https://www.aniplex.co.jp/news/detail/?id=71057",
+      "confidence": "official"
+    },
+    {
+      "id": "returners-magic-season-2",
+      "title": "A Returner's Magic Should Be Special — Season 2",
+      "status": "Released",
+      "status_detail": "Broadcast began October 7, 2026",
+      "date_label": "Premiere",
+      "date_value": "October 7, 2026",
+      "date_iso": "2026-10-07",
+      "announcement_date": "2026-09-15",
+      "synopsis": "The official announcement states that Season 2 begins broadcasting on October 7, 2026, with streaming information also provided.",
+      "source_name": "Aniplex Official News",
+      "source_url": "https://www.aniplex.co.jp/lineup/kikansha/news/detail/?id=71277",
+      "confidence": "official"
+    }
+  ]
+}

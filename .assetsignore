@@ -3,6 +3,7 @@
 .github/
 .github/**
 .gitignore
+.assetsignore
 .env
 .env.*
 .DS_Store

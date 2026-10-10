@@ -111,12 +111,22 @@
       if (!response.ok) throw new Error("News feed HTTP " + response.status);
       const data = await response.json();
       if (!Array.isArray(data.items)) throw new Error("Invalid news feed format");
-      const seen = new Set();
+      const seenUrls = new Set();
+      const seenTitles = new Set();
       items = data.items.filter(item => {
         if (!item || !safeUrl(item.url) || !item.title) return false;
-        const key = normalizeTitle(item.title) + "|" + String(item.source || "").toLowerCase();
-        if (seen.has(key)) return false;
-        seen.add(key);
+        let canonical;
+        try {
+          const parsed = new URL(item.url);
+          ["fbclid", "gclid"].forEach(key => parsed.searchParams.delete(key));
+          [...parsed.searchParams.keys()].filter(key => key.toLowerCase().startsWith("utm_")).forEach(key => parsed.searchParams.delete(key));
+          parsed.hash = "";
+          canonical = parsed.href.replace(/\\/$/, "");
+        } catch (_) { return false; }
+        const titleKey = normalizeTitle(item.title);
+        if (!titleKey || seenUrls.has(canonical) || seenTitles.has(titleKey)) return false;
+        seenUrls.add(canonical);
+        seenTitles.add(titleKey);
         return true;
       }).map(item => {
         const category = ["announcement","creator"].includes(item.category) ? item.category : "all";

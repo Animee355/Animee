@@ -128,8 +128,8 @@
 
   function dateChip(item) {
     const start = safeDate(item.aired && item.aired.from);
-    if (start) return start.toLocaleDateString(undefined, {month:"short",day:"numeric",year:"numeric"});
-    return "Date TBA";
+    if (start) return "Premiere: " + start.toLocaleDateString(undefined, {month:"short",day:"numeric",year:"numeric"});
+    return "Premiere date TBA";
   }
 
   function render() {

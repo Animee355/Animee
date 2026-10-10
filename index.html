@@ -340,6 +340,17 @@ img,video,iframe{max-width:100%}
 #animee-welcome-gate .welcome-logo span{color:#e5283b}
 #animee-welcome-gate .welcome-tagline{margin:15px 0 10px;font-size:clamp(17px,2.5vw,24px);font-weight:850;letter-spacing:-.025em;color:#07518a}
 #animee-welcome-gate .welcome-copy{max-width:460px;margin:0;color:#254e6e;font-size:15px;line-height:1.7}
+#animee-welcome-gate .welcome-search{margin-top:20px;max-width:500px}
+#animee-welcome-gate .welcome-search label{display:block;margin-bottom:7px;color:#174769;font-size:12px;font-weight:850}
+#animee-welcome-gate .welcome-search-row{display:flex;gap:7px;padding:5px;border:1px solid #9fd7ec;border-radius:15px;background:#fff;box-shadow:0 8px 24px #07518a0d}
+#animee-welcome-gate .welcome-search-row input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:#082849;padding:10px 11px;font:inherit;font-size:14px}
+#animee-welcome-gate .welcome-search-row input::placeholder{color:#7894a8}
+#animee-welcome-gate .welcome-search-row button{border:0;border-radius:10px;padding:10px 15px;background:#07518a;color:white;font-size:13px;font-weight:900;cursor:pointer}
+#animee-welcome-gate .welcome-trending{margin-top:15px}
+#animee-welcome-gate .welcome-trending-label{display:block;margin-bottom:8px;color:#416b86;font-size:10px;font-weight:950;letter-spacing:.15em}
+#animee-welcome-gate .welcome-chips{display:flex;flex-wrap:wrap;gap:7px}
+#animee-welcome-gate .welcome-chips button{border:1px solid #acd9e9;border-radius:999px;padding:8px 11px;background:#f8fdff;color:#174769;font-size:11px;font-weight:800;cursor:pointer;transition:background .15s ease,border-color .15s ease}
+#animee-welcome-gate .welcome-chips button:hover{background:#dff6ff;border-color:#4ba9d4}
 #animee-welcome-gate .welcome-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:24px}
 #animee-welcome-gate .welcome-enter{display:inline-flex;justify-content:center;align-items:center;gap:10px;min-height:50px;padding:13px 22px;border:1px solid #07518a;border-radius:999px;background:linear-gradient(110deg,#07518a,#0786bd);color:white;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 10px 24px #07518a30;transition:transform .18s ease,filter .18s ease}
 #animee-welcome-gate .welcome-enter:hover{transform:translateY(-2px);filter:brightness(1.08)}
@@ -365,6 +376,20 @@ img,video,iframe{max-width:100%}
       <h1 class="welcome-logo" id="animee-welcome-title"><span>A</span>nimee</h1>
       <p class="welcome-tagline">Where Anime Comes to Life. 💙</p>
       <p class="welcome-copy" id="animee-welcome-description">Discover anime updates, explore new worlds, and connect with fellow anime fans. Your next adventure starts with Animee.</p>
+      <form class="welcome-search" id="animee-welcome-search-form" role="search">
+        <label for="animee-welcome-search">Find anime on Animee</label>
+        <div class="welcome-search-row"><input id="animee-welcome-search" type="search" placeholder="Search anime titles or topics…" autocomplete="off" aria-label="Search Animee posts"><button type="submit" aria-label="Search Animee">Search</button></div>
+      </form>
+      <div class="welcome-trending" aria-label="Popular anime shortcuts">
+        <span class="welcome-trending-label">POPULAR SEARCHES</span>
+        <div class="welcome-chips">
+          <button type="button" data-animee-query="Wistoria">✨ Wistoria</button>
+          <button type="button" data-animee-query="Berserk of Gluttony">⚔️ Berserk of Gluttony</button>
+          <button type="button" data-animee-query="Tsukimichi">🌙 Tsukimichi</button>
+          <button type="button" data-animee-query="A-Rank Party">🛡️ A-Rank Party</button>
+          <button type="button" data-animee-query="Magic Maker">🔮 Magic Maker</button>
+        </div>
+      </div>
       <div class="welcome-actions"><button class="welcome-enter" id="animee-enter-site" type="button">Enter Animee <span aria-hidden="true">→</span></button><span class="welcome-hint">Anime news • Community • Fan moments</span></div>
     </div>
     <aside class="welcome-qr-panel" aria-label="Scan the QR code to open Animee on your phone">
@@ -670,23 +695,30 @@ function card(post, history = false) {
   </article>`;
 }
 
+let animeeSearchQuery = '';
+
 function render() {
   const activeFilter = document.querySelector('.filters button.active')?.dataset.filter || 'all';
   // Legacy Facebook URL posts remain in the database but are not embedded or displayed.
   const safePosts = posts.filter(post => displayKind(post) !== 'facebook');
-  const visiblePosts = safePosts.filter(post => {
-    return activeFilter === 'all' || displayKind(post) === activeFilter;
+  const query = animeeSearchQuery.trim().toLocaleLowerCase();
+  const matchingPosts = safePosts.filter(post => {
+    if (!query) return true;
+    return [post.title, post.caption, post.media_type].some(value => String(value || '').toLocaleLowerCase().includes(query));
   });
+  const visiblePosts = matchingPosts.filter(post => activeFilter === 'all' || displayKind(post) === activeFilter);
 
   $('#posts').innerHTML = visiblePosts.length
     ? visiblePosts.map(post => card(post)).join('')
-    : '<div class="empty">No published posts yet. Please check again soon.</div>';
+    : '<div class="empty">' + (query ? 'No Animee posts matched “' + esc(animeeSearchQuery) + '”. Try another anime title or topic.' : 'No published posts yet. Please check again soon.') + '</div>';
 
-  $('#historyList').innerHTML = safePosts.length
-    ? safePosts.map(post => card(post, true)).join('')
-    : '<div class="empty">Your post history will appear here.</div>';
+  $('#historyList').innerHTML = matchingPosts.length
+    ? matchingPosts.map(post => card(post, true)).join('')
+    : '<div class="empty">' + (query ? 'No matching posts in the history.' : 'Your post history will appear here.') + '</div>';
 
-  $('#count').textContent = safePosts.length + (safePosts.length === 1 ? ' post' : ' posts');
+  $('#count').textContent = query
+    ? matchingPosts.length + ' matching ' + (matchingPosts.length === 1 ? 'post' : 'posts')
+    : safePosts.length + (safePosts.length === 1 ? ' post' : ' posts');
 }
 
 function updateAdminUI() {
@@ -1090,6 +1122,29 @@ db.auth.onAuthStateChange((_event, session) => {
     const help = gate.querySelector('.welcome-qr-help');
     if (help) help.textContent = 'QR image could not load. You can still open Animee by visiting animee355.github.io/Animee/';
   }, { once: true });
+  const searchForm = document.getElementById('animee-welcome-search-form');
+  const searchInput = document.getElementById('animee-welcome-search');
+  const runSearch = query => {
+    animeeSearchQuery = String(query || '').trim();
+    enter();
+    window.setTimeout(() => {
+      if (typeof render === 'function') render();
+      const latest = document.getElementById('latest');
+      if (latest) latest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 450);
+  };
+  if (searchForm && searchInput) {
+    searchForm.addEventListener('submit', event => {
+      event.preventDefault();
+      runSearch(searchInput.value);
+    });
+    gate.querySelectorAll('[data-animee-query]').forEach(button => {
+      button.addEventListener('click', () => runSearch(button.getAttribute('data-animee-query')));
+    });
+    document.getElementById('animee-enter-site')?.addEventListener('click', () => { animeeSearchQuery = ''; });
+    document.getElementById('animee-welcome-close')?.addEventListener('click', () => { animeeSearchQuery = ''; });
+    window.setTimeout(() => { if (document.getElementById('animee-welcome-search')) searchInput.focus({ preventScroll: true }); }, 150);
+  }
 })();
 </script>
 
